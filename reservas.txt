@@ -1,0 +1,6 @@
+d,,matutino,,Salón 2,,07:00,
+Martina,56900935,matutino,2°MA,Laboratorio Física,2025-09-27,07:00,07:55
+,,,,,,,
+,,,,,,,
+Pilar,57132620,matutino,2°MA,,Salón 1,3434-03-04,
+Pilar,57132620,matutino,2°MA,,Salón 1,3434-03-04,
