@@ -15,7 +15,7 @@
     <h6>Instituto Tecnológico Superior de Paysandú</h6>
   </div>
   <div class="header-right">
-    <a href="indexEstudiantes.php"><img src="imagenes/imagenesProyecto/LOGO.jpeg" alt="Logo" class="logo"></a>
+    <a href="indexEstudiantes.php"><img src="imagenes/LOGO.jpeg" alt="Logo" class="logo"></a>
   </div>
 </header>
 
