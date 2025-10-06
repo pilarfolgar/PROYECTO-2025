@@ -63,3 +63,79 @@
   .reserva-card { background:white; padding:1rem; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
   .reserva-card h4 { margin-bottom:0.5rem; color: var(--primario); }
   .no-reservas { text-align:center; padding:1rem; font-style:italic; color: var(--hover); }
+ .boton-filtro {
+    margin: 0 8px 8px 0;
+    padding: 0.5em 2em;
+    font-size: 1.1em;
+    border-radius: 2em;
+    border: 2px solid #0d6efd;
+    background: #fff;
+    color: #0d6efd;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  }
+  .boton-filtro:hover, .boton-filtro.active {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+    box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+  }
+    .calendario-aulas-table {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(27,58,75,0.08);
+    background: #fff;
+  }
+  .calendario-aulas-table th, .calendario-aulas-table td {
+    border: 1px solid #e0e6ed !important;
+    vertical-align: middle;
+    padding: 0.5em 0.3em;
+    font-size: 0.97em;
+  }
+  .calendario-aulas-table thead th {
+    position: sticky;
+    top: 0;
+    background: #588BAE;
+    color: #fff;
+    z-index: 2;
+    font-size: 1.05em;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(27,58,75,0.04);
+  }
+  .calendario-aulas-table tbody tr:nth-child(even) {
+    background: #f0f4f8;
+  }
+  .calendario-aulas-table tbody tr:nth-child(odd) {
+    background: #fff;
+  }
+  .calendario-aulas-table .bg-warning {
+    background: #ffe066 !important;
+    color: #1B3A4B !important;
+    font-weight: bold;
+    font-size: 1em;
+  }
+  .calendario-aulas-table .badge {
+    font-size: 1em;
+    padding: 0.3em 0.7em;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(27,58,75,0.08);
+  }
+  .calendario-aulas-table .bg-success {
+    background: #A2D5F2 !important;
+    color: #1B3A4B !important;
+  }
+  .calendario-aulas-table .bg-danger {
+    background: #ff6b6b !important;
+    color: #fff !important;
+  }
+  .calendario-aulas-table .fw-bold {
+    font-weight: 700;
+    color: #417899;
+    background: #f0f4f8;
+    font-size: 1.05em;
+  }
+  .calendario-scroll {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    border-radius: 16px;
+  }

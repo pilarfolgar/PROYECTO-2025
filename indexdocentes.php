@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Docentes - InfraLex</title>
+
+<!-- Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <link rel="stylesheet" href="styleindexdocente.css" />
 </head>
 <body>
@@ -12,77 +19,18 @@
 <header>
   <div class="header-left">
     <h1>InfraLex</h1>
+      <img src="imagenes/logopoyecto.png" alt="Logo" class="logo" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #588BAE;">
     <h6>Instituto Tecnológico Superior de Paysandú</h6>
   </div>
 </header>
 
 <nav class="main-nav">
   <a href="#" class="nav-link">Mis cursos</a>
-  <a href="#" class="nav-link" id="btnReservar">Reservar aulas</a>
-  <a href="usuarios.html" class="nav-link">Mi Perfil</a>
+  <a href="aulas.php" class="nav-link" >Reservar aulas</a>
+ 
 </nav>
-
-<!-- FORMULARIO RESERVA -->
-<div id="formularioReserva" class="formulario">
-  <form id="formReserva">
-    <button type="button" class="cerrar" onclick="cerrarFormulario()">&times;</button>
-    <h2 class="form-title">Reservar Aula</h2>
-
-    <div class="mb-3">
-      <label>Nombre</label>
-      <input type="text" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label>CI</label>
-      <input type="text" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label>Turno</label>
-      <select class="form-select" id="turno" required>
-        <option selected disabled>Elija...</option>
-        <option>Matutino</option>
-        <option>Vespertino</option>
-        <option>Nocturno</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label>Aula</label>
-      <select class="form-select" id="aula" required>
-        <option selected disabled>Elija...</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label>Hora de inicio</label>
-      <select class="form-select" id="horaInicio" required>
-        <option selected disabled>Primero elija un turno...</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label>Cantidad de horas</label>
-      <select class="form-select" id="cantidadHoras" required>
-        <option selected disabled>Elija...</option>
-        <option value="1">1 hora</option>
-        <option value="2">2 horas</option>
-        <option value="3">3 horas</option>
-        <option value="4">4 horas</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label>Hora de fin</label>
-      <input type="text" class="form-control" id="horaFin" readonly>
-    </div>
-
-    <button class="boton" type="submit">Reservar</button>
-  </form>
-</div>
-
-<main class="contenedor">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <section class="mis-cursos">
     <h2>Mis cursos</h2>
     <div class="docentes-grid">
@@ -111,121 +59,134 @@
   </section>
 </main>
 
+<section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
+  <h2 class="text-center mb-4">Vista previa de Aulas</h2>
+  <div class="row g-4 justify-content-center">
+    <?php
+      $aulas = [
+        ["nombre" => "Aula 1", "capacidad" => "30 personas", "imagen" => "AULA1.jpeg"],
+        ["nombre" => "Aula 2", "capacidad" => "30 personas", "imagen" => "AULA2.jpeg"],
+        ["nombre" => "Aula 3", "capacidad" => "30 personas", "imagen" => "AULA3.jpeg"],
+        ["nombre" => "Salón 1", "capacidad" => "100 personas", "imagen" => "SALON1 Y 2.jpeg"],
+        ["nombre" => "Laboratorio de Robótica", "capacidad" => "20 computadoras", "imagen" => "ROBOTICA.jpeg"]
+      ];
+      foreach ($aulas as $aula) {
+        echo '
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm border-0">
+            <img src="Imagenes/'.$aula["imagen"].'" class="card-img-top" alt="'.$aula["nombre"].'">
+            <div class="card-body text-center">
+              <h5 class="card-title">'.$aula["nombre"].'</h5>
+              <p class="card-text">Capacidad: '.$aula["capacidad"].'</p>
+              <a href="aulas.php" class="btn btn-primary">Reservar</a>
+            </div>
+          </div>
+        </div>';
+      }
+    ?>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="aulas.php" class="btn btn-outline-primary btn-lg">Ver todas las aulas</a>
+  </div>
+</section>
+
+<main class="contenedor">
+<!-- CALENDARIO DIARIO DE RESERVAS DE AULAS -->
+<div style="width:100vw;max-width:100%;margin-left:calc(-50vw + 50%);margin-right:calc(-50vw + 50%);background:#f0f4f8;padding:2rem 0 2rem 0;">
+  <h2 class="text-center mb-4">Calendario diario de aulas</h2>
+  <div class="table-responsive" style="padding:2rem;">
+    <div class="calendario-scroll">
+      <table class="table calendario-aulas-table align-middle text-center" style="min-width:1200px;width:100%;">
+        <thead class="table-primary">
+          <tr>
+            <th style="width:110px;">Hora</th>
+            <th>Aula 1</th>
+            <th>Aula 2</th>
+            <th>Aula 3</th>
+            <th>Salón de Actos</th>
+            <th>Salón 1</th>
+            <th>Salón 2</th>
+            <th>Salón 3</th>
+            <th>Salón 4</th>
+            <th>Salón 5</th>
+            <th>Lab. Robótica</th>
+            <th>Lab. Química</th>
+            <th>Lab. Física</th>
+            <th>Taller de Mantenimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          // Generar bloques de 45 minutos desde 7:00 a 23:00
+          function sumarMinutos($hora, $minutos) {
+            $h = (int)substr($hora,0,2);
+            $m = (int)substr($hora,3,2);
+            $m += $minutos;
+            $h += intdiv($m,60);
+            $m = $m % 60;
+            return sprintf('%02d:%02d', $h, $m);
+          }
+          $horaInicio = "07:00";
+          $horaFin = "23:00";
+          $bloques = [];
+          $h = $horaInicio;
+          while ($h < $horaFin) {
+            $bloques[] = $h;
+            $h = sumarMinutos($h, 45);
+          }
+          $horas = $bloques;
+          $aulas = [
+            "Aula 1", "Aula 2", "Aula 3",
+            "Salón de Actos", "Salón 1", "Salón 2", "Salón 3", "Salón 4", "Salón 5",
+            "Lab. Robótica", "Lab. Química", "Lab. Física", "Taller de Mantenimiento"
+          ];
+          $reservas = [
+            "Aula 1" => ["08:30", "13:15", "18:00"],
+            "Aula 2" => ["09:15", "15:45"],
+            "Aula 3" => ["10:00", "20:15"],
+            "Salón de Actos" => ["07:00", "09:15", "11:00"],
+            "Salón 1" => ["07:00", "11:45", "21:30"],
+            "Salón 2" => ["08:30", "14:30"],
+            "Salón 3" => ["10:45", "16:00"],
+            "Salón 4" => ["12:15", "18:45"],
+            "Salón 5" => ["13:15", "20:00"],
+            "Lab. Robótica" => ["14:30", "16:45"],
+            "Lab. Química" => ["09:15", "17:30"],
+            "Lab. Física" => ["11:00", "19:15"],
+            "Taller de Mantenimiento" => ["15:00", "21:00"]
+          ];
+          foreach ($horas as $hora) {
+            // ...existing code...
+            echo '<tr>';
+            echo '<td><strong>'.$hora.'</strong></td>';
+            foreach ($aulas as $aula) {
+              if (in_array($hora, $reservas[$aula])) {
+                echo '<td class="bg-gradient bg-danger text-white"><span title="Reservado"><span class="badge rounded-pill bg-danger" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-x-circle-fill"></i></span></td>';
+              } else {
+                echo '<td class="bg-gradient bg-success text-dark"><span title="Disponible"><span class="badge rounded-pill bg-success" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-check-circle-fill"></i></span></td>';
+              }
+            }
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    <div class="mt-3 text-start">
+  <span class="badge bg-success" style="background:#A2D5F2;color:#1B3A4B;"><i class="bi bi-check-circle-fill"></i> Disponible</span>
+  <span class="badge bg-danger ms-2" style="background:#ff6b6b;color:#fff;"><i class="bi bi-x-circle-fill"></i> Reservado</span>
+    </div>
+  </div>
+
+
+
 <footer class="footer">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú
 </footer>
 
-<script>
-  const aulasDisponibles = ["Aula 1","Aula 2","Aula 3","Salón 1","Salón 2","Laboratorio Química","Laboratorio Física","Laboratorio Robótica"];
-  const horariosTurno = {
-    "Matutino":["08:00","09:00","10:00","11:00","12:00"],
-    "Vespertino":["13:00","14:00","15:00","16:00","17:00"],
-    "Nocturno":["18:00","19:00","20:00","21:00"]
-  };
 
-  // Miembros de cada clase
-  const miembrosClases = {
-    "1°MA - Lengua": ["Martina Campopiano", "Pedro Suárez", "Lucía Fernández", "Juan Gómez"],
-    "2°BB - Matemática": ["Ana López", "Carlos Rodríguez", "María Torres"]
-  };
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="docentes.js"></script>
 
-  function cerrarFormulario() {
-    document.getElementById("formularioReserva").style.display = "none";
-  }
-
-  document.getElementById("btnReservar").addEventListener("click", function(e){
-    e.preventDefault();
-    let f = document.getElementById("formularioReserva");
-    f.style.display = (f.style.display === "flex" || f.style.display==="") ? "none" : "flex";
-  });
-
-  // Cuando se selecciona un turno, actualizamos aulas y horarios
-  const turnoSelect = document.getElementById("turno");
-  const aulaSelect = document.getElementById("aula");
-  const horaInicioSelect = document.getElementById("horaInicio");
-  const cantidadHorasSelect = document.getElementById("cantidadHoras");
-  const horaFinInput = document.getElementById("horaFin");
-
-  turnoSelect.addEventListener("change", () => {
-    // Limpiar y cargar horarios
-    horaInicioSelect.innerHTML = '<option selected disabled>Elija hora...</option>';
-    horariosTurno[turnoSelect.value].forEach(h => {
-      const opt = document.createElement("option");
-      opt.value = h; opt.textContent = h;
-      horaInicioSelect.appendChild(opt);
-    });
-
-    // Limpiar y cargar aulas dinámicamente
-    aulaSelect.innerHTML = '<option selected disabled>Elija...</option>';
-    aulasDisponibles.forEach(a => {
-      const opt = document.createElement("option");
-      opt.value = a; opt.textContent = a;
-      aulaSelect.appendChild(opt);
-    });
-  });
-
-  // Calcular hora fin automáticamente
-  function calcularHoraFin() {
-    const inicio = horaInicioSelect.value;
-    const horas = parseInt(cantidadHorasSelect.value);
-    if(inicio && horas) {
-      let [h,m] = inicio.split(":").map(Number);
-      h += horas;
-      if(h>=24) h -= 24;
-      horaFinInput.value = `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}`;
-    }
-  }
-
-  horaInicioSelect.addEventListener("change", calcularHoraFin);
-  cantidadHorasSelect.addEventListener("change", calcularHoraFin);
-
-  // Simulación de reservas
-  const reservasContainer = document.getElementById("reservas-container");
-  const reservas = [
-    { aula: "Aula 1", fecha: "2025-10-01", turno: "Matutino", docente: "Juan Pérez", inicio:"08:00", fin:"09:00" },
-    { aula: "Aula 2", fecha: "2025-10-02", turno: "Vespertino", docente: "Ana López", inicio:"13:00", fin:"15:00" }
-  ];
-
-  function renderReservas() {
-    reservasContainer.innerHTML = "";
-    if(reservas.length === 0){
-      reservasContainer.innerHTML = '<div class="no-reservas">No hay reservas por el momento.</div>';
-      return;
-    }
-    reservas.forEach(r=>{
-      const card = document.createElement("div");
-      card.className = "reserva-card";
-      card.innerHTML = `<h4>${r.aula}</h4>
-                        <p><strong>Fecha:</strong> ${r.fecha}</p>
-                        <p><strong>Turno:</strong> ${r.turno}</p>
-                        <p><strong>Hora:</strong> ${r.inicio} - ${r.fin}</p>
-                        <p><strong>Docente:</strong> ${r.docente}</p>`;
-      reservasContainer.appendChild(card);
-    });
-  }
-  renderReservas();
-
-  // Ver miembros de cada curso
-  document.querySelectorAll(".ver-miembros").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const clase = btn.getAttribute("data-clase");
-      const lista = btn.parentElement.querySelector(".lista-miembros");
-
-      if(lista.style.display === "none" || lista.style.display===""){
-        lista.innerHTML = "";
-        miembrosClases[clase]?.forEach(m => {
-          const li = document.createElement("li");
-          li.textContent = m;
-          lista.appendChild(li);
-        });
-        lista.style.display = "block";
-        btn.textContent = "Ocultar miembros";
-      } else {
-        lista.style.display = "none";
-        btn.textContent = "Ver miembros";
-      }
-    });
-  });
-</script>
 </body>
 </html>
