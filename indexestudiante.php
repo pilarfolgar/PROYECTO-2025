@@ -8,26 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<?php
-require("conexion.php");
-session_start();
-$con = conectar_bd();
-$cedula = $_SESSION['cedula'] ?? 0;
 
-// Contar notificaciones no leídas
-$stmt = $con->prepare("SELECT COUNT(*) AS sin_leer FROM notificacion WHERE id_usuario = ? AND leida = 0");
-$stmt->bind_param("i", $cedula);
-$stmt->execute();
-$result = $stmt->get_result();
-$sin_leer = $result->fetch_assoc()['sin_leer'];
-
-// Traer últimas 5 notificaciones
-$stmt2 = $con->prepare("SELECT * FROM notificacion WHERE id_usuario = ? ORDER BY fecha DESC LIMIT 5");
-$stmt2->bind_param("i", $cedula);
-$stmt2->execute();
-$result2 = $stmt2->get_result();
-$notificaciones = $result2->fetch_all(MYSQLI_ASSOC);
-?>
 
 <body>
 
