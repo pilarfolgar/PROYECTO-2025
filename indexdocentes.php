@@ -1,101 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel Docentes - InfraLex</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Docentes - InfraLex</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="styleindexdocente.css" />
 </head>
 <body>
 
 <header>
-  <div class="HeaderIzq">
+  <div class="header-left">
     <h1>InfraLex</h1>
     <h6>Instituto Tecnológico Superior de Paysandú</h6>
   </div>
-  <div class="header-right">
-    <a href="INDEX.PHP"><img src="imagenes/logopoyecto.png" alt="Logo" class="logo"></a>
-  </div>
 </header>
 
-<nav>
-  <a href="#">Mis cursos</a>
-  <a href="aulas.php" id="btnReservar">Reservar aulas</a>
-  <a href="usuarios.html">Mi Perfil</a>
+<nav class="main-nav">
+  <a href="#" class="nav-link">Mis cursos</a>
+  <a href="#" class="nav-link" id="btnReservar">Reservar aulas</a>
+  <a href="usuarios.html" class="nav-link">Mi Perfil</a>
 </nav>
 
-<!-- FORMULARIO RESERVA (ahora como overlay modal con estilo de .formulario) -->
+<!-- FORMULARIO RESERVA -->
 <div id="formularioReserva" class="formulario">
-  <form id="formReserva" action="reservar.php" method="POST" class="row g-3 needs-validation" novalidate>
+  <form id="formReserva">
     <button type="button" class="cerrar" onclick="cerrarFormulario()">&times;</button>
     <h2 class="form-title">Reservar Aula</h2>
 
-    <div class="col-md-6">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" name="nombre" id="nombre" required>
-    </div>
-    <div class="col-md-6">
-      <label for="ci" class="form-label">CI</label>
-      <input type="text" class="form-control" name="ci" id="ci" required>
+    <div class="mb-3">
+      <label>Nombre</label>
+      <input type="text" class="form-control" required>
     </div>
 
-    <div class="col-md-6">
-      <label for="turno" class="form-label">Turno</label>
-      <select class="form-select" name="turno" id="turno" required>
-        <option selected disabled value="">Elija...</option>
-        <option value="matutino">Matutino</option>
-        <option value="vespertino">Vespertino</option>
-        <option value="nocturno">Nocturno</option>
+    <div class="mb-3">
+      <label>CI</label>
+      <input type="text" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Turno</label>
+      <select class="form-select" id="turno" required>
+        <option selected disabled>Elija...</option>
+        <option>Matutino</option>
+        <option>Vespertino</option>
+        <option>Nocturno</option>
       </select>
     </div>
 
-    <div class="col-md-6">
-      <label for="clase" class="form-label">Clase</label>
-      <select class="form-select" name="clase" id="clase" required>
-        <option selected disabled value="">Primero elija un turno...</option>
+    <div class="mb-3">
+      <label>Aula</label>
+      <select class="form-select" id="aula" required>
+        <option selected disabled>Elija...</option>
       </select>
     </div>
 
-    <div class="col-md-6">
-      <label for="materia" class="form-label">Materia</label>
-      <select class="form-select" name="materia" id="materia" required>
-        <option selected disabled value="">Primero elija una clase...</option>
+    <div class="mb-3">
+      <label>Hora de inicio</label>
+      <select class="form-select" id="horaInicio" required>
+        <option selected disabled>Primero elija un turno...</option>
       </select>
     </div>
 
-    <div class="col-md-6">
-      <label for="aula" class="form-label">Aula a reservar</label>
-      <select class="form-select" name="aula" id="aula" required>
-        <option selected disabled value="">Elija...</option>
-        <option>Aula 1</option>
-        <option>Aula 2</option>
-        <option>Aula 3</option>
-        <option>Salón 1</option>
-        <option>Salón 2</option>
-        <option>Laboratorio Química</option>
-        <option>Laboratorio Física</option>
-        <option>Laboratorio Robótica</option>
-        <option>Salón de Actos</option>
-      </select>
-    </div>
-
-    <div class="col-md-6">
-      <label for="fecha" class="form-label">Fecha</label>
-      <input type="date" class="form-control" name="fecha" id="fecha" required>
-    </div>
-
-    <div class="col-md-3">
-      <label for="horaInicio" class="form-label">Hora inicio</label>
-      <select class="form-select" name="horaInicio" id="horaInicio" required>
-        <option selected disabled value="">Primero elija un turno...</option>
-      </select>
-    </div>
-
-    <div class="col-md-3">
-      <label for="cantidadHoras" class="form-label">Cantidad de horas</label>
-      <select class="form-select" name="cantidadHoras" id="cantidadHoras" required>
-        <option selected disabled value="">Elija...</option>
+    <div class="mb-3">
+      <label>Cantidad de horas</label>
+      <select class="form-select" id="cantidadHoras" required>
+        <option selected disabled>Elija...</option>
         <option value="1">1 hora</option>
         <option value="2">2 horas</option>
         <option value="3">3 horas</option>
@@ -103,145 +73,159 @@
       </select>
     </div>
 
-    <div class="col-md-3">
-      <label for="horaFin" class="form-label">Hora fin</label>
-      <input type="text" class="form-control" name="horaFin" id="horaFin" readonly>
+    <div class="mb-3">
+      <label>Hora de fin</label>
+      <input type="text" class="form-control" id="horaFin" readonly>
     </div>
 
-    <div class="col-12">
-      <button class="boton" type="submit">Reservar</button>
-    </div>
+    <button class="boton" type="submit">Reservar</button>
   </form>
 </div>
 
 <main class="contenedor">
-  <div class="tarjeta">
-    <h3>Mis cursos</h3>
-    <p>Accede a tus cursos y materias dictadas.</p>
-    <button class="boton">Ver cursos</button>
-  </div>
-  <div class="tarjeta">
-    <h3>Reservas de aulas</h3>
-    <p>Gestiona tus reservas de aulas y laboratorios.</p>
-    <button class="boton">Ver reservas</button>
-  </div>
-  <div class="tarjeta">
-    <h3>Perfil</h3>
-    <p>Consulta tus datos y horarios.</p>
-    <button class="boton">Mi perfil</button>
-  </div>
+  <section class="mis-cursos">
+    <h2>Mis cursos</h2>
+    <div class="docentes-grid">
+      <div class="docente-card">
+        <div class="docente-photo"></div>
+        <div class="docente-name">1°MA - Lengua</div>
+        <div class="docente-subject">Turno matutino </div>
+        <button class="boton ver-miembros" data-clase="1°MA - Lengua">Ver miembros</button>
+        <ul class="lista-miembros" style="display:none;"></ul>
+      </div>
+      <div class="docente-card">
+        <div class="docente-photo"></div>
+        <div class="docente-name">2°BB - Matemática</div>
+        <div class="docente-subject">Turno vespertino </div>
+        <button class="boton ver-miembros" data-clase="2°BB - Matemática">Ver miembros</button>
+        <ul class="lista-miembros" style="display:none;"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mis reservas</h2>
+    <div id="reservas-container">
+      <div class="no-reservas">No hay reservas por el momento.</div>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
-  &copy; 2025 Instituto Tecnológico Superior de Paysandú | Contacto: evolutionit2008@gmail.com
+  &copy; 2025 Instituto Tecnológico Superior de Paysandú
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Función para cerrar el formulario
+  const aulasDisponibles = ["Aula 1","Aula 2","Aula 3","Salón 1","Salón 2","Laboratorio Química","Laboratorio Física","Laboratorio Robótica"];
+  const horariosTurno = {
+    "Matutino":["08:00","09:00","10:00","11:00","12:00"],
+    "Vespertino":["13:00","14:00","15:00","16:00","17:00"],
+    "Nocturno":["18:00","19:00","20:00","21:00"]
+  };
+
+  // Miembros de cada clase
+  const miembrosClases = {
+    "1°MA - Lengua": ["Martina Campopiano", "Pedro Suárez", "Lucía Fernández", "Juan Gómez"],
+    "2°BB - Matemática": ["Ana López", "Carlos Rodríguez", "María Torres"]
+  };
+
   function cerrarFormulario() {
     document.getElementById("formularioReserva").style.display = "none";
   }
 
-  // Mostrar/ocultar formulario (corregido y adaptado para .formulario)
-  document.getElementById("btnReservar").addEventListener("click", function(e) {
+  document.getElementById("btnReservar").addEventListener("click", function(e){
     e.preventDefault();
-    let formulario = document.getElementById("formularioReserva");
-    if (formulario.style.display === "flex" || formulario.style.display === "") {
-      formulario.style.display = "none";
-    } else {
-      formulario.style.display = "flex";
-      formulario.scrollIntoView({ behavior: "smooth" });
-    }
+    let f = document.getElementById("formularioReserva");
+    f.style.display = (f.style.display === "flex" || f.style.display==="") ? "none" : "flex";
   });
 
-  // Clases por turno
-  const clasesPorTurno = {
-    matutino: ["1°MC", "2°MA", "3°MA", "3°BA robótica"],
-    vespertino: ["1°MA", "1°MB", "2°MC", "3°MC", "TC1 Diseño Gráfico"],
-    nocturno: ["1°MA Nocturno", "2°MA Nocturno", "3°MA Nocturno"]
-  };
-
-  // Materias por clase
-  const materiasPorClase = {
-    "1°MA": ["Lengua", "Matemática", "Historia", "Biología", "Soporte"],
-    "1°MB": ["Lengua", "Matemática", "Lógica", "Ciudadanía", "Programación"],
-    "2°MC": ["Electrotecnia", "Física", "Inglés", "Programación"],
-    "3°MC": ["Matemática", "Historia", "Inglés", "Programación"],
-    "TC1 Diseño Gráfico": ["Diseño", "Multimedia", "Arte Digital"],
-    "1°MA Nocturno": ["Lengua", "Historia", "Soporte"],
-    "2°MA Nocturno": ["Programación", "Matemática", "Inglés"],
-    "3°MA Nocturno": ["Redes", "Electrotecnia", "Física"]
-  };
-
-  // Horarios por turno
-  const horariosPorTurno = {
-    matutino: ["07:15", "07:55", "08:35", "09:15", "09:55", "10:35", "11:15", "11:55", "12:35", "13:15"],
-    vespertino: ["13:45", "14:25", "15:05", "15:45", "16:25", "17:05", "17:45", "18:25", "19:05", "19:45"],
-    nocturno: ["19:30", "20:10", "20:50", "21:30", "22:10", "22:50", "23:30"]
-  };
-
+  // Cuando se selecciona un turno, actualizamos aulas y horarios
   const turnoSelect = document.getElementById("turno");
-  const claseSelect = document.getElementById("clase");
-  const materiaSelect = document.getElementById("materia");
+  const aulaSelect = document.getElementById("aula");
   const horaInicioSelect = document.getElementById("horaInicio");
   const cantidadHorasSelect = document.getElementById("cantidadHoras");
   const horaFinInput = document.getElementById("horaFin");
 
-  turnoSelect.addEventListener("change", function() {
-    const turno = this.value;
-    claseSelect.innerHTML = '<option selected disabled value="">Elija...</option>';
-    horaInicioSelect.innerHTML = '<option selected disabled value="">Elija...</option>';
+  turnoSelect.addEventListener("change", () => {
+    // Limpiar y cargar horarios
+    horaInicioSelect.innerHTML = '<option selected disabled>Elija hora...</option>';
+    horariosTurno[turnoSelect.value].forEach(h => {
+      const opt = document.createElement("option");
+      opt.value = h; opt.textContent = h;
+      horaInicioSelect.appendChild(opt);
+    });
 
-    if (clasesPorTurno[turno]) {
-      clasesPorTurno[turno].forEach(clase => {
-        let option = document.createElement("option");
-        option.textContent = clase;
-        option.value = clase;
-        claseSelect.appendChild(option);
-      });
-    }
-
-    if (horariosPorTurno[turno]) {
-      horariosPorTurno[turno].forEach(hora => {
-        let option = document.createElement("option");
-        option.textContent = hora;
-        option.value = hora;
-        horaInicioSelect.appendChild(option);
-      });
-    }
+    // Limpiar y cargar aulas dinámicamente
+    aulaSelect.innerHTML = '<option selected disabled>Elija...</option>';
+    aulasDisponibles.forEach(a => {
+      const opt = document.createElement("option");
+      opt.value = a; opt.textContent = a;
+      aulaSelect.appendChild(opt);
+    });
   });
 
-  claseSelect.addEventListener("change", function() {
-    const clase = this.value;
-    materiaSelect.innerHTML = '<option selected disabled value="">Elija...</option>';
-    if (materiasPorClase[clase]) {
-      materiasPorClase[clase].forEach(materia => {
-        let option = document.createElement("option");
-        option.textContent = materia;
-        option.value = materia;
-        materiaSelect.appendChild(option);
-      });
-    }
-  });
-
+  // Calcular hora fin automáticamente
   function calcularHoraFin() {
-    const turno = turnoSelect.value;
     const inicio = horaInicioSelect.value;
-    const cantidad = parseInt(cantidadHorasSelect.value);
-
-    if (!turno || !inicio || !cantidad) { horaFinInput.value = ""; return; }
-
-    const horas = horariosPorTurno[turno];
-    const indexInicio = horas.indexOf(inicio);
-    if (indexInicio === -1) return;
-
-    const indexFin = indexInicio + cantidad - 1;
-    horaFinInput.value = (indexFin < horas.length) ? horas[indexFin] : "Fuera de rango";
+    const horas = parseInt(cantidadHorasSelect.value);
+    if(inicio && horas) {
+      let [h,m] = inicio.split(":").map(Number);
+      h += horas;
+      if(h>=24) h -= 24;
+      horaFinInput.value = `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}`;
+    }
   }
 
   horaInicioSelect.addEventListener("change", calcularHoraFin);
   cantidadHorasSelect.addEventListener("change", calcularHoraFin);
+
+  // Simulación de reservas
+  const reservasContainer = document.getElementById("reservas-container");
+  const reservas = [
+    { aula: "Aula 1", fecha: "2025-10-01", turno: "Matutino", docente: "Juan Pérez", inicio:"08:00", fin:"09:00" },
+    { aula: "Aula 2", fecha: "2025-10-02", turno: "Vespertino", docente: "Ana López", inicio:"13:00", fin:"15:00" }
+  ];
+
+  function renderReservas() {
+    reservasContainer.innerHTML = "";
+    if(reservas.length === 0){
+      reservasContainer.innerHTML = '<div class="no-reservas">No hay reservas por el momento.</div>';
+      return;
+    }
+    reservas.forEach(r=>{
+      const card = document.createElement("div");
+      card.className = "reserva-card";
+      card.innerHTML = `<h4>${r.aula}</h4>
+                        <p><strong>Fecha:</strong> ${r.fecha}</p>
+                        <p><strong>Turno:</strong> ${r.turno}</p>
+                        <p><strong>Hora:</strong> ${r.inicio} - ${r.fin}</p>
+                        <p><strong>Docente:</strong> ${r.docente}</p>`;
+      reservasContainer.appendChild(card);
+    });
+  }
+  renderReservas();
+
+  // Ver miembros de cada curso
+  document.querySelectorAll(".ver-miembros").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const clase = btn.getAttribute("data-clase");
+      const lista = btn.parentElement.querySelector(".lista-miembros");
+
+      if(lista.style.display === "none" || lista.style.display===""){
+        lista.innerHTML = "";
+        miembrosClases[clase]?.forEach(m => {
+          const li = document.createElement("li");
+          li.textContent = m;
+          lista.appendChild(li);
+        });
+        lista.style.display = "block";
+        btn.textContent = "Ocultar miembros";
+      } else {
+        lista.style.display = "none";
+        btn.textContent = "Ver miembros";
+      }
+    });
+  });
 </script>
 </body>
 </html>

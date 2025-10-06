@@ -1,0 +1,65 @@
+ :root {
+    --primario: #1B3A4B;
+    --secundario: #588BAE;
+    --acento: #A2D5F2;
+    --fondo: #F0F4F8;
+    --texto: #1B3A4B;
+    --hover: #417899;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; }
+  body { background-color: var(--fondo); color: var(--texto); min-height:100vh; display:flex; flex-direction:column; }
+  header { background-color: var(--primario); color:white; display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; flex-wrap:wrap; gap:1rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+  .header-left { display:flex; flex-direction:column; gap:0.2rem; }
+  .header-left h1 { font-size:2rem; font-weight:bold; }
+  .header-left h6 { font-size:1rem; color: var(--acento); }
+
+  nav.main-nav { background-color: var(--secundario); display:flex; justify-content:center; align-items:center; gap:1rem; flex-wrap:wrap; padding:0.8rem 1rem; }
+  nav.main-nav a { color:white; text-decoration:none; font-weight:bold; padding:0.5rem 1rem; border-radius:12px; transition: all 0.3s ease; }
+  nav.main-nav a:hover { background: linear-gradient(90deg,var(--acento),var(--hover)); color: var(--primario); transform: translateY(-2px); }
+
+  main.contenedor { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:2rem; padding:2rem; }
+  .tarjeta { background:white; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.05); padding:1.5rem; transition: transform 0.3s, box-shadow 0.3s; }
+  .tarjeta:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.1),0 4px 12px rgba(0,0,0,0.08); }
+  .tarjeta h3 { color: var(--primario); margin-bottom:0.5rem; }
+
+  .boton { margin-top:1rem; background-color: var(--acento); color: var(--texto); padding:0.5rem 1rem; border:none; border-radius:6px; font-weight:bold; cursor:pointer; transition:background 0.3s, transform 0.2s; }
+  .boton:hover { background-color: var(--hover); transform: translateY(-2px); }
+
+  .docentes-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; }
+  .docente-card { background:white; border-radius:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05); padding:1.5rem; text-align:center; display:flex; flex-direction:column; align-items:center; transition: transform 0.3s, box-shadow 0.3s; }
+  .docente-card:hover { transform: translateY(-6px) scale(1.03); box-shadow:0 12px 24px rgba(0,0,0,0.1),0 4px 12px rgba(0,0,0,0.08); }
+  .docente-photo { width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:1rem; border:3px solid var(--secundario); background-color: var(--acento); }
+  .docente-name { font-size:1.25rem; color: var(--primario); margin-bottom:0.3rem; font-weight:700; }
+  .docente-subject { font-size:1rem; color: var(--hover); font-weight:600; }
+
+  .lista-miembros {
+    margin-top: 1rem;
+    padding-left: 0;
+    list-style: none;
+    width: 100%;
+    text-align: left;
+  }
+  .lista-miembros li {
+    background: var(--fondo);
+    margin-bottom: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--texto);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .footer { background-color: var(--primario); text-align:center; padding:1rem; margin-top:2rem; color:white; }
+  .footer a { color:white; text-decoration:underline; }
+  .footer a:hover { color: var(--acento); text-decoration:none; }
+
+  .formulario { position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; z-index:1050; justify-content:center; align-items:center; padding:1rem; }
+  .formulario form { max-width:800px; width:100%; margin:auto; padding:2rem; background:white; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,0.15); max-height:90vh; overflow-y:auto; }
+  .formulario .form-title { color: var(--primario); font-weight:bold; margin-bottom:1.5rem; text-align:center; }
+  .formulario .cerrar { position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; color: var(--secundario); cursor:pointer; transition:color 0.3s; }
+  .formulario .cerrar:hover { color: var(--hover); }
+
+  #reservas-container { margin-top:1rem; display:flex; flex-direction:column; gap:1rem; }
+  .reserva-card { background:white; padding:1rem; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+  .reserva-card h4 { margin-bottom:0.5rem; color: var(--primario); }
+  .no-reservas { text-align:center; padding:1rem; font-style:italic; color: var(--hover); }

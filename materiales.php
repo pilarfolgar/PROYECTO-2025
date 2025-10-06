@@ -45,7 +45,7 @@
     </div>
   </div>
   <div class="text-center mt-4">
-    <a href="indexEstudiantes.php" class="btn btn-secondary">Volver al panel</a>
+    <a href="indexestudiante.php" class="btn btn-secondary">Volver al panel</a>
   </div>
 </main>
 </body>
