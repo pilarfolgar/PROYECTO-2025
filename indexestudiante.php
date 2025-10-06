@@ -50,8 +50,8 @@
       <div class="p-3 border rounded bg-white shadow-sm">
         <h4 class="text-center mb-3">Accesos rápidos</h4>
         <ul class="list-group">
-          <li class="list-group-item"><a href="https://plataforma.utu.edu.uy" target="_blank">🌐 Plataforma UTU</a></li>
-          <li class="list-group-item"><a href="https://classroom.google.com" target="_blank">📘 Google Classroom</a></li>
+          <li class="list-group-item"><a href="https://www.utu.edu.uy/" target="_blank">🌐 Plataforma UTU</a></li>
+          <li class="list-group-item"><a href="https://sites.google.com/view/classrooms-workspace/" target="_blank">📘 Google Classroom</a></li>
           <li class="list-group-item"><a href="horarios.php">📅 Ver horarios</a></li>
           <li class="list-group-item"><a href="materiales.php">📂 Material de estudio</a></li>
         </ul>
@@ -69,7 +69,7 @@
 <!-- Formulario flotante -->
 <section id="form-reporte" class="formulario">
   <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
-  <form id="reporteForm" action="guardarReporte.php" method="POST" class="needs-validation form-reserva-style" novalidate>
+  <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
     <h2 class="form-title">Reportar Objeto Dañado</h2>
 
     <div class="mb-3">
