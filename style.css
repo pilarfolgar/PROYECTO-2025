@@ -169,11 +169,20 @@ nav a:hover {
   transform: translateY(-2px);
 }
 
+a {
+    text-decoration: none; /* Quita la línea */
+    color: inherit; /* Mantiene el color del texto, opcional */
+}
+
 /* ---------------- CAROUSEL ---------------- */
 .carousel-inner {
   max-height: 600px;
   overflow: hidden;
 }
+.sin-subrayado {
+    text-decoration: none;
+}
+
 
 .carousel-inner img {
   width: 100%;

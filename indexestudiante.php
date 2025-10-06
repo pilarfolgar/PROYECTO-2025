@@ -53,10 +53,10 @@
       <div class="p-3 border rounded bg-white shadow-sm">
         <h4 class="text-center mb-3">Accesos rápidos</h4>
         <ul class="list-group">
-          <li class="list-group-item"><a href="https://www.utu.edu.uy/" target="_blank">🌐 Plataforma UTU</a></li>
-          <li class="list-group-item"><a href="https://sites.google.com/view/classrooms-workspace/" target="_blank">📘 Google Classroom</a></li>
-          <li class="list-group-item"><a href="horarios.php">📅 Ver horarios</a></li>
-          <li class="list-group-item"><a href="materiales.php">📂 Material de estudio</a></li>
+          <li class="list-group-item"><a href="https://www.utu.edu.uy/" class="sin-subrayado" target="_blank">🌐 Plataforma UTU</a></li>
+          <li class="list-group-item"><a href="https://sites.google.com/view/classrooms-workspace/" class="sin-subrayado" target="_blank">📘 Google Classroom</a></li>
+          <li class="list-group-item"><a href="horarios.php" class="sin-subrayado">📅 Ver horarios</a></li>
+          <li class="list-group-item"><a href="materiales.php" class="sin-subrayado">📂 Material de estudio</a></li>
         </ul>
       </div>
     </div>
