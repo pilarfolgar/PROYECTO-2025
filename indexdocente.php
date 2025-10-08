@@ -2,20 +2,25 @@
 <html lang="es">
 <head>
 
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Docentes - InfraLex</title>
 
+
 <!-- Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 
+
 <!-- Flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
 <link rel="stylesheet" href="styleindexdocente.css" />
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 
 <header>
   <div class="header-left">
@@ -24,6 +29,7 @@
     <h6>Instituto Tecnológico Superior de Paysandú</h6>
   </div>
 </header>
+
 
 <nav class="main-nav">
   <a href="#" class="nav-link">Mis cursos</a>
@@ -52,6 +58,7 @@
     </div>
   </section>
 
+
   <section>
     <h2>Mis reservas</h2>
     <div id="reservas-container">
@@ -59,6 +66,7 @@
     </div>
   </section>
 </main>
+
 
 <section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
   <h2 class="text-center mb-4">Vista previa de Aulas</h2>
@@ -87,10 +95,12 @@
     ?>
   </div>
 
+
   <div class="text-center mt-4">
     <a href="aulas.php" class="btn btn-outline-primary btn-lg">Ver todas las aulas</a>
   </div>
 </section>
+
 
 <main class="contenedor">
 <!-- CALENDARIO DIARIO DE RESERVAS DE AULAS -->
@@ -181,8 +191,10 @@
   <!-- Botón flotante -->
 <button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
 
+
 <!-- Overlay -->
 <div id="overlayReporte" class="formulario-overlay"></div>
+
 
 <!-- Formulario flotante -->
 <section id="form-reporte" class="formulario">
@@ -190,11 +202,13 @@
   <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
     <h2 class="form-title">Reportar Objeto Dañado</h2>
 
+
     <div class="mb-3">
       <label for="nombreReporte" class="form-label">Nombre</label>
       <input type="text" class="form-control" id="nombreReporte" name="nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$">
       <div class="invalid-feedback">Por favor, ingrese un nombre válido (solo letras).</div>
     </div>
+
 
     <div class="mb-3">
       <label for="emailReporte" class="form-label">Email</label>
@@ -202,11 +216,13 @@
       <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
     </div>
 
+
     <div class="mb-3">
       <label for="objetoReporte" class="form-label">Objeto o área</label>
       <input type="text" class="form-control" id="objetoReporte" name="objeto" required>
       <div class="invalid-feedback">Este campo es obligatorio.</div>
     </div>
+
 
     <div class="mb-3">
       <label for="descripcionReporte" class="form-label">Descripción del problema</label>
@@ -214,11 +230,13 @@
       <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
     </div>
 
+
     <div class="mb-3">
       <label for="fechaReporte" class="form-label">Fecha del reporte</label>
       <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
       <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
     </div>
+
 
     <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
     <div id="mensajeReporte" class="mt-3 text-center"></div>
@@ -227,14 +245,22 @@
 
 
 
+
+
+
 <footer class="footer">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú
 </footer>
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
 <script src="estudiantes.js"></script>
 
+
 </body>
 </html>
+
+

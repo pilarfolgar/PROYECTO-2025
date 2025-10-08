@@ -1,12 +1,4 @@
-<?php
-session_start();
-include 'conexion.php';
-
-// Suponemos que el estudiante ya inició sesión y su cédula está en $_SESSION['cedula']
-$cedula = $_SESSION['cedula'];
-$nombre = $_SESSION['nombre'];
-?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -16,7 +8,10 @@ $nombre = $_SESSION['nombre'];
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
+
+
 <body>
+
 <header>
   <div class="HeaderIzq">
     <h1>InfraLex</h1>
@@ -34,26 +29,41 @@ $nombre = $_SESSION['nombre'];
 </nav>
 
 <main class="container my-5">
-  <h2 class="text-center mb-4">Bienvenido/a, <?php echo htmlspecialchars($nombre); ?></h2>
+  <h2 class="text-center mb-4">Bienvenido/a, Estudiante</h2>
 
-  <!-- Notificaciones -->
-  <div class="mb-4">
-    <h4>📢 Notificaciones recientes</h4>
-    <ul id="notificaciones" class="list-group"></ul>
+  <div class="alert alert-info text-center" role="alert" id="notificacionAula">
+    📢 Hoy te toca clase en: <strong>Aula 12 - Segundo piso</strong>
   </div>
 
-  <!-- Chat/foro -->
-  <div class="mb-4">
-    <h4>💬 Foro de mensajes</h4>
-    <div id="chatBox" class="border rounded p-3 mb-2" style="height:200px; overflow-y:scroll;"></div>
-    <div class="input-group">
-      <input type="text" id="mensajeInput" class="form-control" placeholder="Escribe un mensaje...">
-      <button id="enviarMensaje" class="btn btn-primary">Enviar</button>
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="p-3 border rounded bg-light shadow-sm">
+        <h4 class="text-center mb-3">Calendario de clases</h4>
+        <ul class="list-group">
+          <li class="list-group-item">📅 Lunes - Programación - Aula 11</li>
+          <li class="list-group-item">📅 Martes - Redes - Aula 12</li>
+          <li class="list-group-item">📅 Miércoles - Base de Datos - Aula 14</li>
+          <li class="list-group-item">📅 Jueves - Diseño Web - Aula 10</li>
+          <li class="list-group-item">📅 Viernes - Taller Integrador - Aula 8</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="p-3 border rounded bg-white shadow-sm">
+        <h4 class="text-center mb-3">Accesos rápidos</h4>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="https://www.utu.edu.uy/" class="sin-subrayado" target="_blank">🌐 Plataforma UTU</a></li>
+          <li class="list-group-item"><a href="https://sites.google.com/view/classrooms-workspace/" class="sin-subrayado" target="_blank">📘 Google Classroom</a></li>
+          <li class="list-group-item"><a href="horarios.php" class="sin-subrayado">📅 Ver horarios</a></li>
+          <li class="list-group-item"><a href="materiales.php" class="sin-subrayado">📂 Material de estudio</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </main>
 
-<!-- Botón flotante para reporte -->
+<!-- Botón flotante -->
 <button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
 
 <!-- Overlay -->
@@ -63,16 +73,74 @@ $nombre = $_SESSION['nombre'];
 <section id="form-reporte" class="formulario">
   <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
   <form id="reporteForm" action="#" method="POST" class="needs-validation form-reserva-style" novalidate>
+
     <h2 class="form-title">Reportar Objeto Dañado</h2>
-    <input type="text" class="form-control mb-3" id="nombreReporte" name="nombre" placeholder="Nombre" required>
-    <input type="email" class="form-control mb-3" id="emailReporte" name="email" placeholder="Email" required>
-    <input type="text" class="form-control mb-3" id="objetoReporte" name="objeto" placeholder="Objeto o área" required>
-    <textarea class="form-control mb-3" id="descripcionReporte" name="descripcion" rows="3" placeholder="Descripción" required></textarea>
-    <input type="date" class="form-control mb-3" id="fechaReporte" name="fecha" required>
+
+    <div class="mb-3">
+      <label for="nombreReporte" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombreReporte" name="nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$">
+      <div class="invalid-feedback">Por favor, ingrese un nombre válido (solo letras).</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="emailReporte" class="form-label">Email</label>
+      <input type="email" class="form-control" id="emailReporte" name="email" required>
+      <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="objetoReporte" class="form-label">Objeto o área</label>
+      <input type="text" class="form-control" id="objetoReporte" name="objeto" required>
+      <div class="invalid-feedback">Este campo es obligatorio.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcionReporte" class="form-label">Descripción del problema</label>
+      <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="3" minlength="10" required></textarea>
+      <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="fechaReporte" class="form-label">Fecha del reporte</label>
+      <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
+      <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
+    </div>
+
     <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
     <div id="mensajeReporte" class="mt-3 text-center"></div>
   </form>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("reporteForm");
+  const mensaje = document.getElementById("mensajeReporte");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evita que se envíe al servidor
+
+    // Validación del formulario (Bootstrap)
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    // Mostrar mensaje de éxito
+    mensaje.innerHTML = '<div class="alert alert-success">✅ ¡Reporte enviado con éxito!</div>';
+
+    // Opcional: limpiar formulario
+    form.reset();
+    form.classList.remove('was-validated');
+
+    // Cerrar formulario después de 3 segundos
+    setTimeout(() => {
+      document.getElementById("overlayReporte").style.display = "none";
+      document.getElementById("form-reporte").style.display = "none";
+      mensaje.innerHTML = "";
+    }, 3000);
+  });
+});
+</script>
+
 
 <footer class="footer mt-5">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú | Contacto: evolutionit2008@gmail.com
