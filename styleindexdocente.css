@@ -10,14 +10,15 @@
   body { background-color: var(--fondo); color: var(--texto); min-height:100vh; display:flex; flex-direction:column; }
   header { background-color: var(--primario); color:white; display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; flex-wrap:wrap; gap:1rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
   .header-left { display:flex; flex-direction:column; gap:0.2rem; }
-  .header-left h1 { font-size:2rem; font-weight:bold; }
-  .header-left h6 { font-size:1rem; color: var(--acento); }
+  .header-left h1 { font-size:2rem; font-weight:bold; padding-bottom: 0.7rem; }
+  .header-left h6 { font-size:1rem; color: var(--acento); padding-bottom: 0.7rem; }
 
   nav.main-nav { background-color: var(--secundario); display:flex; justify-content:center; align-items:center; gap:1rem; flex-wrap:wrap; padding:0.8rem 1rem; }
   nav.main-nav a { color:white; text-decoration:none; font-weight:bold; padding:0.5rem 1rem; border-radius:12px; transition: all 0.3s ease; }
   nav.main-nav a:hover { background: linear-gradient(90deg,var(--acento),var(--hover)); color: var(--primario); transform: translateY(-2px); }
 
   main.contenedor { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:2rem; padding:2rem; }
+  h2 { padding-bottom: 0.8rem; }
   .tarjeta { background:white; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.05); padding:1.5rem; transition: transform 0.3s, box-shadow 0.3s; }
   .tarjeta:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.1),0 4px 12px rgba(0,0,0,0.08); }
   .tarjeta h3 { color: var(--primario); margin-bottom:0.5rem; }
