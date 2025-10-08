@@ -61,13 +61,7 @@
   </form>
 </div>
 
-<header>
-    <div>
-    <h1>InfraLex</h1>
-    <h6>Instituto Tecnológico Superior de Paysandú</h6>
-    </div>
-    <a href="index.php"><img src="imagenes/logopoyecto.png" alt="Logo" class="logo"></a>
-</header>
+
 <nav>
    
     <a href="funcionarios.php">Funcionarios</a>
@@ -194,7 +188,7 @@
       <div class="tarjeta">
   <img src="Imagenes/aula1.jpeg" alt="Aula 1" data-bs-toggle="modal" data-bs-target="#modalImagen" onclick="mostrarImagen(this)">
         <h4>Aula 1</h4>
-        <p>Capacidad: 30 personas
+        <p>Capacidad: 30 personas<br>
           Recursos: Proyector, Televisión, Aire, 13 computadoras
         </p>
         <button class="btn btn-primary" onclick="abrirReserva('Aula 1')">Reservar</button>

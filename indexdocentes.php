@@ -177,52 +177,6 @@
   <span class="badge bg-danger ms-2" style="background:#ff6b6b;color:#fff;"><i class="bi bi-x-circle-fill"></i> Reservado</span>
     </div>
   </div>
-  <!-- Botón flotante -->
-<button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
-
-<!-- Overlay -->
-<div id="overlayReporte" class="formulario-overlay"></div>
-
-<!-- Formulario flotante -->
-<section id="form-reporte" class="formulario">
-  <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
-  <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
-    <h2 class="form-title">Reportar Objeto Dañado</h2>
-
-    <div class="mb-3">
-      <label for="nombreReporte" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombreReporte" name="nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$">
-      <div class="invalid-feedback">Por favor, ingrese un nombre válido (solo letras).</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="emailReporte" class="form-label">Email</label>
-      <input type="email" class="form-control" id="emailReporte" name="email" required>
-      <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="objetoReporte" class="form-label">Objeto o área</label>
-      <input type="text" class="form-control" id="objetoReporte" name="objeto" required>
-      <div class="invalid-feedback">Este campo es obligatorio.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="descripcionReporte" class="form-label">Descripción del problema</label>
-      <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="3" minlength="10" required></textarea>
-      <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="fechaReporte" class="form-label">Fecha del reporte</label>
-      <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
-      <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
-    </div>
-
-    <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
-    <div id="mensajeReporte" class="mt-3 text-center"></div>
-  </form>
-</section>
 
 
 
@@ -233,7 +187,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
-<script src="estudiantes.js"></script>
 
 </body>
 </html>
