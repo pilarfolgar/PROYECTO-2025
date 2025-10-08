@@ -1,45 +1,13 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Registro</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
 <?php require("header.php"); ?>
-<?php if (isset($_SESSION['msg_usuario']) && $_SESSION['msg_usuario'] === 'guardado'): ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  Swal.fire({
-    icon: 'success',
-    title: '¡Éxito!',
-    text: 'Usuario registrado con éxito',
-    timer: 2500,
-    showConfirmButton: false
-  });
-});
-</script>
-<?php unset($_SESSION['msg_usuario']); endif; ?>
-
-<?php if (isset($_SESSION['error_usuario'])): ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  Swal.fire({
-    icon: 'error',
-    title: '<?php echo ($_SESSION['error_usuario'] === "usuario_existente") ? "Cédula duplicada" : "Error"; ?>',
-    text: '<?php echo ($_SESSION['error_usuario'] === "usuario_existente") ? "Ya existe un usuario con esa cédula" : "Ocurrió un error al registrar el usuario"; ?>'
-  });
-});
-</script>
-<?php unset($_SESSION['error_usuario']); endif; ?>
-
 
 <main class="container my-5">
   <form action="procesar_registro.php" method="POST" id="registro_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 500px;">

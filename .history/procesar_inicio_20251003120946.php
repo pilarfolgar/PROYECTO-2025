@@ -36,7 +36,7 @@ function logear($con, $cedula, $pass) {
         if ($pass == $datos_usr['pass']) {
             $_SESSION["cedula"]  = $cedula;
             $_SESSION["usuario"] = $datos_usr['nombre'];
-            header("Location: indexadministrativo.php");
+            header("Location: index.php");
             exit();
         } else {
             $_SESSION['mensaje'] = "<label style='color:red;'>Contraseña incorrecta</label>";

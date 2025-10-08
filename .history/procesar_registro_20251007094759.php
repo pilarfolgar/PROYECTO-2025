@@ -1,7 +1,9 @@
 <?php
-session_start();
 require("conexion.php");
 $con = conectar_bd();
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -12,20 +14,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cedula   = isset($_POST["cedula"]) ? intval($_POST["cedula"]) : 0;
     $rol      = isset($_POST["rol"]) ? mysqli_real_escape_string($con, $_POST["rol"]) : NULL;
 
+    $turno = !empty($_POST["turno"]) ? mysqli_real_escape_string($con, $_POST["turno"]) : NULL;
+    $curso = !empty($_POST["curso"]) ? mysqli_real_escape_string($con, $_POST["curso"]) : NULL;
+    $clase = !empty($_POST["clase"]) ? mysqli_real_escape_string($con, $_POST["clase"]) : NULL;
+
     if (consultar_existe_usr($con, $cedula)) {
-        $_SESSION['error_usuario'] = 'usuario_existente';
-        header("Location: registro.php");
-        exit;
+        echo "El usuario ya existe.";
     } else {
-        if (insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol)) {
-            $_SESSION['msg_usuario'] = 'guardado';
-            header("Location: registro.php");
-            exit;
-        } else {
-            $_SESSION['error_usuario'] = 'error_general';
-            header("Location: registro.php");
-            exit;
-        }
+        insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol, $turno, $curso, $clase);
     }
 }
 
@@ -35,11 +31,17 @@ function consultar_existe_usr($con, $cedula) {
     return ($resultado && mysqli_num_rows($resultado) > 0);
 }
 
-function insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol) {
+function insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol, $turno, $curso, $clase) {
     $consulta_insertar = "INSERT INTO usuario
         (cedula, nombrecompleto, pass, apellido, email, rol)
         VALUES
         ('$cedula', '$nombre', '$password', '$apellido', '$email', '$rol')";
-    return mysqli_query($con, $consulta_insertar);
+
+    if (mysqli_query($con, $consulta_insertar)) {
+        header("Location: indexadministrativo.php");
+        exit;
+    } else {
+        echo "Error al registrar: " . mysqli_error($con);
+    }
 }
 ?>
