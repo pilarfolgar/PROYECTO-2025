@@ -43,6 +43,11 @@ session_start(); // Inicia sesión
     <p>Registrar y actualizar datos de los docentes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-docente')">➕ Agregar Docente</a>
   </div>
+    <div class="tarjeta">
+    <h3>Curso</h3>
+    <p>Registrar y actualizar datos de los docentes.</p>
+<a href="#" class="boton" onclick="mostrarForm('form-curso')">➕ Agregar Curso</a>
+  </div>
 
   <div class="tarjeta">
     <h3>Asignaturas</h3>
@@ -70,7 +75,6 @@ session_start(); // Inicia sesión
 </main>
 <?php require("footer.php"); ?>
 
-<!-- FORM DOCENTE -->
 <!-- FORM DOCENTE -->
 <section id="form-docente" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-docente')" aria-label="Cerrar formulario">✖</button>
@@ -106,6 +110,36 @@ session_start(); // Inicia sesión
   </form>
 </section>
 
+<!-- FORM CURSO -->
+<section id="form-curso" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-curso')" aria-label="Cerrar formulario">✖</button>
+  <form action="procesar-curso.php" method="POST" class="needs-validation form-reserva-style novalidate">
+    <h2 class="form-title">Registrar Curso</h2>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="nombreCurso" class="form-label">Nombre del curso</label>
+        <input type="text" class="form-control" id="nombreCurso" name="nombre" required placeholder="Ej. Ingeniería en Software">
+      </div>
+      <div class="col-md-6">
+        <label for="codigoCurso" class="form-label">Código del curso</label>
+        <input type="text" class="form-control" id="codigoCurso" name="codigo" required placeholder="Ej. IS2025">
+      </div>
+      <div class="col-12">
+        <label for="asignaturasCurso" class="form-label">Asignaturas que se dictan</label>
+        <select class="form-select" id="asignaturasCurso" name="asignaturas[]" multiple required>
+          <?php
+          $sql = "SELECT id_asignatura, nombre FROM asignatura ORDER BY nombre";
+          $result = $con->query($sql);
+          while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['id_asignatura'] . '">' . $row['nombre'] . '</option>';
+          }
+          ?>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="boton mt-3">Guardar</button>
+  </form>
+</section>
 
 <!-- FORM ASIGNATURA -->
 <section id="form-asignatura" class="formulario" style="display: none;">
@@ -113,20 +147,42 @@ session_start(); // Inicia sesión
   <form action="procesar-asignatura.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Asignatura</h2>
     <div class="row g-3">
+      
+      <div class="col-md-6">
+        <label for="cursoAsignatura" class="form-label">Curso</label>
+        <select class="form-select" id="cursoAsignatura" name="id_curso" required onchange="cargarAsignaturas(this.value)">
+          <option value="">Seleccione un curso...</option>
+          <?php
+          $sql = "SELECT id_curso, nombre FROM curso ORDER BY nombre";
+          $result = $con->query($sql);
+          while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['id_curso'] . '">' . $row['nombre'] . '</option>';
+          }
+          ?>
+        </select>
+      </div>
+
       <div class="col-md-6">
         <label for="nombreAsignatura" class="form-label">Nombre de la asignatura</label>
         <input type="text" class="form-control" id="nombreAsignatura" name="nombre" required placeholder="Ej. Programación II">
       </div>
+      
       <div class="col-md-6">
         <label for="codigoAsignatura" class="form-label">Código</label>
         <input type="text" class="form-control" id="codigoAsignatura" name="codigo" required placeholder="Ej. PROG201">
       </div>
+
+      <div class="col-12">
+        <label for="asignaturasAsignatura" class="form-label">Asignaturas disponibles en el curso</label>
+        <select class="form-select" id="asignaturasAsignatura" name="id_asignatura" required>
+          <option value="">Seleccione primero un curso...</option>
+        </select>
+      </div>
+
       <div class="col-12">
         <label for="docentesAsignatura" class="form-label">Docentes asignados (seleccione múltiples)</label>
         <select class="form-select" id="docentesAsignatura" name="docentes[]" multiple required>
           <?php
-          require("conexion.php");
-          $con = conectar_bd();
           $sql = "SELECT cedula, nombrecompleto, apellido FROM usuario WHERE rol = 'docente'";
           $result = $con->query($sql);
           while ($row = $result->fetch_assoc()) {
@@ -135,6 +191,7 @@ session_start(); // Inicia sesión
           ?>
         </select>
       </div>
+
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>

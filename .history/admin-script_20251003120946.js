@@ -36,22 +36,3 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
-function cargarAsignaturas(id_curso) {
-    const select = document.getElementById('asignaturasAsignatura');
-    select.innerHTML = '<option value="">Cargando...</option>';
-    fetch('obtener-asignaturas-curso.php?id_curso=' + id_curso)
-        .then(res => res.json())
-        .then(data => {
-            select.innerHTML = '';
-            if(data.length === 0){
-                select.innerHTML = '<option value="">No hay asignaturas para este curso</option>';
-            } else {
-                data.forEach(a => {
-                    const opt = document.createElement('option');
-                    opt.value = a.id_asignatura;
-                    opt.textContent = a.nombre;
-                    select.appendChild(opt);
-                });
-            }
-        });
-}
