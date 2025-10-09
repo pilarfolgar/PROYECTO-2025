@@ -19,13 +19,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         if (insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol)) {
             $_SESSION['msg_usuario'] = 'guardado';
-            header("Location: registro.php");
-            exit;
-        } else {
-            $_SESSION['error_usuario'] = 'error_general';
-            header("Location: registro.php");
-            exit;
-        }
+            if ($rol === 'estudiante') {
+        header("Location: indexestudiantes.php");
+    } elseif ($rol === 'administrativo') {
+        header("Location: indexadministrativo.php");
+    } elseif ($rol === 'docente') {
+        header("Location: indexdocente.php");
+    } else {
+        // Si por alguna razón no se seleccionó rol
+        header("Location: registro.php");
+    }
+    exit;
+} else {
+    $_SESSION['error_usuario'] = 'error_general';
+    header("Location: registro.php");
+    exit;
+}
     }
 }
 
