@@ -9,6 +9,7 @@
 <body>
 
 <?php require("header.php"); ?>
+
 <?php session_start(); // Iniciar sesión para manejar mensajes de error ?>
 
 <main class="container my-5">
