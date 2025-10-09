@@ -39,6 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
+<?php if (isset($_SESSION['msg_usuario']) && $_SESSION['msg_usuario'] === 'pendiente_verificacion'): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Swal.fire({
+    icon: 'info',
+    title: 'Registro pendiente',
+    text: 'Tu cuenta como docente debe ser verificada por un administrador antes de poder ingresar.',
+    confirmButtonText: 'Entendido'
+  });
+});
+</script>
+<?php unset($_SESSION['msg_usuario']); endif; ?>
+
 
 
 <main class="container my-5">
