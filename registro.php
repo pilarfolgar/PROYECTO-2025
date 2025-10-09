@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
       <select name="rol" id="rol" class="form-select">
         <option value="">Seleccione...</option>
         <option value="estudiante">Estudiante</option>
-        <option value="administrativo">Administrativo</option>
         <option value="docente">Docente</option>
       </select>
     </div>
