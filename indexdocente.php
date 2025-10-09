@@ -2,19 +2,25 @@
 <html lang="es">
 <head>
 
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Docentes - InfraLex</title>
 
+
 <!-- Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+
 
 <!-- Flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+
 <link rel="stylesheet" href="styleindexdocente.css" />
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 
 <header>
   <div class="header-left">
@@ -23,6 +29,7 @@
     <h6>Instituto Tecnológico Superior de Paysandú</h6>
   </div>
 </header>
+
 
 <nav class="main-nav">
   <a href="#" class="nav-link">Mis cursos</a>
@@ -51,6 +58,7 @@
     </div>
   </section>
 
+
   <section>
     <h2>Mis reservas</h2>
     <div id="reservas-container">
@@ -58,6 +66,7 @@
     </div>
   </section>
 </main>
+
 
 <section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
   <h2 class="text-center mb-4">Vista previa de Aulas</h2>
@@ -86,10 +95,12 @@
     ?>
   </div>
 
+
   <div class="text-center mt-4">
     <a href="aulas.php" class="btn btn-outline-primary btn-lg">Ver todas las aulas</a>
   </div>
 </section>
+
 
 <main class="contenedor">
 <!-- CALENDARIO DIARIO DE RESERVAS DE AULAS -->
@@ -231,9 +242,13 @@
 </footer>
 
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
 <script src="estudiantes.js"></script>
 
 </body>
 </html>
+
+

@@ -72,7 +72,8 @@
 <!-- Formulario flotante -->
 <section id="form-reporte" class="formulario">
   <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
-  <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
+  <form id="reporteForm" action="#" method="POST" class="needs-validation form-reserva-style" novalidate>
+
     <h2 class="form-title">Reportar Objeto Dañado</h2>
 
     <div class="mb-3">
@@ -109,6 +110,37 @@
     <div id="mensajeReporte" class="mt-3 text-center"></div>
   </form>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("reporteForm");
+  const mensaje = document.getElementById("mensajeReporte");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evita que se envíe al servidor
+
+    // Validación del formulario (Bootstrap)
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    // Mostrar mensaje de éxito
+    mensaje.innerHTML = '<div class="alert alert-success">✅ ¡Reporte enviado con éxito!</div>';
+
+    // Opcional: limpiar formulario
+    form.reset();
+    form.classList.remove('was-validated');
+
+    // Cerrar formulario después de 3 segundos
+    setTimeout(() => {
+      document.getElementById("overlayReporte").style.display = "none";
+      document.getElementById("form-reporte").style.display = "none";
+      mensaje.innerHTML = "";
+    }, 3000);
+  });
+});
+</script>
+
 
 <footer class="footer mt-5">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú | Contacto: evolutionit2008@gmail.com
