@@ -66,6 +66,11 @@ session_start(); // Inicia sesión
   <p>Crear y administrar grupos de estudiantes.</p>
   <a href="#" class="boton" onclick="mostrarForm('form-grupo')">➕ Agregar Grupo</a>
 </div>
+<div class="tarjeta">
+  <h3>Usuarios</h3>
+  <p>Aprobar o eliminar cuentas de docentes pendientes de verificación.</p>
+  <a href="#" class="boton" onclick="mostrarForm('form-usuarios')">👤 Gestionar Usuarios</a>
+</div>
 
 </main>
 <?php require("footer.php"); ?>
@@ -290,6 +295,7 @@ session_start(); // Inicia sesión
 <div class="col-md-6">
     <label for="horarioGrupo" class="form-label">Horarios del grupo</label>
     <select class="form-select" id="horarioGrupo" name="horarios[]" multiple required>
+
         <?php
         // Si $id_grupo no existe (registro nuevo), usamos 0
         $id_grupo = $id_grupo ?? 0;
@@ -319,7 +325,54 @@ session_start(); // Inicia sesión
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
+<!-- FORM USUARIOS PENDIENTES -->
+<section id="form-usuarios" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-usuarios')" aria-label="Cerrar formulario">✖</button>
+  <h2 class="form-title">Usuarios Pendientes</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Cédula</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        require("conexion.php");
+        $con = conectar_bd();
+        $sql = "SELECT * FROM usuario WHERE rol = 'docente' AND verificado = 0";
+        $result = $con->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>{$row['nombre']}</td>
+                        <td>{$row['apellido']}</td>
+                        <td>{$row['email']}</td>
+                        <td>{$row['cedula']}</td>
+                        <td>
+                          <form action='aprobar_usuario.php' method='POST' style='display:inline;'>
+                            <input type='hidden' name='cedula' value='{$row['cedula']}'>
+                            <button type='submit' class='btn btn-success btn-sm'>Aprobar</button>
+                          </form>
+                          <form action='eliminar_usuario.php' method='POST' style='display:inline;'>
+                            <input type='hidden' name='cedula' value='{$row['cedula']}'>
+                            <button type='submit' class='btn btn-danger btn-sm'>Eliminar</button>
+                          </form>
+                        </td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5' class='text-center'>No hay usuarios pendientes</td></tr>";
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
+</section>
 
 <!-- ===========================
   BLOQUES DE SWEETALERT (ENVUELTOS EN DOMCONTENTLOADED)

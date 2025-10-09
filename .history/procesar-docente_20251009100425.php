@@ -7,7 +7,7 @@ $con = conectar_bd();
 // Validar que venga por POST
 // =========================
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: indexadministrativo.php");
+    header("Location: admin.php");
     exit();
 }
 
@@ -25,7 +25,7 @@ $telefono = trim($_POST["telefono"] ?? "");
 // =========================
 if (empty($nombre) || empty($apellido) || empty($documento) || empty($email)) {
     $_SESSION['error_docente'] = "campos_vacios";
-    header("Location: indexadministrativo.php");
+    header("Location: admin.php");
     exit();
 }
 
@@ -39,7 +39,7 @@ $check->store_result();
 
 if ($check->num_rows > 0) {
     $_SESSION['error_docente'] = "docente_existente";
-    header("Location: indexadministrativo.php");
+    header("Location: admin.php");
     exit();
 }
 $check->close();

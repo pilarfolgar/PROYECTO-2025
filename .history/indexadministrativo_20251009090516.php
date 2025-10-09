@@ -73,38 +73,33 @@ session_start(); // Inicia sesión
 <!-- FORM DOCENTE -->
 <section id="form-docente" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-docente')" aria-label="Cerrar formulario">✖</button>
-  <form action="procesar-docente.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
+  <form action="procesar-docente.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Docente</h2>
     <div class="row g-3">
       <div class="col-md-6">
         <label for="nombreDocente" class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="nombreDocente" name="nombre" required>
+        <input type="text" class="form-control" id="nombreDocente" name="nombre" required placeholder="Ej. Juan">
       </div>
       <div class="col-md-6">
         <label for="apellidoDocente" class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="apellidoDocente" name="apellido" required>
+        <input type="text" class="form-control" id="apellidoDocente" name="apellido" required placeholder="Ej. Pérez">
       </div>
       <div class="col-md-6">
         <label for="documentoDocente" class="form-label">Cédula</label>
-        <input type="number" class="form-control" id="documentoDocente" name="documento" required>
+        <input type="number" class="form-control" id="documentoDocente" name="documento" required placeholder="Ej. 12345678">
       </div>
       <div class="col-md-6">
         <label for="emailDocente" class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" id="emailDocente" name="email" required>
+        <input type="email" class="form-control" id="emailDocente" name="email" required placeholder="ej. juan@infra.com">
       </div>
       <div class="col-md-6">
         <label for="telefonoDocente" class="form-label">Teléfono</label>
-        <input type="tel" class="form-control" id="telefonoDocente" name="telefono">
-      </div>
-      <div class="col-md-6">
-        <label for="fotoDocente" class="form-label">Foto del docente</label>
-        <input type="file" class="form-control" id="fotoDocente" name="foto" accept="image/*">
+        <input type="tel" class="form-control" id="telefonoDocente" name="telefono" placeholder="Ej. +598 12345678">
       </div>
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
 
 <!-- FORM ASIGNATURA -->
 <section id="form-asignatura" class="formulario" style="display: none;">
@@ -258,9 +253,9 @@ session_start(); // Inicia sesión
         <label for="orientacionGrupo" class="form-label">Orientación</label>
         <select class="form-select" id="orientacionGrupo" name="orientacion" required>
           <option value="">Seleccione orientación...</option>
-          <option value="Tec. de la Información">Tecnologías de la información</option>
-          <option value="Tec. de la Información Bilingüe">Tecnologías de la información Bilingüe</option>
-          <option value="Tecnología">Tecnólogo en Ciberseguridad</option>
+          <option value="Ciencias">Ciencias</option>
+          <option value="Humanidades">Humanidades</option>
+          <option value="Tecnología">Tecnología</option>
           <!-- Agregás las demás orientaciones que tengas -->
         </select>
       </div>

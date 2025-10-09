@@ -71,6 +71,7 @@ session_start(); // Inicia sesión
 <?php require("footer.php"); ?>
 
 <!-- FORM DOCENTE -->
+<!-- FORM DOCENTE -->
 <section id="form-docente" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-docente')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-docente.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
@@ -260,7 +261,7 @@ session_start(); // Inicia sesión
           <option value="">Seleccione orientación...</option>
           <option value="Tec. de la Información">Tecnologías de la información</option>
           <option value="Tec. de la Información Bilingüe">Tecnologías de la información Bilingüe</option>
-          <option value="Tecnología">Tecnólogo en Ciberseguridad</option>
+          <option value="Tecnología">Tecnología</option>
           <!-- Agregás las demás orientaciones que tengas -->
         </select>
       </div>
