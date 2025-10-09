@@ -52,13 +52,13 @@ session_start(); // Inicia sesión (agrega lógica de auth si es necesario)
 
       <div class="docente-card" tabindex="0">
         <img class="docente-photo" src="imagenes/LOGO.jpeg" alt="Foto de Diego Martínez" />
-        <div class="docente-name">Diego Martínez</div>
-        <div class="docente-subject">Diseño Gráfico</div>
+        <div class="docente-name">Facundo Rubil</div>
+        <div class="docente-subject">Programación Full Stack</div>
       </div>
 
       <div class="docente-card" tabindex="0">
         <img class="docente-photo" src="imagenes/LOGO.jpeg" alt="Foto de Catherine Bianchi" />
-        <div class="docente-name">Catherine Bianchi</div>
+        <div class="docente-name">Katherine Bianchi</div>
         <div class="docente-subject">Ciberseguridad</div>
       </div>
 
@@ -70,14 +70,14 @@ session_start(); // Inicia sesión (agrega lógica de auth si es necesario)
 
       <div class="docente-card" tabindex="0">
         <img class="docente-photo" src="imagenes/LOGO.jpeg" alt="Foto de Valentina Díaz" />
-        <div class="docente-name">Valentina Díaz</div>
-        <div class="docente-subject">Secretariado Bilingüe</div>
+        <div class="docente-name">Pedro Ferret</div>
+        <div class="docente-subject">Inglés</div>
       </div>
 
       <div class="docente-card" tabindex="0">
         <img class="docente-photo" src="imagenes/LOGO.jpeg" alt="Foto de Eduardo Demichelis" />
         <div class="docente-name">Eduardo Demichelis</div>
-        <div class="docente-subject">Laboratorio</div>
+        <div class="docente-subject">Laboratorio de Mantenimiento</div>
       </div>
     </div>
   </main>
