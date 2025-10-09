@@ -18,8 +18,6 @@
 
 <?php require("header.php"); ?>
 
-
-
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -50,13 +48,14 @@
   </div>
 </section>
 
+<!-- ✅ VISTA PREVIA DE AULAS (limitada a 5 aulas desde la base) -->
 <section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
   <h2 class="text-center mb-4">Vista previa de Aulas</h2>
   <div class="row g-4 justify-content-center">
     <?php
     require("conexion.php");
     $con = conectar_bd();
-    $sql = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo";
+    $sql = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
     $result = $con->query($sql);
     while ($row = $result->fetch_assoc()) {
         $img = $row['imagen'] ?: 'imagenes/default-aula.jpg';
@@ -80,8 +79,8 @@
   </div>
 </section>
 
+<!-- ✅ CALENDARIO DE RESERVAS -->
 <main class="contenedor">
-<!-- CALENDARIO DIARIO DE RESERVAS DE AULAS -->
 <div style="width:100vw;max-width:100%;margin-left:calc(-50vw + 50%);margin-right:calc(-50vw + 50%);background:#f0f4f8;padding:2rem 0 2rem 0;">
   <h2 class="text-center mb-4">Calendario diario de aulas</h2>
   <div class="table-responsive" style="padding:2rem;">
