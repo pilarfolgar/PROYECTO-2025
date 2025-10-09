@@ -174,26 +174,95 @@ session_start(); // Inicia sesión
         <label for="horaFinHorario" class="form-label">Hora de fin</label>
         <input type="time" class="form-control" id="horaFinHorario" name="hora_fin" required>
       </div>
-<div class="col-md-6">
-  <label for="grupoHorario" class="form-label">Grupo</label>
-  <select class="form-select" id="grupoHorario" name="id_grupo" required>
-    <option value="">Seleccione grupo...</option>
-    <?php
-    // Obtener todos los grupos cargados
-    $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
-    $result = $con->query($sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo '<option value="' . $row['id_grupo'] . '">' 
-                 . $row['nombre'] . ' - ' . $row['orientacion'] 
-                 . '</option>';
+<?php
+session_start();
+require("conexion.php");
+
+$con = conectar_bd();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validar que todos los campos requeridos estén completos
+    if (
+        !empty($_POST['id_asignatura']) &&
+        !empty($_POST['dia']) &&
+        !empty($_POST['hora_inicio']) &&
+        !empty($_POST['hora_fin']) &&
+        !empty($_POST['id_grupo'])
+    ) {
+        $id_asignatura = intval($_POST['id_asignatura']);
+        $dia = trim($_POST['dia']);
+        $hora_inicio = $_POST['hora_inicio'];
+        $hora_fin = $_POST['hora_fin'];
+        $id_grupo = intval($_POST['id_grupo']);
+
+        // Verificar que la asignatura exista
+        $sql_check_asig = "SELECT id_asignatura FROM asignatura WHERE id_asignatura = ?";
+        $stmt_check = $con->prepare($sql_check_asig);
+        $stmt_check->bind_param("i", $id_asignatura);
+        $stmt_check->execute();
+        $stmt_check->store_result();
+
+        if ($stmt_check->num_rows == 0) {
+            $_SESSION['error_horario'] = "asignatura_inexistente";
+            header("Location: admin-panel.php");
+            exit();
         }
+        $stmt_check->close();
+
+        // Verificar que el grupo exista
+        $sql_check_grupo = "SELECT id_grupo FROM grupo WHERE id_grupo = ?";
+        $stmt_check2 = $con->prepare($sql_check_grupo);
+        $stmt_check2->bind_param("i", $id_grupo);
+        $stmt_check2->execute();
+        $stmt_check2->store_result();
+
+        if ($stmt_check2->num_rows == 0) {
+            $_SESSION['error_horario'] = "grupo_inexistente";
+            header("Location: admin-panel.php");
+            exit();
+        }
+        $stmt_check2->close();
+
+        // Verificar duplicados: mismo grupo, asignatura, día y horario
+        $sql_check_dup = "SELECT * FROM horarios 
+                          WHERE id_asignatura = ? 
+                          AND id_grupo = ? 
+                          AND dia = ? 
+                          AND hora_inicio = ? 
+                          AND hora_fin = ?";
+        $stmt_dup = $con->prepare($sql_check_dup);
+        $stmt_dup->bind_param("iisss", $id_asignatura, $id_grupo, $dia, $hora_inicio, $hora_fin);
+        $stmt_dup->execute();
+        $result_dup = $stmt_dup->get_result();
+
+        if ($result_dup->num_rows > 0) {
+            $_SESSION['error_horario'] = "duplicado";
+            header("Location: admin-panel.php");
+            exit();
+        }
+        $stmt_dup->close();
+
+        // Insertar el horario
+        $sql_insert = "INSERT INTO horarios (id_asignatura, id_grupo, dia, hora_inicio, hora_fin) 
+                       VALUES (?, ?, ?, ?, ?)";
+        $stmt_insert = $con->prepare($sql_insert);
+        $stmt_insert->bind_param("iisss", $id_asignatura, $id_grupo, $dia, $hora_inicio, $hora_fin);
+
+        if ($stmt_insert->execute()) {
+            $_SESSION['msg_horario'] = "guardado";
+        } else {
+            $_SESSION['error_horario'] = "error_bd";
+        }
+
+        $stmt_insert->close();
     } else {
-        echo '<option value="">No hay grupos registrados</option>';
+        $_SESSION['error_horario'] = "campos_vacios";
     }
-    ?>
-  </select>
-</div>
+
+    header("Location: admin-panel.php");
+    exit();
+}
+?>
 
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
@@ -203,45 +272,25 @@ session_start(); // Inicia sesión
 <!-- FORM AULA -->
 <section id="form-aula" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-aula')" aria-label="Cerrar formulario">✖</button>
-  <form action="procesar-aula.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
+  <form action="procesar-aula.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Aula</h2>
     <div class="row g-3">
-      <!-- Código de aula -->
       <div class="col-md-6">
         <label for="codigoAula" class="form-label">Número o código de aula</label>
         <input type="text" class="form-control" id="codigoAula" name="codigo" required placeholder="Ej. Aula 101">
       </div>
-      <!-- Capacidad -->
       <div class="col-md-6">
         <label for="capacidadAula" class="form-label">Capacidad</label>
-        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30" required>
+        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30">
       </div>
-      <!-- Ubicación -->
       <div class="col-12">
         <label for="ubicacionAula" class="form-label">Ubicación</label>
-        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A" required>
-      </div>
-      <!-- Tipo de espacio -->
-      <div class="col-12">
-        <label for="tipoAula" class="form-label">Tipo de espacio</label>
-        <select class="form-select" id="tipoAula" name="tipo" required>
-          <option value="" disabled selected>Seleccione tipo...</option>
-          <option value="aula">Aula</option>
-          <option value="salon">Salón</option>
-          <option value="lab">Laboratorio</option>
-        </select>
-      </div>
-      <!-- Imagen -->
-      <div class="col-12">
-        <label for="imagenAula" class="form-label">Imagen</label>
-        <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
+        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A">
       </div>
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
-
 <!-- FORM GRUPO -->
 <section id="form-grupo" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-grupo')" aria-label="Cerrar formulario">✖</button>

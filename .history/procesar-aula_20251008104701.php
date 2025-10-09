@@ -18,7 +18,7 @@ if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0){
     }
 }
 
-// SQL insertar datos
+// Preparar SQL para insertar datos
 $sql = "INSERT INTO aula (codigo, capacidad, ubicacion, imagen, tipo) VALUES (?, ?, ?, ?, ?)";
 $stmt = $con->prepare($sql);
 $stmt->bind_param("sisss", $codigo, $capacidad, $ubicacion, $imagenPath, $tipo);

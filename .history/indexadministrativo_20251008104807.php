@@ -203,7 +203,7 @@ session_start(); // Inicia sesión
 <!-- FORM AULA -->
 <section id="form-aula" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-aula')" aria-label="Cerrar formulario">✖</button>
-  <form action="procesar-aula.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
+  <form action="procesar-aulas.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Aula</h2>
     <div class="row g-3">
       <!-- Código de aula -->

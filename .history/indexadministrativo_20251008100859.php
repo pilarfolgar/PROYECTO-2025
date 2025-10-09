@@ -206,32 +206,18 @@ session_start(); // Inicia sesión
   <form action="procesar-aula.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Aula</h2>
     <div class="row g-3">
-      <!-- Código de aula -->
       <div class="col-md-6">
         <label for="codigoAula" class="form-label">Número o código de aula</label>
         <input type="text" class="form-control" id="codigoAula" name="codigo" required placeholder="Ej. Aula 101">
       </div>
-      <!-- Capacidad -->
       <div class="col-md-6">
         <label for="capacidadAula" class="form-label">Capacidad</label>
-        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30" required>
+        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30">
       </div>
-      <!-- Ubicación -->
       <div class="col-12">
         <label for="ubicacionAula" class="form-label">Ubicación</label>
-        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A" required>
+        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A">
       </div>
-      <!-- Tipo de espacio -->
-      <div class="col-12">
-        <label for="tipoAula" class="form-label">Tipo de espacio</label>
-        <select class="form-select" id="tipoAula" name="tipo" required>
-          <option value="" disabled selected>Seleccione tipo...</option>
-          <option value="aula">Aula</option>
-          <option value="salon">Salón</option>
-          <option value="lab">Laboratorio</option>
-        </select>
-      </div>
-      <!-- Imagen -->
       <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
@@ -240,7 +226,6 @@ session_start(); // Inicia sesión
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
 
 <!-- FORM GRUPO -->
 <section id="form-grupo" class="formulario" style="display: none;">

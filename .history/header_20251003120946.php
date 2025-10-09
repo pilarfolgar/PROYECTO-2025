@@ -16,4 +16,7 @@
 </header>
 
 <nav>
+    <a href="estudiantes.html">Horarios</a>
+    <a href="funcionarios.html">Funcionarios</a>
+    <a href="registro.php">Ingresar</a>
 </nav>

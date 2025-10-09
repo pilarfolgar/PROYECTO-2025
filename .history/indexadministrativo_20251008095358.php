@@ -174,27 +174,10 @@ session_start(); // Inicia sesión
         <label for="horaFinHorario" class="form-label">Hora de fin</label>
         <input type="time" class="form-control" id="horaFinHorario" name="hora_fin" required>
       </div>
-<div class="col-md-6">
-  <label for="grupoHorario" class="form-label">Grupo</label>
-  <select class="form-select" id="grupoHorario" name="id_grupo" required>
-    <option value="">Seleccione grupo...</option>
-    <?php
-    // Obtener todos los grupos cargados
-    $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
-    $result = $con->query($sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo '<option value="' . $row['id_grupo'] . '">' 
-                 . $row['nombre'] . ' - ' . $row['orientacion'] 
-                 . '</option>';
-        }
-    } else {
-        echo '<option value="">No hay grupos registrados</option>';
-    }
-    ?>
-  </select>
-</div>
-
+      <div class="col-md-6">
+        <label for="claseHorario" class="form-label">Clase/Grupo (opcional)</label>
+        <input type="text" class="form-control" id="claseHorario" name="clase" placeholder="Ej. 1°MA">
+      </div>
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
@@ -203,45 +186,25 @@ session_start(); // Inicia sesión
 <!-- FORM AULA -->
 <section id="form-aula" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-aula')" aria-label="Cerrar formulario">✖</button>
-  <form action="procesar-aula.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
+  <form action="procesar-aula.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Aula</h2>
     <div class="row g-3">
-      <!-- Código de aula -->
       <div class="col-md-6">
         <label for="codigoAula" class="form-label">Número o código de aula</label>
         <input type="text" class="form-control" id="codigoAula" name="codigo" required placeholder="Ej. Aula 101">
       </div>
-      <!-- Capacidad -->
       <div class="col-md-6">
         <label for="capacidadAula" class="form-label">Capacidad</label>
-        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30" required>
+        <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30">
       </div>
-      <!-- Ubicación -->
       <div class="col-12">
         <label for="ubicacionAula" class="form-label">Ubicación</label>
-        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A" required>
-      </div>
-      <!-- Tipo de espacio -->
-      <div class="col-12">
-        <label for="tipoAula" class="form-label">Tipo de espacio</label>
-        <select class="form-select" id="tipoAula" name="tipo" required>
-          <option value="" disabled selected>Seleccione tipo...</option>
-          <option value="aula">Aula</option>
-          <option value="salon">Salón</option>
-          <option value="lab">Laboratorio</option>
-        </select>
-      </div>
-      <!-- Imagen -->
-      <div class="col-12">
-        <label for="imagenAula" class="form-label">Imagen</label>
-        <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
+        <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A">
       </div>
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
-
 <!-- FORM GRUPO -->
 <section id="form-grupo" class="formulario" style="display: none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-grupo')" aria-label="Cerrar formulario">✖</button>
@@ -283,31 +246,26 @@ session_start(); // Inicia sesión
         </select>
       </div>
 <div class="col-md-6">
-    <label for="horarioGrupo" class="form-label">Horarios del grupo</label>
-    <select class="form-select" id="horarioGrupo" name="horarios[]" multiple required>
-        <?php
-        // Si $id_grupo no existe (registro nuevo), usamos 0
-        $id_grupo = $id_grupo ?? 0;
-
-        $sql = "SELECT h.id_horario, CONCAT(h.dia, ' ', h.hora_inicio, '-', h.hora_fin) AS horario,
-                      IF(gh.id_horario IS NOT NULL, 1, 0) AS seleccionado
-                FROM horarios h
-                LEFT JOIN grupo_horario gh ON h.id_horario = gh.id_horario AND gh.id_grupo = ?
-                ORDER BY h.dia, h.hora_inicio";
-
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $id_grupo);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        while($row = $result->fetch_assoc()){
-            $selected = $row['seleccionado'] ? 'selected' : '';
-            echo '<option value="'.$row['id_horario'].'" '.$selected.'>'.$row['horario'].'</option>';
+  <label for="grupoHorario" class="form-label">Grupo</label>
+  <select class="form-select" id="grupoHorario" name="id_grupo" required>
+    <option value="">Seleccione grupo...</option>
+    <?php
+    // Obtener todos los grupos cargados
+    $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
+    $result = $con->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row['id_grupo'] . '">' 
+                 . $row['nombre'] . ' - ' . $row['orientacion'] 
+                 . '</option>';
         }
-        $stmt->close();
-        ?>
-    </select>
+    } else {
+        echo '<option value="">No hay grupos registrados</option>';
+    }
+    ?>
+  </select>
 </div>
+
 
 
     </div>

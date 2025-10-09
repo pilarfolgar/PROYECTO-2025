@@ -16,4 +16,5 @@
 </header>
 
 <nav>
+    <a href="registro.php">Ingresar</a>
 </nav>
