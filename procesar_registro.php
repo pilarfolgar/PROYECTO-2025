@@ -1,6 +1,7 @@
 <?php
 session_start();
 require("conexion.php");
+require("validador_ci.php"); // archivo con la clase CI_Uruguay
 $con = conectar_bd();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -12,33 +13,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cedula   = isset($_POST["cedula"]) ? intval($_POST["cedula"]) : 0;
     $rol      = isset($_POST["rol"]) ? mysqli_real_escape_string($con, $_POST["rol"]) : NULL;
 
-    // Solo permitir registro si el rol es estudiante o docente
+    // -----------------------------
+    // 1️⃣ Validación de CI (cédula)
+    // -----------------------------
+    $ciValidator = new CI_Uruguay();
+    $validacionCI = $ciValidator->validarCI($cedula);
+    if (!$validacionCI['valida']) {
+        $_SESSION['error_usuario'] = 'ci_invalida';
+        header("Location: registro.php");
+        exit;
+    }
+
+    // -----------------------------
+    // 2️⃣ Validación de rol
+    // -----------------------------
     if ($rol !== 'estudiante' && $rol !== 'docente') {
         $_SESSION['error_usuario'] = 'rol_invalido';
         header("Location: registro.php");
         exit;
     }
 
+    // -----------------------------
+    // 3️⃣ Verificar si el usuario ya existe
+    // -----------------------------
     if (consultar_existe_usr($con, $cedula)) {
         $_SESSION['error_usuario'] = 'usuario_existente';
         header("Location: registro.php");
         exit;
     } else {
+
         // Si es docente, su estado será 'pendiente' (requiere aprobación)
         $estado = ($rol === 'docente') ? 'pendiente' : 'activo';
 
+        // -----------------------------
+        // 4️⃣ Insertar datos en la BD
+        // -----------------------------
         if (insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $rol, $estado)) {
-            $_SESSION['msg_usuario'] = 'guardado';
 
             if ($rol === 'estudiante') {
+                $_SESSION['msg_usuario'] = 'guardado';
                 // Estudiantes entran directamente
                 header("Location: indexestudiantes.php");
             } elseif ($rol === 'docente') {
-                // Docentes quedan en espera
+                // Docentes quedan en espera de verificación
                 $_SESSION['msg_usuario'] = 'pendiente_verificacion';
                 header("Location: registro.php");
             }
             exit;
+
         } else {
             $_SESSION['error_usuario'] = 'error_general';
             header("Location: registro.php");
@@ -47,6 +69,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+// -----------------------------
+// Funciones auxiliares
+// -----------------------------
 function consultar_existe_usr($con, $cedula) {
     $consulta = "SELECT cedula FROM usuario WHERE cedula = '$cedula'";
     $resultado = mysqli_query($con, $consulta);
@@ -61,4 +86,3 @@ function insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $r
     return mysqli_query($con, $consulta_insertar);
 }
 ?>
-

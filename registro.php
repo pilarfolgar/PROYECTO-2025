@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['msg_usuario']); endif; ?>
 
+<?php if (isset($_SESSION['error_usuario']) && $_SESSION['error_usuario'] === 'ci_invalida'): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Swal.fire({
+    icon: 'error',
+    title: 'Cédula inválida',
+    text: 'La cédula ingresada no es válida. Asegúrese de que tenga 8 dígitos y el dígito verificador correcto.',
+    confirmButtonText: 'Entendido'
+  });
+});
+</script>
+<?php unset($_SESSION['error_usuario']); endif; ?>
 
 
 <main class="container my-5">

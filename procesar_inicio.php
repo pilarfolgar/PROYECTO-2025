@@ -1,5 +1,7 @@
 <?php
 require("conexion.php");
+require("validador_ci.php");
+
 $con = conectar_bd();
 
 session_start();
@@ -7,6 +9,13 @@ session_start();
 if (isset($_POST["cedula"], $_POST["pass"])) {
     $cedula = $_POST["cedula"];
     $pass   = $_POST["pass"];
+     $ciValidator = new CI_Uruguay();
+    $validacionCI = $ciValidator->validarCI($cedula);
+    if (!$validacionCI['valida']) {
+        $_SESSION['mensaje'] = "<label style='color:red;'>Cédula inválida</label>";
+        header("Location: iniciosesion.php");
+        exit;
+    }
     logear($con, $cedula, $pass);
 }
 
