@@ -1,20 +1,39 @@
-<?php
-?>
-<header>
+<header class="header">
   <div class="header-left">
-    <img src="imagenes/logopoyecto.png" alt="Logo" class="logo" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #588BAE;">
     <div class="header-text">
       <h2>InfraLex</h2>
       <h5>Instituto Tecnológico Superior de Paysandú</h5>
     </div>
   </div>
+
   <div class="header-right">
-    <a href="logout.php" class="btn btn-danger">
-      <i class="bi bi-box-arrow-right"></i> Logout
-    </a>
+    <!-- Ícono de notificaciones -->
+    <button class="btn-notificacion" aria-label="Notificaciones">
+      🔔
+      <span class="notif-badge">3</span>
+    </button>
+
+    <!-- Logo -->
+    <img src="imagenes/logopoyecto.png" alt="Logo" class="logo">
+
+    <!-- Botón menú hamburguesa -->
+    <button class="menu-btn" id="menu-btn" aria-label="Abrir menú">
+      <span class="menu-line"></span>
+      <span class="menu-line"></span>
+      <span class="menu-line"></span>
+    </button>
+
+    <!-- Menú desplegable -->
+    <div class="menu-dropdown" id="menu-dropdown">
+      <a href="#" id="toggle-theme">🌙 Modo oscuro</a>
+      <a href="logout.php">🚪 Logout</a>
+    </div>
   </div>
 </header>
-<nav class="main-nav">
-  <a href="#carreras" class="nav-link">Carreras</a>
-  <a href="funcionarios.php" class="nav-link">Equipo</a>
+
+<nav class="nav">
+  <a href="indexdocente.html">Inicio</a>
+  <a href="aulas.php">Aulas</a>
+  <a href="docentes.html">Docentes</a>
+  <a href="contacto.html">Contacto</a>
 </nav>

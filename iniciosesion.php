@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleindexdocente.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -46,6 +47,7 @@
 <?php require("footer.php"); ?>
 
 <script src="app.js"></script>
+<script src="header.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

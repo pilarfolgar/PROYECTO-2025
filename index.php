@@ -5,31 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evolution IT</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <img src="imagenes/logopoyecto.png" alt="Logo" class="logo">
-    <div class="header-text">
-      <h2>InfraLex</h2>
-      <h5>Instituto Tecnológico Superior de Paysandú</h5>
-    </div>
-  </div>
-  <div class="header-right">
-    <a href="iniciosesion.php" class="btn-ingresar">
-      <i class="fas fa-sign-in-alt"></i> Ingresar
-    </a>
-  </div>
-</header>
-<nav>
-  <div class="container nav-container">
-    <a href="#carreras">Carreras</a>
-    <a href="funcionarios.php">Equipo</a>
-  </div>
-</nav>
+<?php require("header.php"); ?>
+
+
 
 <!-- ---------------- CARRUSEL ---------------- -->
 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
@@ -164,6 +148,7 @@
 <?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="header.js"></script>
 <script>
 // Scroll reveal
 const reveals = document.querySelectorAll('.reveal');

@@ -792,3 +792,62 @@ img {
   background-color: var(--hover);
   transform: scale(1.05);
 }
+/* ================= MODO OSCURO ================= */
+body.dark-mode {
+  background-color: #121212;
+  color: #e5e5e5;
+}
+
+body.dark-mode header {
+  background-color: #222;
+  color: #e5e5e5;
+}
+
+body.dark-mode nav {
+  background-color: #333;
+}
+
+body.dark-mode a {
+  color: var(--acento); /* Links visibles */
+}
+
+body.dark-mode a:hover {
+  color: #ffffff; /* Hover más visible */
+  text-decoration: underline;
+}
+
+body.dark-mode .footer {
+  background-color: #222;
+  color: #e5e5e5;
+}
+
+body.dark-mode .footer a {
+  color: var(--acento);
+}
+
+/* ================= HEADER AJUSTADO ================= */
+.header-left {
+  order: 1; /* Logo y texto primero */
+}
+
+.header-right {
+  order: 2; /* Menú / botón derecho */
+  margin-left: auto; /* Empuja a la derecha */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Menú hamburguesa en móvil */
+@media (max-width: 768px) {
+  .header-left {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+  
+  .header-right {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
