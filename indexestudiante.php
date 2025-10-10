@@ -1,4 +1,55 @@
-<!DOCTYPE html> 
+<?php
+session_start();
+require("conexion.php");
+$con = conectar_bd();
+
+// Verificamos que el estudiante haya iniciado sesión
+if(!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 'estudiante'){
+    header("Location: iniciosesion.php");
+    exit;
+}
+
+$estudiante_id = $_SESSION['usuario_id'];
+$grupo_id = $_SESSION['grupo_id'];
+
+// ====== NOTIFICACIONES DEL ESTUDIANTE ======
+$notificaciones = [];
+$sql_notif = "SELECT id, titulo, mensaje, fecha, visto_estudiante 
+              FROM notificaciones 
+              WHERE grupo_id = ? 
+              ORDER BY fecha DESC";
+$stmt = $con->prepare($sql_notif);
+$stmt->bind_param("i", $grupo_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while($row = $result->fetch_assoc()){
+    $notificaciones[] = $row;
+}
+
+// ====== AVISOS GENERALES ======
+$avisos = [];
+$sql_avisos = "SELECT titulo, mensaje, fecha FROM avisos ORDER BY fecha DESC";
+$result = $con->query($sql_avisos);
+while($row = $result->fetch_assoc()){
+    $avisos[] = $row;
+}
+
+// ====== HORARIOS DEL GRUPO ======
+$horarios = [];
+$sql_horarios = "SELECT h.dia_semana, a.nombre AS asignatura, h.hora_inicio, h.hora_fin, h.aula
+                 FROM horarios h
+                 INNER JOIN asignaturas a ON h.id_asignatura = a.id
+                 WHERE h.grupo_id = ?
+                 ORDER BY FIELD(dia_semana,'Lunes','Martes','Miércoles','Jueves','Viernes'), h.hora_inicio";
+$stmt = $con->prepare($sql_horarios);
+$stmt->bind_param("i", $grupo_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while($row = $result->fetch_assoc()){
+    $horarios[] = $row;
+}
+?>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -8,8 +59,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-
-
 <body>
 
 <header>
@@ -23,7 +72,7 @@
 </header>
 
 <nav>
-  <a href="materiales.php">Material de estudio</a>
+  <!-- Eliminamos materiales fijos -->
   <a href="horarios.php">Horarios de clase</a>
   <a href="index.php">Cerrar sesión</a>
 </nav>
@@ -31,32 +80,58 @@
 <main class="container my-5">
   <h2 class="text-center mb-4">Bienvenido/a, Estudiante</h2>
 
+  <!-- ALERTA CON PRÓXIMA CLASE (opcional dinámica, aquí fijo) -->
   <div class="alert alert-info text-center" role="alert" id="notificacionAula">
     📢 Hoy te toca clase en: <strong>Aula 12 - Segundo piso</strong>
   </div>
 
   <div class="row">
+    <!-- HORARIOS -->
     <div class="col-md-6 mb-4">
       <div class="p-3 border rounded bg-light shadow-sm">
         <h4 class="text-center mb-3">Calendario de clases</h4>
         <ul class="list-group">
-          <li class="list-group-item">📅 Lunes - Programación - Aula 11</li>
-          <li class="list-group-item">📅 Martes - Redes - Aula 12</li>
-          <li class="list-group-item">📅 Miércoles - Base de Datos - Aula 14</li>
-          <li class="list-group-item">📅 Jueves - Diseño Web - Aula 10</li>
-          <li class="list-group-item">📅 Viernes - Taller Integrador - Aula 8</li>
+          <?php if(count($horarios) > 0): ?>
+            <?php foreach($horarios as $h): ?>
+              <li class="list-group-item">
+                📅 <?php echo $h['dia_semana']; ?> - <?php echo $h['asignatura']; ?> 
+                - <?php echo $h['aula']; ?> 
+                (<?php echo substr($h['hora_inicio'],0,5) . " - " . substr($h['hora_fin'],0,5); ?>)
+              </li>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <li class="list-group-item text-center">No hay clases asignadas.</li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
 
+    <!-- NOTIFICACIONES Y AVISOS -->
     <div class="col-md-6 mb-4">
       <div class="p-3 border rounded bg-white shadow-sm">
-        <h4 class="text-center mb-3">Accesos rápidos</h4>
+        <h4 class="text-center mb-3">Notificaciones y avisos</h4>
         <ul class="list-group">
-          <li class="list-group-item"><a href="https://www.utu.edu.uy/" class="sin-subrayado" target="_blank">🌐 Plataforma UTU</a></li>
-          <li class="list-group-item"><a href="https://sites.google.com/view/classrooms-workspace/" class="sin-subrayado" target="_blank">📘 Google Classroom</a></li>
-          <li class="list-group-item"><a href="horarios.php" class="sin-subrayado">📅 Ver horarios</a></li>
-          <li class="list-group-item"><a href="materiales.php" class="sin-subrayado">📂 Material de estudio</a></li>
+          <?php if(count($notificaciones) > 0): ?>
+            <?php foreach($notificaciones as $n): ?>
+              <li class="list-group-item">
+                <strong><?php echo $n['titulo']; ?></strong><br>
+                <?php echo $n['mensaje']; ?><br>
+                <small class="text-muted"><?php echo date("d/m/Y H:i", strtotime($n['fecha'])); ?></small>
+              </li>
+            <?php endforeach; ?>
+          <?php endif; ?>
+          <?php if(count($avisos) > 0): ?>
+            <?php foreach($avisos as $a): ?>
+              <li class="list-group-item list-group-item-warning">
+                <strong><?php echo $a['titulo']; ?></strong><br>
+                <?php echo $a['mensaje']; ?><br>
+                <small class="text-muted"><?php echo date("d/m/Y H:i", strtotime($a['fecha'])); ?></small>
+              </li>
+            <?php endforeach; ?>
+          <?php endif; ?>
+          <?php if(count($notificaciones) == 0 && count($avisos) == 0): ?>
+            <li class="list-group-item text-center">No hay notificaciones ni avisos.</li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
@@ -110,37 +185,6 @@
     <div id="mensajeReporte" class="mt-3 text-center"></div>
   </form>
 </section>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("reporteForm");
-  const mensaje = document.getElementById("mensajeReporte");
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita que se envíe al servidor
-
-    // Validación del formulario (Bootstrap)
-    if (!form.checkValidity()) {
-      form.classList.add('was-validated');
-      return;
-    }
-
-    // Mostrar mensaje de éxito
-    mensaje.innerHTML = '<div class="alert alert-success">✅ ¡Reporte enviado con éxito!</div>';
-
-    // Opcional: limpiar formulario
-    form.reset();
-    form.classList.remove('was-validated');
-
-    // Cerrar formulario después de 3 segundos
-    setTimeout(() => {
-      document.getElementById("overlayReporte").style.display = "none";
-      document.getElementById("form-reporte").style.display = "none";
-      mensaje.innerHTML = "";
-    }, 3000);
-  });
-});
-</script>
-
 
 <footer class="footer mt-5">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú | Contacto: evolutionit2008@gmail.com
