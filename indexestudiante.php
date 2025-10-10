@@ -185,6 +185,37 @@ while($row = $result->fetch_assoc()){
     <div id="mensajeReporte" class="mt-3 text-center"></div>
   </form>
 </section>
+<!-- ================= Funcionalidades Extra para Estudiantes ================= -->
+<div class="row my-4">
+
+  <!-- Temporizador de estudio -->
+  <div class="col-md-6 mb-4">
+    <div class="p-3 border rounded bg-light shadow-sm">
+      <h4 class="text-center mb-3">⏱️ Temporizador de estudio</h4>
+      <div class="text-center">
+        <span id="timer">25:00</span>
+        <div class="mt-2">
+          <button id="startTimer" class="btn btn-success btn-sm">Iniciar</button>
+          <button id="pauseTimer" class="btn btn-warning btn-sm">Pausar</button>
+          <button id="resetTimer" class="btn btn-danger btn-sm">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notas rápidas -->
+  <div class="col-md-6 mb-4">
+    <div class="p-3 border rounded bg-white shadow-sm">
+      <h4 class="text-center mb-3">📝 Notas rápidas</h4>
+      <textarea id="quickNotes" class="form-control" rows="6" placeholder="Escribe tus notas..."></textarea>
+      <button id="saveNotes" class="btn btn-primary btn-sm mt-2">Guardar notas</button>
+      <p id="notesMsg" class="mt-2 text-success"></p>
+    </div>
+  </div>
+
+</div>
+
+
 
 <footer class="footer mt-5">
   &copy; 2025 Instituto Tecnológico Superior de Paysandú | Contacto: evolutionit2008@gmail.com

@@ -111,3 +111,78 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ==================== Temporizador Pomodoro ====================
+  let time = 25 * 60; // 25 minutos
+  let interval;
+  const timerEl = document.getElementById("timer");
+  const startBtn = document.getElementById("startTimer");
+  const pauseBtn = document.getElementById("pauseTimer");
+  const resetBtn = document.getElementById("resetTimer");
+
+  function updateTimer() {
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+    timerEl.textContent = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+  }
+
+  startBtn.addEventListener("click", () => {
+    if (!interval) {
+      interval = setInterval(() => {
+        if (time > 0) {
+          time--;
+          updateTimer();
+        } else {
+          clearInterval(interval);
+          interval = null;
+          alert("⏰ Tiempo de estudio terminado!");
+        }
+      }, 1000);
+    }
+  });
+
+  pauseBtn.addEventListener("click", () => {
+    clearInterval(interval);
+    interval = null;
+  });
+
+  resetBtn.addEventListener("click", () => {
+    clearInterval(interval);
+    interval = null;
+    time = 25 * 60;
+    updateTimer();
+  });
+
+  updateTimer();
+
+  // ==================== Notas rápidas con LocalStorage ====================
+  const notesEl = document.getElementById("quickNotes");
+  const saveBtn = document.getElementById("saveNotes");
+  const msg = document.getElementById("notesMsg");
+
+  if(localStorage.getItem("estudianteNotas")){
+    notesEl.value = localStorage.getItem("estudianteNotas");
+  }
+
+  saveBtn.addEventListener("click", () => {
+    localStorage.setItem("estudianteNotas", notesEl.value);
+    msg.textContent = "✅ Notas guardadas localmente!";
+    setTimeout(() => msg.textContent = "", 2000);
+  });
+
+  // ==================== Resaltado automático de la clase del día ====================
+  const items = document.querySelectorAll(".list-group-item");
+  const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const now = new Date();
+  const hoy = dias[now.getDay()];
+  const horaActual = now.getHours() + ":" + now.getMinutes().toString().padStart(2,'0');
+
+  items.forEach(item => {
+    if(item.textContent.includes(hoy)) {
+      item.style.backgroundColor = "#d1e7dd"; // verde claro
+      item.style.fontWeight = "bold";
+    }
+  });
+
+});
