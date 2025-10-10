@@ -1,17 +1,18 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   const menuBtn = document.getElementById('menu-btn');
   const menuDropdown = document.getElementById('menu-dropdown');
   const themeToggle = document.getElementById('toggle-theme');
 
-  if(menuBtn && menuDropdown) {
+  // Menu hamburguesa
+  if (menuBtn && menuDropdown) {
     menuBtn.addEventListener('click', () => {
       menuBtn.classList.toggle('active');
       menuDropdown.classList.toggle('show');
     });
   }
 
-  if(themeToggle) {
+  // Modo oscuro
+  if (themeToggle) {
     themeToggle.addEventListener('click', (e) => {
       e.preventDefault();
       document.body.classList.toggle('dark-mode');
