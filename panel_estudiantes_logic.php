@@ -4,7 +4,7 @@ require("conexion.php");
 $con = conectar_bd();
 
 // Verificar que el estudiante haya iniciado sesión
-if(!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 'estudiante'){
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 'estudiante') {
     header("Location: iniciosesion.php");
     exit;
 }
@@ -22,7 +22,7 @@ $stmt = $con->prepare($sql_notif);
 $stmt->bind_param("i", $grupo_id);
 $stmt->execute();
 $result = $stmt->get_result();
-while($row = $result->fetch_assoc()){
+while ($row = $result->fetch_assoc()) {
     $notificaciones[] = $row;
 }
 
@@ -30,7 +30,7 @@ while($row = $result->fetch_assoc()){
 $avisos = [];
 $sql_avisos = "SELECT titulo, mensaje, fecha FROM avisos ORDER BY fecha DESC";
 $result = $con->query($sql_avisos);
-while($row = $result->fetch_assoc()){
+while ($row = $result->fetch_assoc()) {
     $avisos[] = $row;
 }
 
@@ -45,7 +45,7 @@ $stmt = $con->prepare($sql_horarios);
 $stmt->bind_param("i", $grupo_id);
 $stmt->execute();
 $result = $stmt->get_result();
-while($row = $result->fetch_assoc()){
+while ($row = $result->fetch_assoc()) {
     $horarios[] = $row;
 }
 ?>
