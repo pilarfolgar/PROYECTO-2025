@@ -1,0 +1,137 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--primario);
+  color: white;
+  flex-wrap: wrap;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.header-text h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header-text h5 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--acento);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+.menu-dropdown {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: var(--secundario);
+  position: absolute;
+  right: 2rem;
+  top: 70px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.menu-dropdown.show {
+  display: flex;
+}
+
+/* Notificaciones */
+.btn-notificacion {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: white;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-btn { display: flex; }
+  .nav { display: none; }
+}
+
+/* ================= MODO OSCURO ================= */
+body.dark-mode {
+  background-color: #121212;
+  color: #dcdcdc;
+}
+
+body.dark-mode .header {
+  background-color: #222;
+  color: #f1f1f1;
+}
+
+body.dark-mode .header-text h2,
+body.dark-mode .header-text h5 {
+  color: #f1f1f1;
+}
+
+body.dark-mode .nav {
+  background-color: #333;
+}
+
+body.dark-mode .nav a {
+  color: #f1f1f1;
+}
+
+body.dark-mode .nav a:hover {
+  color: var(--acento);
+  background-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .btn-notificacion {
+  color: #f1f1f1;
+}
+
+body.dark-mode .menu-dropdown {
+  background-color: #333;
+  color: #f1f1f1;
+}
