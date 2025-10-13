@@ -186,3 +186,33 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+// ==================== SUGERENCIA ====================
+const btnAbrirSugerencia = document.getElementById('abrirSugerencia');
+const overlaySugerencia = document.getElementById('overlaySugerencia');
+const formSugerencia = document.getElementById('form-sugerencia');
+const btnCerrarSugerencia = document.getElementById('cerrarSugerencia');
+const formSugerenciaForm = document.getElementById('sugerenciaForm');
+const mensajeSugerencia = document.getElementById('mensajeSugerencia');
+
+btnAbrirSugerencia.addEventListener('click', () => {
+  overlaySugerencia.style.display = 'block';
+  formSugerencia.style.display = 'block';
+});
+
+btnCerrarSugerencia.addEventListener('click', cerrarSugerencia);
+overlaySugerencia.addEventListener('click', cerrarSugerencia);
+
+function cerrarSugerencia() {
+  overlaySugerencia.style.display = 'none';
+  formSugerencia.style.display = 'none';
+}
+
+// Validación simple
+formSugerenciaForm.addEventListener('submit', function(event){
+  if(mensajeSugerencia.value.trim().length < 5){
+    event.preventDefault();
+    mensajeSugerencia.classList.add('is-invalid');
+  } else {
+    mensajeSugerencia.classList.remove('is-invalid');
+  }
+});

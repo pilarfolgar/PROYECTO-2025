@@ -851,3 +851,50 @@ body.dark-mode .footer a {
     width: 100%;
   }
 }
+/* Overlay y modal */
+.formulario-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+}
+.formulario {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  z-index: 1000;
+}
+.cerrar {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+/* Botón flotante */
+.btn-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+.btn-flotante:hover {
+  background-color: #0b5ed7;
+}

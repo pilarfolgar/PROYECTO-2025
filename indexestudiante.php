@@ -1,90 +1,129 @@
-<?php
-session_start();
-
-// Redirige si no hay sesión activa o no es estudiante
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 'estudiante') {
-    header("Location: iniciosesion.php");
-    exit;
-}
-
-// Incluimos la lógica que llena horarios, notificaciones y avisos
-require("panel_estudiantes_logic.php"); 
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Estudiantes - InfraLex</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Estudiante</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styleindexdocente.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="d-flex justify-content-between align-items-center p-3 border-bottom">
-    <div>
-        <h1>InfraLex</h1>
-        <h6>Instituto Tecnológico Superior de Paysandú</h6>
+<?php require("header.php"); ?>
+
+<section class="mis-cursos my-5">
+  <h2 class="text-center mb-4">Panel Estudiante</h2>
+  <div class="docentes-grid">
+
+    <!-- Tarjeta Notificaciones -->
+    <div class="estudiante-card">
+      <div class="docente-photo bg-primary text-white fs-1 d-flex justify-content-center align-items-center">
+        <i class="bi bi-bell"></i>
+      </div>
+      <div class="docente-name">Notificaciones</div>
+      <div class="docente-subject">Ver tus avisos importantes</div>
+      <a href="notificaciones.php" class="boton w-100 text-center">Ir a Notificaciones</a>
     </div>
-    <div>
-        <a href="indexEstudiantes.php"><img src="imagenes/LOGO.jpeg" alt="Logo" class="logo" style="height:60px;"></a>
+
+    <!-- Tarjeta Avisos -->
+    <div class="estudiante-card">
+      <div class="docente-photo bg-success text-white fs-1 d-flex justify-content-center align-items-center">
+        <i class="bi bi-clipboard"></i>
+      </div>
+      <div class="docente-name">Avisos</div>
+      <div class="docente-subject">Consulta los avisos generales</div>
+      <a href="avisos.php" class="boton w-100 text-center">Ir a Avisos</a>
     </div>
-</header>
 
-<nav class="nav bg-light p-2 mb-4">
-    <a class="nav-link" href="horarios.php">Horarios de clase</a>
-    <a class="nav-link" href="cerrar_sesion.php">Cerrar sesión</a>
-</nav>
+    <!-- Tarjeta Horario -->
+    <div class="estudiante-card">
+      <div class="docente-photo bg-warning text-white fs-1 d-flex justify-content-center align-items-center">
+        <i class="bi bi-calendar-week"></i>
+      </div>
+      <div class="docente-name">Horario del Grupo</div>
+      <div class="docente-subject">Visualiza tus clases y aulas</div>
+      <a href="horarios.php" class="boton w-100 text-center">Ver Horario</a>
+    </div>
 
-<main class="container my-5">
-    <h2 class="text-center mb-4">Bienvenido/a, Estudiante</h2>
+    <!-- Tarjeta Enviar Sugerencia -->
+    <div class="estudiante-card">
+      <div class="docente-photo bg-danger text-white fs-1 d-flex justify-content-center align-items-center">
+        <i class="bi bi-pencil-square"></i>
+      </div>
+      <div class="docente-name">Enviar Sugerencia</div>
+      <div class="docente-subject">Reporta un problema o sugerencia</div>
+      <button class="boton w-100 text-center" id="abrirSugerencia">Enviar</button>
+    </div>
 
-    <div class="row g-4">
-        <!-- HORARIOS -->
-        <div class="col-md-6">
-            <div class="p-3 border rounded bg-light shadow-sm h-100">
-                <h4 class="text-center mb-3">Calendario de clases</h4>
-                <ul class="list-group">
-                    <?php if (!empty($horarios)): ?>
-                        <?php foreach ($horarios as $h): ?>
-                            <li class="list-group-item">
-                                📅 <?= $h['dia_semana']; ?> - <?= $h['asignatura']; ?> - <?= $h['aula']; ?> 
-                                (<?= substr($h['hora_inicio'],0,5) ?> - <?= substr($h['hora_fin'],0,5) ?>)
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="list-group-item text-center">No hay clases asignadas.</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
+  </div>
+</section>
 
-        <!-- NOTIFICACIONES Y AVISOS -->
-        <div class="col-md-6">
-            <div class="p-3 border rounded bg-white shadow-sm h-100">
-                <h4 class="text-center mb-3">Notificaciones y avisos</h4>
-                <ul class="list-group">
-                    <?php if (!empty($notificaciones)): ?>
-                        <?php foreach ($notificaciones as $n): ?>
-                            <li class="list-group-item">
-                                <strong><?= $n['titulo']; ?></strong><br>
-                                <?= $n['mensaje']; ?><br>
-                                <small class="text-muted"><?= date("d/m/Y H:i", strtotime($n['fecha'])); ?></small>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+<!-- Overlay sugerencia -->
+<div id="overlaySugerencia" class="formulario-overlay"></div>
 
-                    <?php if (!empty($avisos)): ?>
-                        <?php foreach ($avisos as $a): ?>
-                            <li class="list-group-item list-group-item-warning">
-                                <strong><?= $a['titulo']; ?></strong><br>
-                                <?= $a['mensaje']; ?><br>
-                                <small class="text-muted"><?= date("d/m/Y H:i", strtotime($a['fecha'])); ?></small>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+<!-- Formulario flotante sugerencia -->
+<section id="form-sugerencia" class="formulario">
+  <button type="button" class="cerrar" id="cerrarSugerencia">✖</button>
+  <form id="sugerenciaForm" method="POST">
+    <h2 class="form-title">Sugerencia</h2>
+    <div class="mb-3">
+      <textarea class="form-control" id="mensajeSugerencia" name="mensaje" rows="4" minlength="5" required placeholder="Escribí tu mensaje"></textarea>
+      <div class="invalid-feedback">Debe escribir al menos 5 caracteres.</div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Enviar</button>
+  </form>
+</section>
 
-                    <?php if (empty($notificaciones) && empty($avisos)): ?>
-                        <li class="list-group-item text-center">No hay notificaciones ni avisos.</li>
-                    <?php endif; ?>
-                </ul>
+<!-- Botón flotante Reporte -->
+<button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
+
+<!-- Overlay reporte -->
+<div id="overlayReporte" class="formulario-overlay"></div>
+
+<!-- Formulario flotante reporte -->
+<section id="form-reporte" class="formulario">
+  <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
+  <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
+    <h2 class="form-title">Reportar Objeto Dañado</h2>
+    <div class="mb-3">
+      <label for="nombreReporte" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombreReporte" name="nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$">
+      <div class="invalid-feedback">Por favor, ingrese un nombre válido (solo letras).</div>
+    </div>
+    <div class="mb-3">
+      <label for="emailReporte" class="form-label">Email</label>
+      <input type="email" class="form-control" id="emailReporte" name="email" required>
+      <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
+    </div>
+    <div class="mb-3">
+      <label for="objetoReporte" class="form-label">Objeto o área</label>
+      <input type="text" class="form-control" id="objetoReporte" name="objeto" required>
+      <div class="invalid-feedback">Este campo es obligatorio.</div>
+    </div>
+    <div class="mb-3">
+      <label for="descripcionReporte" class="form-label">Descripción del problema</label>
+      <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="3" minlength="10" required></textarea>
+      <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
+    </div>
+    <div class="mb-3">
+      <label for="fechaReporte" class="form-label">Fecha del reporte</label>
+      <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
+      <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
+    <div id="mensajeReporte" class="mt-3 text-center"></div>
+  </form>
+</section>
+
+<footer class="footer mt-5">
+  &copy; <?php echo date("Y"); ?> Instituto Tecnológico Superior de Paysandú
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="estudiantes.js"></script>
+</body>
+</html>
+

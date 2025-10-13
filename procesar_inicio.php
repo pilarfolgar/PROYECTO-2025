@@ -17,7 +17,6 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
         exit;
     }
 
-    // Verificación formato cédula
     if (!preg_match('/^\d{8}$/', $cedula_input)) {
         $_SESSION['mensaje'] = 'La cédula debe tener exactamente 8 dígitos.';
         header("Location: iniciosesion.php");
@@ -34,35 +33,26 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
     $cedula = intval($cedula_input);
 
     // Traer usuario
-    $stmt = mysqli_prepare($con, "SELECT cedula, nombrecompleto, email, pass, rol FROM usuario WHERE cedula=?");
+    $stmt = mysqli_prepare($con, "SELECT cedula, nombrecompleto, email, pass, rol, verificado FROM usuario WHERE cedula=?");
     mysqli_stmt_bind_param($stmt, "i", $cedula);
     mysqli_stmt_execute($stmt);
     $resultado = mysqli_stmt_get_result($stmt);
 
     if ($fila = mysqli_fetch_assoc($resultado)) {
-
-        $hash_bd = trim($fila['pass']); // trim por si hay espacios
-
-        // Debug temporal
-        error_log("DEBUG LOGIN - pass ingresada: '$pass'");
-        error_log("DEBUG LOGIN - hash BD: '$hash_bd' | longitud: " . strlen($hash_bd));
-
-        if (password_verify($pass, $hash_bd)) {
+        if (password_verify($pass, trim($fila['pass']))) {
             // Login exitoso
-            $_SESSION['cedula'] = $fila['cedula'];
+            $_SESSION['usuario_id'] = $fila['cedula'];
             $_SESSION['usuario'] = $fila['nombrecompleto'];
             $_SESSION['rol'] = $fila['rol'];
+            $_SESSION['verificado'] = $fila['verificado'];
 
             // Redirección según rol
-            switch ($fila['rol']) {
-                case 'estudiante':
-                    header("Location: index.php");
-                    break;
-                case 'docente':
-                    header("Location: indexdocente.php");
-                    break;
-                default:
-                    header("Location: indexadministrativo.php");
+            if ($fila['rol'] === 'estudiante') {
+                header("Location: indexestudiante.php");
+            } elseif ($fila['rol'] === 'docente') {
+                header("Location: indexdocente.php");
+            } else {
+                header("Location: indexadministrativo.php");
             }
             exit();
         } else {
@@ -70,7 +60,6 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
             header("Location: iniciosesion.php");
             exit;
         }
-
     } else {
         $_SESSION['mensaje'] = 'Usuario no encontrado (cédula no registrada).';
         header("Location: iniciosesion.php");
