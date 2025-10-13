@@ -12,7 +12,7 @@ session_start();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
-<?php require("header.php"); ?>
+<?php require("HeaderIndex.php"); ?>
 
 <!-- Mensaje de éxito para registro guardado -->
 <?php if (isset($_SESSION['msg_usuario']) && $_SESSION['msg_usuario'] === 'guardado'): ?>
