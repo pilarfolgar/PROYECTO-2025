@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 1️⃣ Validación de CI (obligatoria: 8 dígitos uruguayos)
+    // 1️⃣ Validación de CI (obligatoria ahora, pero maneja si vacía)
     $cedula_int = NULL;
     if (!empty($cedula)) {
         if (!preg_match('/^\d{8}$/', $cedula)) {
@@ -35,8 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $cedula_int = intval($cedula);
     } else {
-        // Cédula obligatoria: fuerza error si vacía
-        $_SESSION['error_usuario'] = 'ci_invalida';
+        // Si cedula es opcional, setea NULL; sino, fuerza error
+        $_SESSION['error_usuario'] = 'ci_invalida';  // Cambia a 'cedula_requerida' si quieres mensaje específico
         header("Location: registro.php");
         exit;
     }
@@ -61,32 +61,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 4️⃣ Preparar valores para INSERT (sin campo 'estado'; usa campos existentes)
+    // 4️⃣ Preparar valores para INSERT (incluyendo campos extras)
+    $estado = ($rol === 'docente') ? 'pendiente' : 'activo';
     $nombrecompleto = $nombre . ' ' . $apellido;
     $telefono = '';  // Vacío; usuario lo completa después
     $foto = NULL;    // Sin foto inicial
     $asignatura = ($rol === 'docente') ? '' : NULL;  // Docentes pueden agregar después
     $id_grupo = ($rol === 'estudiante') ? NULL : NULL;  // Grupos para estudiantes después
 
-    if (insertar_datos($con, $cedula_int, $nombrecompleto, $password, $apellido, $email, $rol, $telefono, $foto, $asignatura, $id_grupo)) {
-        // Registro exitoso: maneja redirección por rol (sin 'estado' en BD)
+    if (insertar_datos($con, $cedula_int, $nombrecompleto, $password, $apellido, $email, $rol, $estado, $telefono, $foto, $asignatura, $id_grupo)) {
         if ($rol === 'estudiante') {
             $_SESSION['msg_usuario'] = 'guardado';
             header("Location: indexestudiantes.php");
-        } else {  // Docente: muestra mensaje de verificación pendiente (lógica en login futura)
+        } else {
             $_SESSION['msg_usuario'] = 'pendiente_verificacion';
             header("Location: registro.php");
         }
         exit;
     } else {
         $_SESSION['error_usuario'] = 'error_general';
-        error_log("Error INSERT: " . mysqli_error($con) . " | Query details: cedula={$cedula_int}, email={$email}, rol={$rol}");  // Log detallado para debug
+        error_log("Error INSERT: " . mysqli_error($con) . " | Query: cedula={$cedula_int}, email={$email}");  // Log detallado
         header("Location: registro.php");
         exit;
     }
 }
 
-// Funciones (sin 'estado'; solo campos existentes)
+// Funciones actualizadas (incluye todos los campos)
 function consultar_existe_usr($con, $cedula) {
     if ($cedula === NULL || $cedula === 0) return false;
     $stmt = mysqli_prepare($con, "SELECT cedula FROM usuario WHERE cedula = ?");
@@ -97,11 +97,10 @@ function consultar_existe_usr($con, $cedula) {
     return ($result && mysqli_num_rows($result) > 0);
 }
 
-function insertar_datos($con, $cedula, $nombrecompleto, $password, $apellido, $email, $rol, $telefono, $foto, $asignatura, $id_grupo) {
-    // INSERT solo con campos existentes en la BD (sin 'estado')
-    $stmt = mysqli_prepare($con, "INSERT INTO usuario (cedula, nombrecompleto, pass, apellido, email, rol, telefono, foto, asignatura, id_grupo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    // Bind: i (int cedula), s (strings y NULLs)
-    mysqli_stmt_bind_param($stmt, "isssssssss", $cedula, $nombrecompleto, $password, $apellido, $email, $rol, $telefono, $foto, $asignatura, $id_grupo);
+function insertar_datos($con, $cedula, $nombrecompleto, $password, $apellido, $email, $rol, $estado, $telefono, $foto, $asignatura, $id_grupo) {
+    // Prepared statement para todos los campos (nota: foto e id_grupo como NULL si es el caso)
+    $stmt = mysqli_prepare($con, "INSERT INTO usuario (cedula, nombrecompleto, pass, apellido, email, rol, estado, telefono, foto, asignatura, id_grupo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "issssssssss", $cedula, $nombrecompleto, $password, $apellido, $email, $rol, $estado, $telefono, $foto, $asignatura, $id_grupo);
     $result = mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
     return $result;

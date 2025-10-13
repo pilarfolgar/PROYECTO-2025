@@ -1,6 +1,3 @@
-<?php
-session_start();  // Al inicio absoluto para sesiones (antes de cualquier output)
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,13 +11,15 @@ session_start();  // Al inicio absoluto para sesiones (antes de cualquier output
 
 <?php require("header.php"); ?>
 
+<?php session_start(); // Iniciar sesión para manejar mensajes ?>
+
 <main class="container my-5">
   <form action="procesar_inicio.php" method="POST" id="login_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 400px;">
     <h3 class="text-center mb-4">Iniciar Sesión</h3>
     
     <div class="mb-3">
       <label for="cedula" class="form-label">Cédula (8 dígitos) *</label>
-      <!-- type="text" con pattern para evitar truncado en números grandes -->
+      <!-- CAMBIO: type="text" con pattern para evitar truncado en números grandes -->
       <input type="text" name="cedula" id="cedula" class="form-control" 
              pattern="\d{8}" maxlength="8" title="Debe ser exactamente 8 dígitos numéricos" required>
     </div>
@@ -57,7 +56,7 @@ session_start();  // Al inicio absoluto para sesiones (antes de cualquier output
 <script src="header.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Validación JS básica para UX -->
+<!-- NUEVO: Validación JS básica para UX -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('login_form');
