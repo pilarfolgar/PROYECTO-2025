@@ -7,11 +7,11 @@ session_start();  // Al inicio absoluto para sesiones (antes de cualquier output
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="styleindexdocente.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+
 </head>
 <body>
-
+<?php require("HeaderIndex.php"); ?>
 <main class="container my-5">
   <form action="procesar_inicio.php" method="POST" id="login_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 400px;">
     <h3 class="text-center mb-4">Iniciar Sesión</h3>

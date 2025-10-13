@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<?php require("header.php"); ?>
+<?php require("HeaderIndex.php"); ?>
 
 
 

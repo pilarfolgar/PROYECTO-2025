@@ -15,25 +15,7 @@ session_start(); // Inicia sesión
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="HeaderIzq">
-    <h1>InfraLex</h1>
-    <h6>Instituto Tecnológico Superior de Paysandú</h6>
-  </div>
-  <div class="header-right">
-    <a href="index.php"><img src="imagenes/logopoyecto.png" alt="Logo" class="logo"></a>
-  </div>
-</header>
-
-<!-- NAV -->
-<nav>
-  <a href="index.php">Inicio</a>
-  <a href="">Reservas</a>
-  <a href="#reportes">Reportes</a>
-  <a href="#usuarios">Usuarios</a>
-  <a href="logout.php">Log Out</a>
-</nav>
+<?php require("header.php"); ?>
 
 <!-- PANEL ADMINISTRATIVO -->
 <main class="contenedor" id="gestion">
