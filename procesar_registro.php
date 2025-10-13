@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $apellido = mysqli_real_escape_string($con, $_POST["apellido"]);
     $email    = mysqli_real_escape_string($con, $_POST["email"]);
     $password = mysqli_real_escape_string($con, $_POST["pass"]);
-    $cedula   = isset($_POST["cedula"]) ? intval($_POST["cedula"]) : 0;
+    $cedula   = isset($_POST["cedula"]) ? trim($_POST["cedula"]) : '';
     $rol      = isset($_POST["rol"]) ? mysqli_real_escape_string($con, $_POST["rol"]) : NULL;
 
     // -----------------------------
@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // -----------------------------
     $ciValidator = new CI_Uruguay();
     $validacionCI = $ciValidator->validarCI($cedula);
-    if (!$validacionCI['valida']) {
+
+    if (!$validacionCI) {
         $_SESSION['error_usuario'] = 'ci_invalida';
         header("Location: registro.php");
         exit;
@@ -86,3 +87,4 @@ function insertar_datos($con, $nombre, $apellido, $email, $password, $cedula, $r
     return mysqli_query($con, $consulta_insertar);
 }
 ?>
+
