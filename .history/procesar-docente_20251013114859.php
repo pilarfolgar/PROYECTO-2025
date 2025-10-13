@@ -45,6 +45,21 @@ if ($check->num_rows > 0) {
 $check->close();
 
 // =========================
+// Verificar si ya existe docente con ese email
+// =========================
+$check_email = $con->prepare("SELECT email FROM usuario WHERE email = ?");
+$check_email->bind_param("s", $email);
+$check_email->execute();
+$check_email->store_result();
+
+if ($check_email->num_rows > 0) {
+    $_SESSION['error_docente'] = "email_existente";
+    header("Location: indexadministrativo.php");
+    exit();
+}
+$check_email->close();
+
+// =========================
 // Procesar imagen (foto)
 // =========================
 $foto = null;

@@ -69,10 +69,10 @@ $password_hash = password_hash($documento, PASSWORD_DEFAULT);
 // =========================
 // Insertar docente en la BD
 // =========================
-$sql = "INSERT INTO usuario (cedula, nombrecompleto, pass, apellido, email, rol, telefono, foto)
+$sql = "INSERT INTO usuario (cedula, nombrecompleto, apellido, email, telefono, rol, foto, password)
         VALUES (?, ?, ?, ?, ?, 'docente', ?, ?)";
 $stmt = $con->prepare($sql);
-$stmt->bind_param("sssssss", $documento, $nombre, $password_hash, $apellido, $email, $telefono, $foto);
+$stmt->bind_param("sssssss", $documento, $nombre, $apellido, $email, $telefono, $foto, $password_hash);
 
 if ($stmt->execute()) {
     $_SESSION['msg_docente'] = "guardado";
