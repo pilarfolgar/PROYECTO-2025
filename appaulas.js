@@ -1,4 +1,4 @@
-// Función para filtrar espacios según categoría
+// Filtrar espacios
 function filtrar(categoria) {
     document.querySelectorAll('.boton-filtro').forEach(btn => btn.classList.remove('active'));
     const boton = document.getElementById(`filtro-${categoria}`);
@@ -9,13 +9,12 @@ function filtrar(categoria) {
     });
 }
 
-// Función para mostrar imagen ampliada en el modal
+// Mostrar imagen en modal
 function mostrarImagen(img) {
-    const imagenModal = document.getElementById('imagenAmpliada');
-    imagenModal.src = img.src;
+    document.getElementById('imagenAmpliada').src = img.src;
 }
 
-// Función para abrir el modal de reserva con el aula seleccionada
+// Abrir modal de reserva
 function abrirReserva(nombreEspacio) {
     document.getElementById('tituloReserva').innerText = `Reservar - ${nombreEspacio}`;
     document.getElementById('aulaSeleccionada').value = nombreEspacio;
@@ -23,28 +22,29 @@ function abrirReserva(nombreEspacio) {
     modal.show();
 }
 
-// Función para enviar la reserva a la base de datos
-document.getElementById('formReserva').addEventListener('submit', function(e) {
+// Enviar reserva al servidor
+document.getElementById('formReserva').addEventListener('submit', function(e){
     e.preventDefault();
-
-    const formData = new FormData(this); // recoge todos los inputs automáticamente
+    const form = this;
+    const formData = new FormData(form);
+    const mensaje = document.getElementById('mensajeReserva');
 
     fetch('guardar_reserva.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
-        if (data.success) {
-            alert("✅ Reserva confirmada correctamente");
-            this.reset(); // limpia el formulario
-            bootstrap.Modal.getInstance(document.getElementById('modalReserva')).hide();
+        if(data.success){
+            mensaje.innerHTML = `<span class="text-success">${data.message}</span>`;
+            form.reset();
+            setTimeout(()=>bootstrap.Modal.getInstance(document.getElementById('modalReserva')).hide(), 1500);
         } else {
-            alert("❌ Error al reservar: " + data.message);
+            mensaje.innerHTML = `<span class="text-danger">${data.message}</span>`;
         }
     })
-    .catch(error => {
-        console.error(error);
-        alert("❌ Error de conexión o servidor");
+    .catch(err => {
+        console.error(err);
+        mensaje.innerHTML = `<span class="text-danger">Error de conexión</span>`;
     });
 });
