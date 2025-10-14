@@ -57,6 +57,12 @@ $con = conectar_bd();
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
 </main>
+<div class="tarjeta">
+  <h3>Avisos Generales</h3>
+  <p>Cargar avisos que verán todos los estudiantes.</p>
+  <a href="#" class="boton" onclick="mostrarForm('form-aviso')">➕ Agregar Aviso</a>
+</div>
+
 
 <?php require("footer.php"); ?>
 
@@ -297,6 +303,29 @@ $con = conectar_bd();
     <button type="submit" class="boton mt-3">Enviar</button>
   </form>
 </section>
+<!-- FORM AVISO -->
+<section id="form-aviso" class="formulario" style="display:none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-aviso')">✖</button>
+  <form action="procesar-aviso.php" method="POST" class="needs-validation form-reserva-style novalidate">
+    <h2 class="form-title">Agregar Aviso General</h2>
+    <div class="row g-3">
+      <div class="col-12">
+        <label for="tituloAviso" class="form-label">Título</label>
+        <input type="text" class="form-control" id="tituloAviso" name="titulo" required placeholder="Ej. Cambio de horario">
+      </div>
+      <div class="col-12">
+        <label for="mensajeAviso" class="form-label">Mensaje</label>
+        <textarea class="form-control" id="mensajeAviso" name="mensaje" rows="4" required placeholder="Escriba el aviso"></textarea>
+      </div>
+      <div class="col-12">
+        <label for="fechaAviso" class="form-label">Fecha</label>
+        <input type="date" class="form-control" id="fechaAviso" name="fecha" value="<?php echo date('Y-m-d'); ?>" required>
+      </div>
+    </div>
+    <button type="submit" class="boton mt-3">Guardar Aviso</button>
+  </form>
+</section>
+
 
 <!-- =====================
    SWEETALERT CENTRALIZADO
@@ -326,6 +355,25 @@ document.addEventListener('DOMContentLoaded', function() {
     ?>
 });
 </script>
+
+<?php
+$alerts['msg_aviso'] = ['icon'=>'success','title'=>'¡Éxito!','text'=>'Aviso agregado correctamente'];
+$alerts['error_aviso'] = ['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al agregar el aviso','form'=>'form-aviso'];
+?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    <?php
+    foreach($alerts as $key=>$alert){
+        if(isset($_SESSION[$key])){
+            $form = isset($alert['form']) ? "mostrarForm('{$alert['form']}');" : "";
+            echo $form."Swal.fire({icon:'{$alert['icon']}',title:'{$alert['title']}',text:'{$alert['text']}',timer:2500,showConfirmButton:false});";
+            unset($_SESSION[$key]);
+        }
+    }
+    ?>
+});
+</script>
+
 
 </body>
 </html>
