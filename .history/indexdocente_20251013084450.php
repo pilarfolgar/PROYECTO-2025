@@ -1,6 +1,3 @@
-<?php 
-require("seguridad.php");
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,8 +5,10 @@ require("seguridad.php");
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Docentes - InfraLex</title>
 
+<!-- Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 
+<!-- Flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <link rel="stylesheet" href="styleindexdocente.css" />
