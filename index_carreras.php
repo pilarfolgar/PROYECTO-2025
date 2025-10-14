@@ -67,7 +67,7 @@
       <div class="carrera-card">
         <h4>Bachillerato en tecnologías de la información bilingüe</h4>
         <div class="carrera-info">Duración: 3 años</div>
-        <div class="carrera-info">Turno: Matutino</div>
+        <div class="carrera-info">Turno: Matutino/Vespertino</div>
         <strong>Materias:</strong><br>
         <span class="materia-chip">Lengua y comunicación multimodal</span>
         <span class="materia-chip">Biología</span>
@@ -144,7 +144,7 @@
     <div class="col-md-6 reveal">
       <div class="carrera-card">
         <h4>Tecnicatura en ciberseguridad</h4>
-        <div class="carrera-info">Duración: 6 semestres</div>
+        <div class="carrera-info">Duración: 3 años</div>
         <div class="carrera-info">Turno: Nocturno</div>
         <strong>Materias:</strong><br>
         <span class="materia-chip">Introducción a la programación</span>
