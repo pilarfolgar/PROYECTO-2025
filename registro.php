@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['msg_usuario']); endif; ?>
 
-<!-- Error: Cédula inválida -->
+<!-- Bloques de errores -->
 <?php if (isset($_SESSION['error_usuario']) && $_SESSION['error_usuario'] === 'ci_invalida'): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
-<!-- NUEVO: Error: Rol inválido -->
 <?php if (isset($_SESSION['error_usuario']) && $_SESSION['error_usuario'] === 'rol_invalido'): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -71,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
-<!-- NUEVO: Error: Email duplicado -->
 <?php if (isset($_SESSION['error_usuario']) && $_SESSION['error_usuario'] === 'email_existente'): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -85,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
-<!-- NUEVO: Error: Campos vacíos -->
 <?php if (isset($_SESSION['error_usuario']) && $_SESSION['error_usuario'] === 'campos_vacios'): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -99,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
-<!-- NUEVO: Error: General (o cualquier otro no manejado) -->
 <?php if (isset($_SESSION['error_usuario']) && in_array($_SESSION['error_usuario'], ['error_general', 'usuario_existente'])): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -122,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
-<!-- NUEVO: Captura cualquier otro error no específico (fallback) -->
 <?php if (isset($_SESSION['error_usuario']) && !in_array($_SESSION['error_usuario'], ['ci_invalida', 'rol_invalido', 'email_existente', 'campos_vacios', 'error_general', 'usuario_existente'])): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -137,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
 <main class="container my-5">
+  <h1 class="text-center mb-4">Inicio de Sesión</h1>
+
   <form action="procesar_registro.php" method="POST" id="registro_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 500px;">
   
     <div class="mb-3">
@@ -159,20 +156,32 @@ document.addEventListener('DOMContentLoaded', function() {
       <input type="password" name="pass" id="pass" class="form-control" required minlength="6">
     </div>
 
-    <!-- CAMBIO: Cédula ahora required con patrón para 8 dígitos -->
     <div class="mb-3">
       <label for="cedula" class="form-label">Cédula (Uruguaya, 8 dígitos) *</label>
       <input type="text" name="cedula" id="cedula" class="form-control" 
              pattern="\d{8}" maxlength="8" title="Debe ser exactamente 8 dígitos numéricos" required>
     </div>
 
-    <!-- CAMBIO: Rol ahora required -->
     <div class="mb-3">
       <label for="rol" class="form-label">Rol *</label>
       <select name="rol" id="rol" class="form-select" required>
         <option value="">Seleccione...</option>
         <option value="estudiante">Estudiante</option>
         <option value="docente">Docente</option>
+      </select>
+    </div>
+
+    <!-- ✅ NUEVO: Campo Clase -->
+    <div class="mb-3" id="clase_div" style="display: none;">
+      <label for="clase" class="form-label">Clase *</label>
+      <select name="clase" id="clase" class="form-select">
+        <option value="">Seleccione una clase...</option>
+        <option value="1A">1A</option>
+        <option value="1B">1B</option>
+        <option value="2A">2A</option>
+        <option value="2B">2B</option>
+        <option value="3A">3A</option>
+        <option value="3B">3B</option>
       </select>
     </div>
 
@@ -189,23 +198,34 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- NUEVO: JavaScript para validación frontend (mejora UX) -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('registro_form');
   const cedulaInput = document.getElementById('cedula');
   const rolSelect = document.getElementById('rol');
+  const claseDiv = document.getElementById('clase_div');
+  const claseSelect = document.getElementById('clase');
 
-  // Validación en tiempo real para cédula (solo dígitos)
   cedulaInput.addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');  // Solo permite números
+    this.value = this.value.replace(/\D/g, '');
     if (this.value.length > 8) this.value = this.value.slice(0, 8);
   });
 
-  // Validación al submit
+  rolSelect.addEventListener('change', function() {
+    if (this.value === 'estudiante') {
+      claseDiv.style.display = 'block';
+      claseSelect.setAttribute('required', 'required');
+    } else {
+      claseDiv.style.display = 'none';
+      claseSelect.removeAttribute('required');
+      claseSelect.value = '';
+    }
+  });
+
   form.addEventListener('submit', function(e) {
     const cedula = cedulaInput.value;
     const rol = rolSelect.value;
+    const clase = claseSelect.value;
 
     if (!rol) {
       e.preventDefault();
@@ -216,6 +236,18 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmButtonText: 'OK'
       });
       rolSelect.focus();
+      return;
+    }
+
+    if (rol === 'estudiante' && !clase) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Clase requerida',
+        text: 'Debes seleccionar una clase si sos estudiante.',
+        confirmButtonText: 'OK'
+      });
+      claseSelect.focus();
       return;
     }
 
@@ -230,8 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
       cedulaInput.focus();
       return;
     }
-
-    // Si todo OK, permite submit
   });
 });
 </script>
