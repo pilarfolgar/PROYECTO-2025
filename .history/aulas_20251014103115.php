@@ -1,41 +1,3 @@
-<?php 
-require("header.php"); 
-require("conexion.php");
-$con = conectar_bd();
-
-// Procesar reserva si se envió el formulario
-$mensaje = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
-    $id_aula = intval($_POST['id_aula']);
-    $aula_nombre = $con->real_escape_string($_POST['aula_nombre']);
-    $nombre = $con->real_escape_string($_POST['nombre']);
-    $fecha = $con->real_escape_string($_POST['fecha']);
-    $hora_inicio = $con->real_escape_string($_POST['hora_inicio']);
-    $hora_fin = $con->real_escape_string($_POST['hora_fin']);
-    $id_grupo = intval($_POST['id_grupo']);
-
-    // Verificar disponibilidad
-    $sql_check = "SELECT * FROM reserva
-                  WHERE id_aula=$id_aula AND fecha='$fecha'
-                  AND ((hora_inicio <= '$hora_inicio' AND hora_fin > '$hora_inicio')
-                  OR (hora_inicio < '$hora_fin' AND hora_fin >= '$hora_fin')
-                  OR (hora_inicio >= '$hora_inicio' AND hora_fin <= '$hora_fin'))";
-
-    $result = $con->query($sql_check);
-    if($result->num_rows > 0){
-        $mensaje = '<div class="alert alert-danger text-center">El aula ya está reservada en ese horario.</div>';
-    } else {
-        $sql = "INSERT INTO reserva (id_aula, aula, nombre, fecha, hora_inicio, hora_fin, grupo)
-                VALUES ($id_aula, '$aula_nombre', '$nombre', '$fecha', '$hora_inicio', '$hora_fin', $id_grupo)";
-        if ($con->query($sql)) {
-            $mensaje = '<div class="alert alert-success text-center">Reserva confirmada ✅</div>';
-        } else {
-            $mensaje = '<div class="alert alert-danger text-center">Error al guardar la reserva.</div>';
-        }
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -47,9 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 </head>
 <body>
 
-<div class="container my-4">
-    <?php if($mensaje) echo $mensaje; ?>
+<?php 
+require("header.php"); 
+require("conexion.php");
+$con = conectar_bd();
+?>
 
+<div class="container my-4">
     <div class="text-center mb-3">
         <button class="btn btn-outline-primary boton-filtro active" id="filtro-todo" onclick="filtrar('todo')">Todos</button>
         <button class="btn btn-outline-primary boton-filtro" id="filtro-aula" onclick="filtrar('aula')">Aulas</button>
@@ -58,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     </div>
 
     <?php
+    // Traer aulas
     $sql = "SELECT id_aula, codigo, capacidad, ubicacion, imagen, tipo FROM aula ORDER BY codigo";
     $result = $con->query($sql);
     ?>
@@ -73,15 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
                 <div class="card-body text-center">
                     <h4 class="card-title"><?= htmlspecialchars($row['codigo']) ?></h4>
                     <p>Capacidad: <?= $row['capacidad'] ?> personas<br>Ubicación: <?= htmlspecialchars($row['ubicacion']) ?></p>
-                    <button class="btn btn-success w-100" 
-                            onclick="abrirReserva(<?= $row['id_aula'] ?>, '<?= htmlspecialchars($row['codigo']) ?>')">
-                        Reservar
-                    </button>
+                    <button class="btn btn-success w-100" onclick="abrirReserva(<?= $row['id_aula'] ?>,'<?= htmlspecialchars($row['codigo']) ?>')">Reservar</button>
                 </div>
             </div>
         </div>
         <?php endwhile; ?>
     </div>
+</div>
+
+<!-- Modal Imagen -->
+<div class="modal fade" id="modalImagen" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body p-0">
+        <img id="imagenAmpliada" src="" class="w-100" style="object-fit: contain;">
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal Reserva -->
@@ -93,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form method="POST">
+        <form id="formReserva">
           <input type="hidden" name="id_aula" id="idAulaSeleccionada">
           <div class="mb-3">
-            <label class="form-label">Cédula del usuario</label>
-            <input type="number" name="nombre" class="form-control" required>
+            <label class="form-label">Nombre</label>
+            <input type="text" name="nombre" class="form-control" required>
           </div>
           <div class="mb-3">
             <label class="form-label">Aula</label>
@@ -130,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
               ?>
             </select>
           </div>
+          <div id="mensajeReserva" class="mb-3 text-center"></div>
           <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
         </form>
       </div>
@@ -160,6 +136,33 @@ function abrirReserva(idAula, nombreAula) {
     const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
     modal.show();
 }
+
+// Enviar reserva
+document.getElementById('formReserva').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+    const mensaje = document.getElementById('mensajeReserva');
+
+    fetch('guardar_reserva.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            mensaje.innerHTML = `<span class="text-success">${data.message}</span>`;
+            form.reset();
+            setTimeout(()=>bootstrap.Modal.getInstance(document.getElementById('modalReserva')).hide(), 1500);
+        } else {
+            mensaje.innerHTML = `<span class="text-danger">${data.message}</span>`;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        mensaje.innerHTML = `<span class="text-danger">Error de conexión</span>`;
+    });
+});
 </script>
 </body>
 </html>

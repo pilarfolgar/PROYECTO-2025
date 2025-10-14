@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
           <input type="hidden" name="id_aula" id="idAulaSeleccionada">
           <div class="mb-3">
             <label class="form-label">Cédula del usuario</label>
-            <input type="number" name="nombre" class="form-control" required>
+            <input type="text" name="nombre" class="form-control" required>
           </div>
           <div class="mb-3">
             <label class="form-label">Aula</label>
