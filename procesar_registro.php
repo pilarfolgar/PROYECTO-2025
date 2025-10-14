@@ -11,16 +11,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = password_hash($_POST["pass"] ?? '', PASSWORD_DEFAULT);
     $cedula   = trim($_POST["cedula"] ?? '');
     $rol      = trim($_POST["rol"] ?? '');
-    $clase    = trim($_POST["clase"] ?? ''); // ✅ Nuevo campo clase
+    $clase    = trim($_POST["clase"] ?? ''); // 
 
-    // 🔸 Validaciones básicas
+  
     if (empty($nombre) || empty($apellido) || empty($email) || empty($password) || empty($rol)) {
         $_SESSION['error_usuario'] = 'campos_vacios';
         header("Location: registro.php");
         exit;
     }
 
-    // 1️⃣ Validación de CI (8 dígitos uruguayos)
+    
     $cedula_int = NULL;
     if (!empty($cedula)) {
         if (!preg_match('/^\d{8}$/', $cedula)) {
