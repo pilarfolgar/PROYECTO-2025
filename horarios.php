@@ -3,10 +3,10 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-$grupo_id = $_SESSION['grupo_id'] ?? 0; // suponer que cada estudiante tiene un grupo
+$grupo_id = $_SESSION['id_grupo'] ?? 0; // suponer que cada estudiante tiene un grupo
 
 // Traer horarios del grupo
-$sql = "SELECT dia, hora_inicio, hora_fin, materia, aula FROM horarios WHERE grupo_id = ? ORDER BY dia, hora_inicio";
+$sql = "SELECT dia, hora_inicio, hora_fin, materia, aula FROM horarios WHERE  id_grupo = ? ORDER BY dia, hora_inicio";
 $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $grupo_id);
 $stmt->execute();

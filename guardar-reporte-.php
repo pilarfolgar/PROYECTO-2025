@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_query($con, $sql)) {
         echo "<script>
                 alert('✅ Reporte enviado correctamente.');
-                window.location.href = 'indexEstudiantes.php';
+                window.location.href = 'indexestudiante.php';
               </script>";
     } else {
         echo "<script>
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 } else {
     // Si alguien intenta acceder directamente sin enviar el formulario
-    header("Location: indexEstudiantes.php");
+    header("Location: indexestudiante.php");
     exit();
 }
 ?>
