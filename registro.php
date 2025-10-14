@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php unset($_SESSION['error_usuario']); endif; ?>
 
 <main class="container my-5">
-  <h1 class="text-center mb-4">Inicio de Sesión</h1>
+  <h1 class="text-center mb-4">Registro</h1>
 
   <form action="procesar_registro.php" method="POST" id="registro_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 500px;">
   
