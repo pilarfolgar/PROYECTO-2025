@@ -4,8 +4,8 @@ require("conexion.php");
 $con = conectar_bd();
 
 // 1️⃣ Obtener la cédula del usuario logueado
-$usuario_cedula = $_SESSION['usuario_cedula'] ?? '';
-$nombre_estudiante = $_SESSION['usuario_nombre'] ?? 'Estudiante';
+$usuario_cedula = $_SESSION['cedula'] ?? '';
+$nombre_estudiante = $_SESSION['nombrecompleto'] ?? 'Estudiante';
 
 // 2️⃣ Buscar el grupo del estudiante
 $sqlGrupo = "SELECT id_grupo FROM usuario WHERE cedula = ?";
@@ -19,7 +19,7 @@ if ($fila = $resGrupo->fetch_assoc()) {
 }
 
 // 3️⃣ Traer todas las notificaciones de ese grupo
-$sql = "SELECT id, docente_id, titulo, mensaje, fecha, visto_estudiante 
+$sql = "SELECT id, docente_cedula , titulo, mensaje, fecha, visto_estudiante 
         FROM notificaciones 
         WHERE id_grupo = ? 
         ORDER BY fecha DESC";
