@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $grupo = $con->real_escape_string($_POST['grupo']);
 
     // Verificar disponibilidad
-    $sql_check = "SELECT * FROM reservas 
+    $sql_check = "SELECT * FROM reserva
                   WHERE aula='$aula' AND fecha='$fecha'
                   AND ((hora_inicio <= '$hora_inicio' AND hora_fin > '$hora_inicio')
                   OR (hora_inicio < '$hora_fin' AND hora_fin >= '$hora_fin')

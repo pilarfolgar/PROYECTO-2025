@@ -9,18 +9,7 @@
 </head>
 <body>
 
-<header class="d-flex justify-content-between align-items-center p-3 bg-primary text-white">
-    <div>
-        <h1>InfraLex</h1>
-        <h6>Instituto Tecnológico Superior de Paysandú</h6>
-    </div>
-    <a href="index.php"><img src="imagenes/logopoyecto.png" alt="Logo" style="height:60px;width:60px;border-radius:50%;"></a>
-</header>
-
-<nav class="d-flex justify-content-center gap-3 p-2 bg-secondary">
-    <a href="funcionarios.php" class="text-white text-decoration-none">Funcionarios</a>
-    <a href="usuarios.html" class="text-white text-decoration-none">Mi Perfil</a>
-</nav>
+<?php require("header.php"); ?>
 
 <div class="container my-4">
     <div class="text-center mb-3">
