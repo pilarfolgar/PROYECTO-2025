@@ -3,14 +3,19 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-$grupo_id = $_SESSION['id_grupo'] ?? 0; // suponer que cada estudiante tiene un grupo
+// Obtener el id del grupo del estudiante desde la sesión
+$grupo_id = $_SESSION['id_grupo'] ?? 0;
 
 // Traer horarios del grupo
-$sql = "SELECT dia, hora_inicio, hora_fin, materia, aula FROM horarios WHERE  id_grupo = ? ORDER BY dia, hora_inicio";
+$sql = "SELECT dia, hora_inicio, hora_fin, clase, aula 
+        FROM horarios 
+        WHERE id_grupo = ? 
+        ORDER BY dia, hora_inicio";
 $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $grupo_id);
 $stmt->execute();
 $result = $stmt->get_result();
+
 $horario = [];
 while($row = $result->fetch_assoc()){
     $horario[$row['dia']][] = $row;
@@ -37,29 +42,37 @@ while($row = $result->fetch_assoc()){
           <th>Día</th>
           <th>Hora Inicio</th>
           <th>Hora Fin</th>
-          <th>Materia</th>
+          <th>Clase</th>
           <th>Aula</th>
         </tr>
       </thead>
       <tbody>
-        <?php foreach($horario as $dia => $clases): ?>
-            <?php foreach($clases as $clase): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($dia); ?></td>
-                <td><?php echo htmlspecialchars($clase['hora_inicio']); ?></td>
-                <td><?php echo htmlspecialchars($clase['hora_fin']); ?></td>
-                <td><?php echo htmlspecialchars($clase['materia']); ?></td>
-                <td><?php echo htmlspecialchars($clase['aula']); ?></td>
-            </tr>
+        <?php if(!empty($horario)): ?>
+            <?php foreach($horario as $dia => $clases): ?>
+                <?php foreach($clases as $clase): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($dia); ?></td>
+                    <td><?php echo htmlspecialchars($clase['hora_inicio']); ?></td>
+                    <td><?php echo htmlspecialchars($clase['hora_fin']); ?></td>
+                    <td><?php echo htmlspecialchars($clase['clase']); ?></td>
+                    <td><?php echo htmlspecialchars($clase['aula']); ?></td>
+                </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
-        <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="5">No hay clases asignadas para tu grupo.</td>
+            </tr>
+        <?php endif; ?>
       </tbody>
     </table>
   </div>
 </section>
 
-<footer class="footer">
+<footer class="footer mt-5">
   &copy; <?php echo date("Y"); ?> Instituto Tecnológico Superior de Paysandú
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

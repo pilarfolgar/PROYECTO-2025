@@ -1,17 +1,19 @@
 <?php 
 require("seguridad.php");
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Docentes - InfraLex</title>
 
+<!-- Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 
+<!-- Flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+<link rel="stylesheet" href="styleindexdocente.css" />
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -214,7 +216,7 @@ require("seguridad.php");
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
 <script src="estudiantes.js"></script>
-
+<script src="header.js"></script>
 
 </body>
 </html>

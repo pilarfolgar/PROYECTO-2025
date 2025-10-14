@@ -12,6 +12,7 @@ require("seguridad.php");
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+<link rel="stylesheet" href="styleindexdocente.css" />
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -214,7 +215,7 @@ require("seguridad.php");
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
 <script src="estudiantes.js"></script>
-
+<script src="header.js"></script>
 
 </body>
 </html>
