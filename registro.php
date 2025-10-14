@@ -171,19 +171,22 @@ document.addEventListener('DOMContentLoaded', function() {
       </select>
     </div>
 
-    <!-- ✅ NUEVO: Campo Clase -->
-    <div class="mb-3" id="clase_div" style="display: none;">
-      <label for="clase" class="form-label">Clase *</label>
-      <select name="clase" id="clase" class="form-select">
-        <option value="">Seleccione una clase...</option>
-        <option value="1A">1A</option>
-        <option value="1B">1B</option>
-        <option value="2A">2A</option>
-        <option value="2B">2B</option>
-        <option value="3A">3A</option>
-        <option value="3B">3B</option>
-      </select>
-    </div>
+   <!-- Campo Grupo -->
+<div class="mb-3">
+  <label for="grupo" class="form-label">Grupo *</label>
+  <select name="grupo" id="grupo" class="form-select" required>
+    <option value="">Seleccione un grupo...</option>
+    <?php
+    $res_grupo = $con->query("SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre");
+    while($row = $res_grupo->fetch_assoc()) {
+        // Mostramos nombre + orientación para que sea más descriptivo
+        $display = htmlspecialchars($row['nombre'] . ' - ' . $row['orientacion']);
+        echo "<option value='".htmlspecialchars($row['id_grupo'])."'>$display</option>";
+    }
+    ?>
+  </select>
+</div>
+
 
     <button type="submit" class="btn btn-primary">Cargar</button>
     <button type="reset" class="btn btn-secondary">Cancelar</button>
