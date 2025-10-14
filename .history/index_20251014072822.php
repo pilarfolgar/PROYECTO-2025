@@ -70,13 +70,14 @@
             <tr><th>Carrera</th><th>Duración</th><th>Turno</th></tr>
           </thead>
           <tbody>
-            <tr><td>Bachillerato en Tecnológico Tecnologías de la Información Bilingüe</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
-            <tr><td>Bachillerato en Tecnológico Tecnologías de la Información</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
+            <tr><td>Bachillerato en Tecnologías de la Información Bilingüe</td><td>3 años</td><td>Matutino</td></tr>
+            <tr><td>Bachillerato en Tecnologías de la Información</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
             <tr><td>Curso técnico terciario de Diseño Gráfico</td><td>3 años</td><td>Vespertino</td></tr>
-            <tr><td>Secretariado Bilingüe - Inglés</td><td>2 años</td><td>Nocturno</td></tr>
-            <tr><td>Curso Técnico Terciario Diseño Gráfico en Comunicación Visual</td><td>2 años</td><td>Nocturno</td></tr>
-            <tr><td>Tecnólogo en Ciberseguridad</td><td>3 años</td><td>Nocturno</td></tr>
-            <tr><td>Curso Técnico Terciario Redes y Comunicaciones Ópticas</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Secretariado Bilingüe</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Finest</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Tecnicatura en Diseño</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Tecnicatura en Ciberseguridad</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Redes</td><td>1 año</td><td>Nocturno</td></tr>
           </tbody>
         </table>
       </div>

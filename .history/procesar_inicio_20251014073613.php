@@ -56,7 +56,7 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
             // Redirección según rol
             switch ($fila['rol']) {
                 case 'estudiante':
-                    header("Location: indexestudiante.php");
+                    header("Location: index.php");
                     break;
                 case 'docente':
                     header("Location: indexdocente.php");

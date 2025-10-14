@@ -71,9 +71,10 @@
           </thead>
           <tbody>
             <tr><td>Bachillerato en Tecnológico Tecnologías de la Información Bilingüe</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
-            <tr><td>Bachillerato en Tecnológico Tecnologías de la Información</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
+            <tr><td>Bachillerato en Tecnológico Tecnologías de la Información Bilingüe</td><td>3 años</td><td>Matutino/Vespertino</td></tr>
             <tr><td>Curso técnico terciario de Diseño Gráfico</td><td>3 años</td><td>Vespertino</td></tr>
             <tr><td>Secretariado Bilingüe - Inglés</td><td>2 años</td><td>Nocturno</td></tr>
+            <tr><td>Finest</td><td>2 años</td><td>Nocturno</td></tr>
             <tr><td>Curso Técnico Terciario Diseño Gráfico en Comunicación Visual</td><td>2 años</td><td>Nocturno</td></tr>
             <tr><td>Tecnólogo en Ciberseguridad</td><td>3 años</td><td>Nocturno</td></tr>
             <tr><td>Curso Técnico Terciario Redes y Comunicaciones Ópticas</td><td>2 años</td><td>Nocturno</td></tr>
