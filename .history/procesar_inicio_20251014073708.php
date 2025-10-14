@@ -52,8 +52,6 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
             $_SESSION['cedula'] = $fila['cedula'];
             $_SESSION['usuario'] = $fila['nombrecompleto'];
             $_SESSION['rol'] = $fila['rol'];
-            
-    $_SESSION['acceso_panel'] = true;
 
             // Redirección según rol
             switch ($fila['rol']) {

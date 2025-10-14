@@ -1,7 +1,3 @@
-<?php 
-require("seguridad.php");
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>

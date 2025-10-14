@@ -51,12 +51,6 @@ require("seguridad.php");
   <p>Crear y administrar grupos de estudiantes.</p>
   <a href="#" class="boton" onclick="mostrarForm('form-grupo')">➕ Agregar Grupo</a>
 </div>
-<div class="tarjeta">
-  <h3>Enviar Notificación</h3>
-  <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
-  <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
-</div>
-
 
 </main>
 <?php require("footer.php"); ?>
@@ -311,36 +305,6 @@ require("seguridad.php");
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-<section id="form-notificacion" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-notificacion')">✖</button>
-  <form action="procesar-notificacion.php" method="POST" class="needs-validation form-reserva-style novalidate">
-    <h2 class="form-title">Enviar Notificación a Grupo</h2>
-    <div class="row g-3">
-      <div class="col-md-6">
-        <label for="grupoNotificacion" class="form-label">Grupo</label>
-        <select class="form-select" id="grupoNotificacion" name="id_grupo" required>
-          <option value="">Seleccione grupo...</option>
-          <?php
-          $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
-          $result = $con->query($sql);
-          while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['id_grupo'].'">'.$row['nombre'].' - '.$row['orientacion'].'</option>';
-          }
-          ?>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="tituloNotificacion" class="form-label">Título</label>
-        <input type="text" class="form-control" id="tituloNotificacion" name="titulo" required placeholder="Ej. Cambio de aula">
-      </div>
-      <div class="col-12">
-        <label for="mensajeNotificacion" class="form-label">Mensaje</label>
-        <textarea class="form-control" id="mensajeNotificacion" name="mensaje" rows="4" required placeholder="Escriba su mensaje"></textarea>
-      </div>
-    </div>
-    <button type="submit" class="boton mt-3">Enviar</button>
-  </form>
-</section>
 
 
 <!-- ===========================
@@ -432,35 +396,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php unset($_SESSION['error_aula']); endif; ?>
-
-
-<?php if(isset($_SESSION['msg_notificacion']) && $_SESSION['msg_notificacion'] === 'enviada'): ?>
-<script>
-Swal.fire({
-    icon: 'success',
-    title: '¡Éxito!',
-    text: <?php echo json_encode('Notificación enviada con éxito'); ?>,
-    timer: 2500,
-    showConfirmButton: false
-});
-</script>
-<?php unset($_SESSION['msg_notificacion']); endif; ?>
-
-<?php if(isset($_SESSION['error_notificacion'])): ?>
-<script>
-Swal.fire({
-    icon: 'error',
-    title: 'Error',
-    text: <?php 
-        $mensaje = $_SESSION['error_notificacion'] === "faltan_datos" 
-                   ? "Complete todos los campos" 
-                   : "Ocurrió un error al enviar la notificación";
-        echo json_encode($mensaje);
-    ?>
-});
-</script>
-<?php unset($_SESSION['error_notificacion']); endif; ?>
-
 
 
 </body>

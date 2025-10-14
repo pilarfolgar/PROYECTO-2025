@@ -1,5 +1,6 @@
 <?php 
 require("seguridad.php");
+require_once("helpers.php");
 ?>
 
 <!DOCTYPE html>
