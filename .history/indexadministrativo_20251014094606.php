@@ -1,7 +1,8 @@
 <?php
 session_start(); // Inicia sesión
-require("conexion.php");
-$con = conectar_bd();
+?>
+<?php 
+require("seguridad.php");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,6 +20,7 @@ $con = conectar_bd();
 
 <?php require("header.php"); ?>
 
+<!-- PANEL ADMINISTRATIVO -->
 <main class="contenedor" id="gestion">
   <!-- Tarjetas de acciones -->
   <div class="tarjeta">
@@ -44,29 +46,25 @@ $con = conectar_bd();
     <p>Administrar aulas disponibles y asignaciones.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-aula')">➕ Agregar Aula</a>
   </div>
-
   <div class="tarjeta">
-    <h3>Grupos</h3>
-    <p>Crear y administrar grupos de estudiantes.</p>
-    <a href="#" class="boton" onclick="mostrarForm('form-grupo')">➕ Agregar Grupo</a>
-  </div>
+  <h3>Grupos</h3>
+  <p>Crear y administrar grupos de estudiantes.</p>
+  <a href="#" class="boton" onclick="mostrarForm('form-grupo')">➕ Agregar Grupo</a>
+</div>
+<div class="tarjeta">
+  <h3>Enviar Notificación</h3>
+  <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
+  <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
+</div>
 
-  <div class="tarjeta">
-    <h3>Enviar Notificación</h3>
-    <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
-    <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
-  </div>
+
 </main>
-
 <?php require("footer.php"); ?>
 
-<!-- =====================
-   FORMULARIOS
-===================== -->
-
 <!-- FORM DOCENTE -->
-<section id="form-docente" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-docente')">✖</button>
+<!-- FORM DOCENTE -->
+<section id="form-docente" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-docente')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-docente.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Docente</h2>
     <div class="row g-3">
@@ -99,9 +97,10 @@ $con = conectar_bd();
   </form>
 </section>
 
+
 <!-- FORM ASIGNATURA -->
-<section id="form-asignatura" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-asignatura')">✖</button>
+<section id="form-asignatura" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-asignatura')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-asignatura.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Asignatura</h2>
     <div class="row g-3">
@@ -117,10 +116,12 @@ $con = conectar_bd();
         <label for="docentesAsignatura" class="form-label">Docentes asignados (seleccione múltiples)</label>
         <select class="form-select" id="docentesAsignatura" name="docentes[]" multiple required>
           <?php
-          $sql = "SELECT cedula, nombrecompleto, apellido FROM usuario WHERE rol='docente'";
+          require("conexion.php");
+          $con = conectar_bd();
+          $sql = "SELECT cedula, nombrecompleto, apellido FROM usuario WHERE rol = 'docente'";
           $result = $con->query($sql);
-          while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['cedula'].'">Prof. '.$row['nombrecompleto'].' '.$row['apellido'].'</option>';
+          while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['cedula'] . '">Prof. ' . $row['nombrecompleto'] . ' ' . $row['apellido'] . '</option>';
           }
           ?>
         </select>
@@ -131,8 +132,8 @@ $con = conectar_bd();
 </section>
 
 <!-- FORM HORARIO -->
-<section id="form-horario" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-horario')">✖</button>
+<section id="form-horario" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-horario')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-horario.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Horario</h2>
     <div class="row g-3">
@@ -140,11 +141,13 @@ $con = conectar_bd();
         <label for="asignaturaHorario" class="form-label">Asignatura</label>
         <select class="form-select" id="asignaturaHorario" name="id_asignatura" required>
           <option value="">Seleccione asignatura...</option>
+            <option value="">Si no aparece la asignatura deseada, recuerde ingresar primero la asignatura.</option>
+
           <?php
           $sql = "SELECT id_asignatura, nombre, codigo FROM asignatura ORDER BY nombre";
           $result = $con->query($sql);
-          while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['id_asignatura'].'">'.$row['nombre'].' ('.$row['codigo'].')</option>';
+          while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['id_asignatura'] . '">' . $row['nombre'] . ' (' . $row['codigo'] . ')</option>';
           }
           ?>
         </select>
@@ -168,46 +171,54 @@ $con = conectar_bd();
         <label for="horaFinHorario" class="form-label">Hora de fin</label>
         <input type="time" class="form-control" id="horaFinHorario" name="hora_fin" required>
       </div>
-      <div class="col-md-6">
-        <label for="grupoHorario" class="form-label">Grupo</label>
-        <select class="form-select" id="grupoHorario" name="id_grupo" required>
-          <option value="">Seleccione grupo...</option>
-          <?php
-          $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
-          $result = $con->query($sql);
-          if($result->num_rows>0){
-              while($row = $result->fetch_assoc()){
-                  echo '<option value="'.$row['id_grupo'].'">'.$row['nombre'].' - '.$row['orientacion'].'</option>';
-              }
-          } else {
-              echo '<option value="">No hay grupos registrados</option>';
-          }
-          ?>
-        </select>
-      </div>
+<div class="col-md-6">
+  <label for="grupoHorario" class="form-label">Grupo</label>
+  <select class="form-select" id="grupoHorario" name="id_grupo" required>
+    <option value="">Seleccione grupo...</option>
+    <?php
+    // Obtener todos los grupos cargados
+    $sql = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
+    $result = $con->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row['id_grupo'] . '">' 
+                 . $row['nombre'] . ' - ' . $row['orientacion'] 
+                 . '</option>';
+        }
+    } else {
+        echo '<option value="">No hay grupos registrados</option>';
+    }
+    ?>
+  </select>
+</div>
+
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
 
 <!-- FORM AULA -->
-<section id="form-aula" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-aula')">✖</button>
+<section id="form-aula" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-aula')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-aula.php" method="POST" enctype="multipart/form-data" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Aula</h2>
     <div class="row g-3">
+      <!-- Código de aula -->
       <div class="col-md-6">
         <label for="codigoAula" class="form-label">Número o código de aula</label>
         <input type="text" class="form-control" id="codigoAula" name="codigo" required placeholder="Ej. Aula 101">
       </div>
+      <!-- Capacidad -->
       <div class="col-md-6">
         <label for="capacidadAula" class="form-label">Capacidad</label>
         <input type="number" class="form-control" id="capacidadAula" name="capacidad" min="1" placeholder="Ej. 30" required>
       </div>
+      <!-- Ubicación -->
       <div class="col-12">
         <label for="ubicacionAula" class="form-label">Ubicación</label>
         <input type="text" class="form-control" id="ubicacionAula" name="ubicacion" placeholder="Ej. Piso 2, Bloque A" required>
       </div>
+      <!-- Tipo de espacio -->
       <div class="col-12">
         <label for="tipoAula" class="form-label">Tipo de espacio</label>
         <select class="form-select" id="tipoAula" name="tipo" required>
@@ -217,6 +228,7 @@ $con = conectar_bd();
           <option value="lab">Laboratorio</option>
         </select>
       </div>
+      <!-- Imagen -->
       <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
@@ -226,12 +238,14 @@ $con = conectar_bd();
   </form>
 </section>
 
+
 <!-- FORM GRUPO -->
-<section id="form-grupo" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-grupo')">✖</button>
+<section id="form-grupo" class="formulario" style="display: none;">
+  <button type="button" class="cerrar" onclick="cerrarForm('form-grupo')" aria-label="Cerrar formulario">✖</button>
   <form action="procesar-grupo.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Grupo</h2>
     <div class="row g-3">
+      
       <div class="col-md-6">
         <label for="orientacionGrupo" class="form-label">Orientación</label>
         <select class="form-select" id="orientacionGrupo" name="orientacion" required>
@@ -239,34 +253,64 @@ $con = conectar_bd();
           <option value="Tec. de la Información">Tecnologías de la información</option>
           <option value="Tec. de la Información Bilingüe">Tecnologías de la información Bilingüe</option>
           <option value="Tecnología">Tecnólogo en Ciberseguridad</option>
+          <!-- Agregás las demás orientaciones que tengas -->
         </select>
       </div>
+
       <div class="col-md-6">
         <label for="nombreGrupo" class="form-label">Nombre del grupo</label>
         <input type="text" class="form-control" id="nombreGrupo" name="nombre" required placeholder="Ej. 3°A">
       </div>
+
       <div class="col-md-6">
         <label for="cantidadEstudiantes" class="form-label">Cantidad de estudiantes</label>
         <input type="number" class="form-control" id="cantidadEstudiantes" name="cantidad" min="1" required placeholder="Ej. 30">
       </div>
+
       <div class="col-md-6">
         <label for="asignaturasGrupo" class="form-label">Asignaturas</label>
         <select class="form-select" id="asignaturasGrupo" name="asignaturas[]" multiple required>
           <?php
           $sql = "SELECT id_asignatura, nombre FROM asignatura ORDER BY nombre";
           $result = $con->query($sql);
-          while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['id_asignatura'].'">'.$row['nombre'].'</option>';
+          while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['id_asignatura'] . '">' . $row['nombre'] . '</option>';
           }
           ?>
         </select>
       </div>
+<div class="col-md-6">
+    <label for="horarioGrupo" class="form-label">Horarios del grupo</label>
+    <select class="form-select" id="horarioGrupo" name="horarios[]" multiple required>
+        <?php
+        // Si $id_grupo no existe (registro nuevo), usamos 0
+        $id_grupo = $id_grupo ?? 0;
+
+        $sql = "SELECT h.id_horario, CONCAT(h.dia, ' ', h.hora_inicio, '-', h.hora_fin) AS horario,
+                      IF(gh.id_horario IS NOT NULL, 1, 0) AS seleccionado
+                FROM horarios h
+                LEFT JOIN grupo_horario gh ON h.id_horario = gh.id_horario AND gh.id_grupo = ?
+                ORDER BY h.dia, h.hora_inicio";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("i", $id_grupo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while($row = $result->fetch_assoc()){
+            $selected = $row['seleccionado'] ? 'selected' : '';
+            echo '<option value="'.$row['id_horario'].'" '.$selected.'>'.$row['horario'].'</option>';
+        }
+        $stmt->close();
+        ?>
+    </select>
+</div>
+
+
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
-<!-- FORM NOTIFICACIÓN -->
 <section id="form-notificacion" class="formulario" style="display:none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-notificacion')">✖</button>
   <form action="procesar-notificacion.php" method="POST" class="needs-validation form-reserva-style novalidate">
@@ -298,34 +342,126 @@ $con = conectar_bd();
   </form>
 </section>
 
-<!-- =====================
-   SWEETALERT CENTRALIZADO
-===================== -->
+
+<!-- ===========================
+  BLOQUES DE SWEETALERT (ENVUELTOS EN DOMCONTENTLOADED)
+=========================== -->
+
+<?php if (isset($_SESSION['msg_docente']) && $_SESSION['msg_docente'] === 'guardado'): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    <?php
-    $alerts = [
-        'msg_docente' => ['icon'=>'success','title'=>'¡Éxito!','text'=>'Docente registrado con éxito'],
-        'error_docente'=>['icon'=>'error','title'=>'Cédula duplicada','text'=>'Ya existe un docente con esa cédula','form'=>'form-docente'],
-        'msg_asignatura'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Asignatura registrada con éxito'],
-        'error_asignatura'=>['icon'=>'error','title'=>'Código duplicado','text'=>'Ya existe una asignatura con ese código','form'=>'form-asignatura'],
-        'msg_horario'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Horario registrado con éxito'],
-        'error_horario'=>['icon'=>'error','title'=>'Horario duplicado','text'=>'Ya existe un horario registrado con estos datos','form'=>'form-horario'],
-        'msg_aula'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Aula registrada con éxito'],
-        'error_aula'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al registrar el aula','form'=>'form-aula'],
-        'msg_notificacion'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Notificación enviada con éxito'],
-        'error_notificacion'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al enviar la notificación']
-    ];
-    foreach($alerts as $key=>$alert){
-        if(isset($_SESSION[$key])){
-            $form = isset($alert['form']) ? "mostrarForm('{$alert['form']}');" : "";
-            echo $form."Swal.fire({icon:'{$alert['icon']}',title:'{$alert['title']}',text:'{$alert['text']}',timer:2500,showConfirmButton:false});";
-            unset($_SESSION[$key]);
-        }
-    }
+  Swal.fire({icon:'success', title:'¡Éxito!', text:'Docente registrado con éxito', timer:2500, showConfirmButton:false});
+});
+</script>
+<?php unset($_SESSION['msg_docente']); endif; ?>
+
+<?php if (isset($_SESSION['error_docente'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  mostrarForm('form-docente');
+  Swal.fire({
+    icon: 'error',
+    title: '<?php echo ($_SESSION['error_docente'] === "docente_existente") ? "Cédula duplicada" : "Error"; ?>',
+    text: '<?php echo ($_SESSION['error_docente'] === "docente_existente") ? "Ya existe un docente con esa cédula" : "Ocurrió un error al guardar el docente"; ?>'
+  });
+});
+</script>
+<?php unset($_SESSION['error_docente']); endif; ?>
+
+<?php if (isset($_SESSION['msg_asignatura']) && $_SESSION['msg_asignatura'] === 'guardada'): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Swal.fire({icon:'success', title:'¡Éxito!', text:'Asignatura registrada con éxito', timer:2500, showConfirmButton:false});
+});
+</script>
+<?php unset($_SESSION['msg_asignatura']); endif; ?>
+
+<?php if (isset($_SESSION['error_asignatura'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  mostrarForm('form-asignatura');
+  Swal.fire({
+    icon: '<?php echo ($_SESSION['error_asignatura'] === "codigo_existente") ? "error" : "warning"; ?>',
+    title: '<?php echo ($_SESSION['error_asignatura'] === "codigo_existente") ? "Código duplicado" : "Relación existente"; ?>',
+    text: '<?php echo ($_SESSION['error_asignatura'] === "codigo_existente") ? "Ya existe una asignatura con ese código" : "Ya ha sido asignada esta asignatura a ese docente"; ?>'
+  });
+});
+</script>
+<?php unset($_SESSION['error_asignatura']); endif; ?>
+
+<?php if (isset($_SESSION['msg_horario']) && $_SESSION['msg_horario'] === 'guardado'): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Swal.fire({icon:'success', title:'¡Éxito!', text:'Horario registrado con éxito', timer:2500, showConfirmButton:false});
+});
+</script>
+<?php unset($_SESSION['msg_horario']); endif; ?>
+
+<?php if (isset($_SESSION['error_horario'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  mostrarForm('form-horario');
+  if('<?php echo $_SESSION['error_horario']; ?>' === 'asignatura_inexistente'){
+    Swal.fire({icon:'error', title:'Asignatura inexistente', text:'No se encontró la asignatura seleccionada'});
+  } else if('<?php echo $_SESSION['error_horario']; ?>' === 'duplicado'){
+    Swal.fire({icon:'warning', title:'Horario duplicado', text:'Ya existe un horario registrado con estos datos'});
+  }
+});
+</script>
+<?php unset($_SESSION['error_horario']); endif; ?>
+<?php if (isset($_SESSION['msg_aula']) && $_SESSION['msg_aula'] === 'guardada'): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Swal.fire({icon:'success', title:'¡Éxito!', text:'Aula registrada con éxito', timer:2500, showConfirmButton:false});
+});
+</script>
+<?php unset($_SESSION['msg_aula']); endif; ?>
+
+<?php if (isset($_SESSION['error_aula'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  mostrarForm('form-aula');
+  const error = '<?php echo $_SESSION['error_aula']; ?>';
+  if (error === 'codigo_existente') {
+    Swal.fire({icon:'error', title:'Código duplicado', text:'Ya existe un aula con ese código'});
+  } else if (error === 'codigo_vacio') {
+    Swal.fire({icon:'warning', title:'Campo vacío', text:'Debe ingresar un código de aula'});
+  } else {
+    Swal.fire({icon:'error', title:'Error', text:'Ocurrió un error al registrar el aula'});
+  }
+});
+</script>
+<?php unset($_SESSION['error_aula']); endif; ?>
+
+
+<?php if(isset($_SESSION['msg_notificacion']) && $_SESSION['msg_notificacion'] === 'enviada'): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: '¡Éxito!',
+    text: <?php echo json_encode('Notificación enviada con éxito'); ?>,
+    timer: 2500,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['msg_notificacion']); endif; ?>
+
+<?php if(isset($_SESSION['error_notificacion'])): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: <?php 
+        $mensaje = $_SESSION['error_notificacion'] === "faltan_datos" 
+                   ? "Complete todos los campos" 
+                   : "Ocurrió un error al enviar la notificación";
+        echo json_encode($mensaje);
     ?>
 });
 </script>
+<?php unset($_SESSION['error_notificacion']); endif; ?>
+
+
 
 </body>
 </html>

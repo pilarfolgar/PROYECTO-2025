@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt_check->num_rows == 0) {
             $_SESSION['error_horario'] = "asignatura_inexistente";
-    header("Location: indexadministrativo.php");
+            header("Location: admin-panel.php");
             exit();
         }
         $stmt_check->close();
