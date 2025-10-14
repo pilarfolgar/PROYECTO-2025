@@ -898,3 +898,13 @@ body.dark-mode .footer a {
 .btn-flotante:hover {
   background-color: #0b5ed7;
 }
+
+section h2,
+section p,
+.mis-cursos h2,
+.mis-cursos p,
+#reservas-container h2,
+#reservas-container p,
+.no-reservas {
+    margin: 15px 20px; 
+}

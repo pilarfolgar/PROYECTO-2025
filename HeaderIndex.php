@@ -20,7 +20,7 @@
 <!-- NAV ABAJO -->
 <nav style="display:flex;justify-content:center;gap:20px;background:#588BAE;padding:12px;border-top:2px solid #417899;">
   <a href="index.php" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
-  <a href="" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
+  <a href="index_carreras.php" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
 </nav>
 
 <!-- MENÚ DESPLEGABLE -->

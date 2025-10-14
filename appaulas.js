@@ -1,13 +1,9 @@
-// appaulas.js
-
 // Función para filtrar espacios según categoría
 function filtrar(categoria) {
-    // Actualiza el botón activo
     document.querySelectorAll('.boton-filtro').forEach(btn => btn.classList.remove('active'));
     const boton = document.getElementById(`filtro-${categoria}`);
     if (boton) boton.classList.add('active');
 
-    // Muestra u oculta tarjetas según la categoría
     document.querySelectorAll('.espacio').forEach(el => {
         el.style.display = (categoria === 'todo' || el.classList.contains(categoria)) ? 'block' : 'none';
     });
@@ -27,9 +23,28 @@ function abrirReserva(nombreEspacio) {
     modal.show();
 }
 
-// Cierre del modal de reserva y confirmación
+// Función para enviar la reserva a la base de datos
 document.getElementById('formReserva').addEventListener('submit', function(e) {
     e.preventDefault();
-    alert("Reserva confirmada ✅");
-    bootstrap.Modal.getInstance(document.getElementById('modalReserva')).hide();
+
+    const formData = new FormData(this); // recoge todos los inputs automáticamente
+
+    fetch('guardar_reserva.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("✅ Reserva confirmada correctamente");
+            this.reset(); // limpia el formulario
+            bootstrap.Modal.getInstance(document.getElementById('modalReserva')).hide();
+        } else {
+            alert("❌ Error al reservar: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        alert("❌ Error de conexión o servidor");
+    });
 });

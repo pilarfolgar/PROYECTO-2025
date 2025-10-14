@@ -66,7 +66,6 @@
   </div>
 </div>
 
-<!-- Modal Reserva -->
 <div class="modal fade" id="modalReserva" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -75,45 +74,48 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form id="formReserva">
-          <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Aula</label>
-            <input type="text" class="form-control" id="aulaSeleccionada" readonly required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Fecha</label>
-            <input type="date" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Hora de inicio</label>
-            <input type="time" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Hora de fin</label>
-            <input type="time" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Grupo</label>
-            <select class="form-select" id="grupoReserva" required>
-              <option selected disabled>Seleccione grupo...</option>
-              <option value="1MA">1°MA</option>
-              <option value="2BB">2°BB</option>
-              <option value="3CA">3°CA</option>
-              <option value="4DA">4°DA</option>
-              <option value="5EA">5°EA</option>
-              <option value="6FA">6°FA</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
-        </form>
+       
+      <form id="formReserva">
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input type="text" class="form-control" name="nombre" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Aula</label>
+    <input type="text" class="form-control" id="aulaSeleccionada" name="aula" readonly required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Fecha</label>
+    <input type="date" class="form-control" name="fecha" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Hora de inicio</label>
+    <input type="time" class="form-control" name="hora_inicio" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Hora de fin</label>
+    <input type="time" class="form-control" name="hora_fin" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Grupo</label>
+    <select class="form-select" name="grupo" required>
+      <option selected disabled>Seleccione grupo...</option>
+      <option value="1MA">1°MA</option>
+      <option value="2BB">2°BB</option>
+      <option value="3CA">3°CA</option>
+      <option value="4DA">4°DA</option>
+      <option value="5EA">5°EA</option>
+      <option value="6FA">6°FA</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
+</form>
+
       </div>
     </div>
   </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="appaulas.js"></script>
