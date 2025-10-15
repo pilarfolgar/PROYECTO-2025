@@ -9,12 +9,12 @@
 
 <h3 class="text-center mb-4">Recuperar contraseña</h3>
 
-<form method="POST" action="enviar_token_local.php" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width:400px;">
+<form method="POST" action="enviar_codigo.php" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width:400px;">
   <div class="mb-3">
     <label for="email" class="form-label">Correo electrónico</label>
     <input type="email" class="form-control" id="email" name="email" required>
   </div>
-  <button type="submit" class="btn btn-primary w-100">Generar enlace de recuperación</button>
+  <button type="submit" class="btn btn-primary w-100">Enviar código</button>
 </form>
 
 </body>
