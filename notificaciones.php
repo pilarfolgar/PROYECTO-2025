@@ -14,7 +14,7 @@ if(!$cedula_estudiante){
 // 2️⃣ Marcar como vistas las notificaciones nuevas
 if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
-    $sqlVisto = "UPDATE recibe SET visto = 1 WHERE id_notificacion = ? AND cedula_usuario = ?";
+    $sqlVisto = "UPDATE Recibe SET visto = 1 WHERE id_notificacion = ? AND cedula_usuario = ?";
     $stmtV = $con->prepare($sqlVisto);
     $stmtV->bind_param("ii", $id_notificacion, $cedula_estudiante);
     $stmtV->execute();
@@ -24,7 +24,7 @@ if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
 // 3️⃣ Obtener notificaciones del estudiante
 $sql = "SELECT n.id_notificacion, n.titulo, n.mensaje, n.fecha, r.visto
         FROM notificaciones n
-        INNER JOIN recibe r ON n.id_notificacion = r.id_notificacion
+        INNER JOIN Recibe r ON n.id_notificacion = r.id_notificacion
         WHERE r.cedula_usuario = ?
         ORDER BY n.fecha DESC";
 
