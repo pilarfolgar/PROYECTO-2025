@@ -1,6 +1,23 @@
 <?php
 session_start(); // Inicia sesión
-require("conexion.php");
+
+// =====================
+// CONEXIÓN A LA BD
+// =====================
+function conectar_bd() {
+    $host = "localhost";      // Cambia según tu servidor
+    $user = "root";           // Usuario de BD
+    $pass = "";               // Contraseña de BD
+    $db   = "infralex";       // Nombre de tu BD
+
+    $con = new mysqli($host, $user, $pass, $db);
+    if($con->connect_error){
+        die("Conexión fallida: " . $con->connect_error);
+    }
+    $con->set_charset("utf8");
+    return $con;
+}
+
 $con = conectar_bd();
 ?>
 <!DOCTYPE html>
@@ -20,7 +37,7 @@ $con = conectar_bd();
 <?php require("header.php"); ?>
 
 <main class="contenedor" id="gestion">
-  <!-- Tarjetas de acciones -->
+  <!-- ===================== TARJETAS ===================== -->
   <div class="tarjeta">
     <h3>Docentes</h3>
     <p>Registrar y actualizar datos de los docentes.</p>
@@ -57,18 +74,58 @@ $con = conectar_bd();
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
 
-  <div class="tarjeta">
-    <h3>Reservas de Docentes</h3>
-    <p>Ver todas las reservas realizadas por los docentes.</p>
-    <a href="#" class="boton" onclick="mostrarForm('form-reservas')">📋 Ver Reservas</a>
-  </div>
+  <!-- ===================== TABLA DE RESERVAS DE DOCENTES ===================== -->
+  <section id="reserva-docentes" class="mt-5">
+    <h2>Reservas de Docentes</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>ID Reserva</th>
+            <th>Nombre Docente</th>
+            <th>Cédula</th>
+            <th>Aula</th>
+            <th>Fecha</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+            <th>Grupo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $sql_reserva = "SELECT r.id_reserva, r.nombre, u.cedula, r.aula, r.fecha, r.hora_inicio, r.hora_fin, r.grupo
+                          FROM reserva r
+                          LEFT JOIN usuario u ON r.nombre = u.nombrecompleto
+                          WHERE u.rol='docente'
+                          ORDER BY r.fecha DESC, r.hora_inicio ASC";
+          $result_reserva = $con->query($sql_reserva);
+
+          if($result_reserva->num_rows > 0){
+              while($reserva = $result_reserva->fetch_assoc()){
+                  echo "<tr>";
+                  echo "<td>".$reserva['id_reserva']."</td>";
+                  echo "<td>".$reserva['nombre']."</td>";
+                  echo "<td>".$reserva['cedula']."</td>";
+                  echo "<td>".$reserva['aula']."</td>";
+                  echo "<td>".$reserva['fecha']."</td>";
+                  echo "<td>".$reserva['hora_inicio']."</td>";
+                  echo "<td>".$reserva['hora_fin']."</td>";
+                  echo "<td>".$reserva['grupo']."</td>";
+                  echo "</tr>";
+              }
+          } else {
+              echo "<tr><td colspan='8' class='text-center'>No hay reservas registradas.</td></tr>";
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
 <?php require("footer.php"); ?>
 
-<!-- =====================
-     FORMULARIOS
-===================== -->
+<!-- ===================== FORMULARIOS ===================== -->
 
 <!-- FORM DOCENTE -->
 <section id="form-docente" class="formulario" style="display:none;">
@@ -223,32 +280,23 @@ $con = conectar_bd();
           <option value="lab">Laboratorio</option>
         </select>
       </div>
-<div class="col-12">
-  <label for="recursosAula" class="form-label">Recursos disponibles</label>
-  <select name="recursos_existentes[]" class="form-select" multiple size="7">
-    <option value="Aire acondicionado">Aire acondicionado</option>
-    <option value="Televisor">Televisor</option>
-    <option value="Proyector">Proyector</option>
-    <option value="Computadoras">Computadoras</option>
-    <option value="Ventilador">Ventilador</option>
-    <option value="Impresora 3D">Impresora 3D</option>
-  </select>
-  
-  <!-- Selección múltiple de recursos existentes -->
-<select name="recursos_existentes[]" class="form-select" multiple size="7">
-  <option value="1">Aire acondicionado</option>
-  <option value="2">Televisor</option>
-  <option value="3">Proyector</option>
-  <option value="4">Computadoras</option>
-  <option value="5">Ventilador</option>
-  <option value="6">Impresora 3D</option>
-</select>
+      <div class="col-12">
+        <label for="recursosAula" class="form-label">Recursos disponibles</label>
+        <select name="recursos_existentes[]" class="form-select" multiple size="7">
+          <option value="Aire acondicionado">Aire acondicionado</option>
+          <option value="Televisor">Televisor</option>
+          <option value="Proyector">Proyector</option>
+          <option value="Computadoras">Computadoras</option>
+          <option value="Ventilador">Ventilador</option>
+          <option value="Impresora 3D">Impresora 3D</option>
+        </select>
+        <small class="text-muted d-block mb-2">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varios.</small>
 
-  <small class="text-muted d-block mb-2">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varios.</small>
-  <label class="form-label mt-2">Agregar recurso adicional</label>
-  <input type="text" name="recurso_nuevo" class="form-control" placeholder="Ej. Pizarra digital">
-  <small class="text-muted">Si escribes algo aquí, se agregará como un recurso nuevo además de los seleccionados.</small>
-</div>
+        <label class="form-label mt-2">Agregar recurso adicional</label>
+        <input type="text" name="recurso_nuevo" class="form-control" placeholder="Ej. Pizarra digital">
+        <small class="text-muted">Si escribes algo aquí, se agregará como un recurso nuevo además de los seleccionados.</small>
+      </div>
+
       <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
@@ -330,49 +378,7 @@ $con = conectar_bd();
   </form>
 </section>
 
-<!-- FORM RESERVAS DOCENTES -->
-<section id="form-reservas" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-reservas')">✖</button>
-  <h2 class="form-title">Reservas de Docentes</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Docente</th>
-        <th>Asignatura</th>
-        <th>Aula</th>
-        <th>Fecha</th>
-        <th>Hora Inicio</th>
-        <th>Hora Fin</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      $sql = "SELECT r.id_reserva, u.nombrecompleto, u.apellido, a.nombre as asignatura, au.codigo as aula, r.fecha, r.hora_inicio, r.hora_fin
-              FROM reserva r
-              INNER JOIN usuario u ON r.id_docente = u.cedula
-              INNER JOIN asignatura a ON r.id_asignatura = a.id_asignatura
-              INNER JOIN aula au ON r.id_aula = au.id_aula
-              ORDER BY r.fecha DESC, r.hora_inicio ASC";
-      $result = $con->query($sql);
-      if($result->num_rows>0){
-          while($row = $result->fetch_assoc()){
-              echo "<tr>
-                      <td>Prof. ".$row['nombrecompleto']." ".$row['apellido']."</td>
-                      <td>".$row['asignatura']."</td>
-                      <td>".$row['aula']."</td>
-                      <td>".$row['fecha']."</td>
-                      <td>".$row['hora_inicio']."</td>
-                      <td>".$row['hora_fin']."</td>
-                    </tr>";
-          }
-      } else {
-          echo "<tr><td colspan='6'>No hay reservas registradas</td></tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-</section>
-
+<!-- ===================== SWEETALERT ===================== -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     <?php
@@ -398,3 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
     ?>
 });
 </script>
+
+</body>
+</html>
