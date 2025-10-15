@@ -3,27 +3,22 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Verificar que el usuario esté logueado
+// Verificar sesión (solo muestra perfil si hay sesión)
 if (!isset($_SESSION['email'])) {
-    header("Location: iniciosesion.php");
+    echo "<div class='container mt-5'><div class='alert alert-danger text-center'>No estás logueado.</div></div>";
     exit;
 }
 
 $email = $_SESSION['email'];
 
-// Traer todos los datos del usuario desde la BD
-$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE email = ?");
+// Traer datos del usuario
+$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-// Si no se encontró el usuario (algo raro)
-if (!$user) {
-    echo "Usuario no encontrado.";
-    exit;
-}
+if (!$user) { echo "Usuario no encontrado."; exit; }
 ?>
 
 <!DOCTYPE html>
@@ -33,13 +28,7 @@ if (!$user) {
 <title>Mi Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <style>
-    .perfil-card img {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-bottom: 15px;
-    }
+    .perfil-card img { width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom:15px; }
 </style>
 </head>
 <body>
@@ -47,8 +36,7 @@ if (!$user) {
 
 <div class="container my-5">
     <h2 class="mb-4 text-center">Mi Perfil</h2>
-
-    <div class="card perfil-card mx-auto text-center p-4 shadow-sm" style="max-width: 450px;">
+    <div class="card perfil-card mx-auto text-center p-4 shadow-sm" style="max-width:450px;">
         <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
         <h4 class="card-title"><?= htmlspecialchars($user['nombrecompleto'] . ' ' . $user['apellido']) ?></h4>
         <p><strong>Cédula:</strong> <?= htmlspecialchars($user['cedula']) ?></p>
