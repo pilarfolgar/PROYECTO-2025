@@ -233,17 +233,6 @@ $con = conectar_bd();
     <option value="Ventilador">Ventilador</option>
     <option value="Impresora 3D">Impresora 3D</option>
   </select>
-  
-  <!-- Selección múltiple de recursos existentes -->
-<select name="recursos_existentes[]" class="form-select" multiple size="7">
-  <option value="1">Aire acondicionado</option>
-  <option value="2">Televisor</option>
-  <option value="3">Proyector</option>
-  <option value="4">Computadoras</option>
-  <option value="5">Ventilador</option>
-  <option value="6">Impresora 3D</option>
-</select>
-
   <small class="text-muted d-block mb-2">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varios.</small>
   <label class="form-label mt-2">Agregar recurso adicional</label>
   <input type="text" name="recurso_nuevo" class="form-control" placeholder="Ej. Pizarra digital">
