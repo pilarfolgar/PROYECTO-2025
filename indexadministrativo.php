@@ -62,6 +62,47 @@ $con = conectar_bd();
     <p>Ver todas las reservas realizadas por los docentes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-reservas')">📋 Ver Reservas</a>
   </div>
+   <div class="tarjeta" style="width:100%; overflow-x:auto;">
+    <h3>Reservas de Docentes</h3>
+    <p>Listado completo de reservas realizadas por los docentes.</p>
+    <table class="table table-striped table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Docente</th>
+          <th>Asignatura</th>
+          <th>Aula</th>
+          <th>Fecha</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $sql = "SELECT r.id_reserva, u.nombrecompleto, u.apellido, a.nombre as asignatura, au.codigo as aula, r.fecha, r.hora_inicio, r.hora_fin
+                FROM reserva r
+                INNER JOIN usuario u ON r.id_docente = u.cedula
+                INNER JOIN asignatura a ON r.id_asignatura = a.id_asignatura
+                INNER JOIN aula au ON r.id_aula = au.id_aula
+                ORDER BY r.fecha DESC, r.hora_inicio ASC";
+        $result = $con->query($sql);
+        if($result && $result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                echo "<tr>
+                        <td>Prof. ".$row['nombrecompleto']." ".$row['apellido']."</td>
+                        <td>".$row['asignatura']."</td>
+                        <td>".$row['aula']."</td>
+                        <td>".$row['fecha']."</td>
+                        <td>".$row['hora_inicio']."</td>
+                        <td>".$row['hora_fin']."</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='6'>No hay reservas registradas</td></tr>";
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
 </main>
 
 <?php require("footer.php"); ?>
