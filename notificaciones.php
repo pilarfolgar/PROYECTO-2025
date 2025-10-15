@@ -5,18 +5,17 @@ $con = conectar_bd();
 
 // 1️⃣ Cédula del estudiante desde sesión
 $cedula_estudiante = $_SESSION['cedula'] ?? 0;
-
-if(!$cedula_estudiante){
+if (!$cedula_estudiante) {
     echo "No se ha iniciado sesión.";
     exit();
 }
 
 // 2️⃣ Marcar como vistas las notificaciones nuevas
-if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
+if (isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])) {
     $id_notificacion = intval($_GET['marcar_visto']);
     $sqlVisto = "UPDATE Recibe SET visto = 1 WHERE id_notificacion = ? AND cedula_usuario = ?";
     $stmtV = $con->prepare($sqlVisto);
-    if($stmtV){
+    if ($stmtV) {
         $stmtV->bind_param("ii", $id_notificacion, $cedula_estudiante);
         $stmtV->execute();
         $stmtV->close();
@@ -31,43 +30,47 @@ $sql = "SELECT n.id_notificacion, n.titulo, n.mensaje, n.fecha, r.visto
         ORDER BY n.fecha DESC";
 
 $stmt = $con->prepare($sql);
-if(!$stmt) die("Error prepare notificaciones: ".$con->error);
+if (!$stmt) die("Error prepare notificaciones: " . $con->error);
 
 $stmt->bind_param("i", $cedula_estudiante);
 $stmt->execute();
-$stmt->store_result(); // Guardar resultados
 
-$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
+// ✅ Obtener resultados de manera segura
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Mis Notificaciones</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .notificacion { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .nuevo { background-color: #e8f4ff; }
-        .visto { background-color: #f4f4f4; }
-        .fecha { font-size: 0.8em; color: #666; }
-    </style>
+<meta charset="UTF-8">
+<title>Mis Notificaciones</title>
+<style>
+    body { font-family: Arial, sans-serif; }
+    .notificacion { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    .nuevo { background-color: #e8f4ff; }
+    .visto { background-color: #f4f4f4; }
+    .fecha { font-size: 0.8em; color: #666; }
+</style>
 </head>
 <body>
-    <h2>Mis Notificaciones</h2>
+<h2>Mis Notificaciones</h2>
 
-    <?php while($stmt->fetch()): ?>
-        <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
-            <h3><?php echo htmlspecialchars($titulo); ?></h3>
-            <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
-            <p class="fecha"><?php echo $fecha; ?></p>
-            <?php if(!$visto): ?>
-                <a href="?marcar_visto=<?php echo $id_notificacion; ?>">Marcar como leído</a>
+<?php if ($result->num_rows > 0): ?>
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="notificacion <?php echo $row['visto'] ? 'visto' : 'nuevo'; ?>">
+            <h3><?php echo htmlspecialchars($row['titulo']); ?></h3>
+            <p><?php echo nl2br(htmlspecialchars($row['mensaje'])); ?></p>
+            <p class="fecha"><?php echo $row['fecha']; ?></p>
+            <?php if (!$row['visto']): ?>
+                <a href="?marcar_visto=<?php echo $row['id_notificacion']; ?>">Marcar como leído</a>
             <?php else: ?>
                 <span>Leído</span>
             <?php endif; ?>
         </div>
     <?php endwhile; ?>
+<?php else: ?>
+    <p>No tienes notificaciones.</p>
+<?php endif; ?>
 
 </body>
 </html>
