@@ -2,10 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-// Traer los últimos 5 reportes
-$reportes = $con->query("SELECT * FROM reportes ORDER BY creado_en DESC LIMIT 5");
-$nuevos = $reportes->num_rows;
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,59 +56,14 @@ $nuevos = $reportes->num_rows;
     <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
-
-  <div class="tarjeta">
-    <h3>Reservas de Docentes</h3>
-    <p>Ver todas las reservas realizadas por los docentes.</p>
-    <a href="#" class="boton" onclick="mostrarForm('form-reservas')">📋 Ver Reservas</a>
-  </div>
-   <div class="tarjeta" style="width:100%; overflow-x:auto;">
-    <h3>Reservas de Docentes</h3>
-    <p>Listado completo de reservas realizadas por los docentes.</p>
-    <table class="table table-striped table-bordered mt-3">
-      <thead>
-        <tr>
-          <th>Docente</th>
-          <th>Asignatura</th>
-          <th>Aula</th>
-          <th>Fecha</th>
-          <th>Hora Inicio</th>
-          <th>Hora Fin</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $sql = "SELECT r.id_reserva, u.nombrecompleto, u.apellido, a.nombre as asignatura, au.codigo as aula, r.fecha, r.hora_inicio, r.hora_fin
-                FROM reserva r
-                INNER JOIN usuario u ON r.id_docente = u.cedula
-                INNER JOIN asignatura a ON r.id_asignatura = a.id_asignatura
-                INNER JOIN aula au ON r.id_aula = au.id_aula
-                ORDER BY r.fecha DESC, r.hora_inicio ASC";
-        $result = $con->query($sql);
-        if($result && $result->num_rows > 0){
-            while($row = $result->fetch_assoc()){
-                echo "<tr>
-                        <td>Prof. ".$row['nombrecompleto']." ".$row['apellido']."</td>
-                        <td>".$row['asignatura']."</td>
-                        <td>".$row['aula']."</td>
-                        <td>".$row['fecha']."</td>
-                        <td>".$row['hora_inicio']."</td>
-                        <td>".$row['hora_fin']."</td>
-                      </tr>";
-            }
-        } else {
-            echo "<tr><td colspan='6'>No hay reservas registradas</td></tr>";
-        }
-        ?>
-      </tbody>
-    </table>
-  </div>
 </main>
+
+
 
 <?php require("footer.php"); ?>
 
 <!-- =====================
-     FORMULARIOS
+   FORMULARIOS
 ===================== -->
 
 <!-- FORM DOCENTE -->
@@ -270,6 +221,8 @@ $nuevos = $reportes->num_rows;
       </div>
 <div class="col-12">
   <label for="recursosAula" class="form-label">Recursos disponibles</label>
+  
+  <!-- Selección múltiple de recursos existentes -->
   <select name="recursos_existentes[]" class="form-select" multiple size="7">
     <option value="Aire acondicionado">Aire acondicionado</option>
     <option value="Televisor">Televisor</option>
@@ -279,10 +232,13 @@ $nuevos = $reportes->num_rows;
     <option value="Impresora 3D">Impresora 3D</option>
   </select>
   <small class="text-muted d-block mb-2">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varios.</small>
+
+  <!-- Input para agregar un recurso adicional -->
   <label class="form-label mt-2">Agregar recurso adicional</label>
   <input type="text" name="recurso_nuevo" class="form-control" placeholder="Ej. Pizarra digital">
   <small class="text-muted">Si escribes algo aquí, se agregará como un recurso nuevo además de los seleccionados.</small>
 </div>
+
       <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
@@ -364,48 +320,6 @@ $nuevos = $reportes->num_rows;
   </form>
 </section>
 
-<!-- FORM RESERVAS DOCENTES -->
-<section id="form-reservas" class="formulario" style="display:none;">
-  <button type="button" class="cerrar" onclick="cerrarForm('form-reservas')">✖</button>
-  <h2 class="form-title">Reservas de Docentes</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Docente</th>
-        <th>Asignatura</th>
-        <th>Aula</th>
-        <th>Fecha</th>
-        <th>Hora Inicio</th>
-        <th>Hora Fin</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      $sql = "SELECT r.id_reserva, u.nombrecompleto, u.apellido, a.nombre as asignatura, au.codigo as aula, r.fecha, r.hora_inicio, r.hora_fin
-              FROM reserva r
-              INNER JOIN usuario u ON r.id_docente = u.cedula
-              INNER JOIN asignatura a ON r.id_asignatura = a.id_asignatura
-              INNER JOIN aula au ON r.id_aula = au.id_aula
-              ORDER BY r.fecha DESC, r.hora_inicio ASC";
-      $result = $con->query($sql);
-      if($result->num_rows>0){
-          while($row = $result->fetch_assoc()){
-              echo "<tr>
-                      <td>Prof. ".$row['nombrecompleto']." ".$row['apellido']."</td>
-                      <td>".$row['asignatura']."</td>
-                      <td>".$row['aula']."</td>
-                      <td>".$row['fecha']."</td>
-                      <td>".$row['hora_inicio']."</td>
-                      <td>".$row['hora_fin']."</td>
-                    </tr>";
-          }
-      } else {
-          echo "<tr><td colspan='6'>No hay reservas registradas</td></tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-</section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
