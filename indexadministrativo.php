@@ -223,12 +223,26 @@ $con = conectar_bd();
           <option value="lab">Laboratorio</option>
         </select>
       </div>
-      <div class="col-12">
-        <label for="recursosAula" class="form-label">Recursos disponibles</label>
-        <textarea class="form-control" id="recursosAula" name="recursos" rows="3" 
-          placeholder="Ej. Proyector, computadora, pizarra digital, aire acondicionado"></textarea>
-        <small class="text-muted">Describe los recursos o equipos disponibles en el aula.</small>
-      </div>
+<div class="col-12">
+  <label for="recursosAula" class="form-label">Recursos disponibles</label>
+  
+  <!-- Selección múltiple de recursos existentes -->
+  <select name="recursos_existentes[]" class="form-select" multiple size="7">
+    <option value="Aire acondicionado">Aire acondicionado</option>
+    <option value="Televisor">Televisor</option>
+    <option value="Proyector">Proyector</option>
+    <option value="Computadoras">Computadoras</option>
+    <option value="Ventilador">Ventilador</option>
+    <option value="Impresora 3D">Impresora 3D</option>
+  </select>
+  <small class="text-muted d-block mb-2">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varios.</small>
+
+  <!-- Input para agregar un recurso adicional -->
+  <label class="form-label mt-2">Agregar recurso adicional</label>
+  <input type="text" name="recurso_nuevo" class="form-control" placeholder="Ej. Pizarra digital">
+  <small class="text-muted">Si escribes algo aquí, se agregará como un recurso nuevo además de los seleccionados.</small>
+</div>
+
       <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
