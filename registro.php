@@ -11,6 +11,7 @@ $con = conectar_bd();
   <title>Registro</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -69,6 +70,14 @@ $con = conectar_bd();
         ?>
       </select>
     </div>
+
+    <!-- RECAPTCHA -->
+<div class="mb-3 text-center">
+  <div class="g-recaptcha" data-sitekey="6LfHIusrAAAAAClke9PL9JJcbDnGAijza1w_IARk"></div>
+</div>
+<!-- FIN RECAPTCHA -->
+
+
 
     <button type="submit" class="btn btn-primary">Cargar</button>
     <button type="reset" class="btn btn-secondary">Cancelar</button>

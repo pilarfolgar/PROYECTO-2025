@@ -4,23 +4,48 @@ require("conexion.php");
 require("validador_ci.php");
 $con = conectar_bd();
 
+
+$secretKey = "6LfHIusrAAAAAJV9s4pN0LI7aceKeahhvZqJRS3w";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+   
+    if (!isset($_POST['g-recaptcha-response'])) {
+        $_SESSION['error_usuario'] = 'captcha_faltante';
+        header("Location: registro.php");
+        exit;
+    }
+
+    $captchaResponse = $_POST['g-recaptcha-response'];
+    $remoteIp = $_SERVER['REMOTE_ADDR'];
+
+    // Verificar con los servidores de Google
+    $verifyUrl = "https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$captchaResponse&remoteip=$remoteIp";
+    $response = file_get_contents($verifyUrl);
+    $responseKeys = json_decode($response, true);
+
+    if (!$responseKeys["success"]) {
+        $_SESSION['error_usuario'] = 'captcha_invalido';
+        header("Location: registro.php");
+        exit;
+    }
+
+    
     $nombre   = trim($_POST["nombre"] ?? '');
     $apellido = trim($_POST["apellido"] ?? '');
-    $email    = trim(strtolower($_POST["email"] ?? ''));  // Minúsculas para consistencia
+    $email    = trim(strtolower($_POST["email"] ?? ''));  
     $password = password_hash($_POST["pass"] ?? '', PASSWORD_DEFAULT);
     $cedula   = trim($_POST["cedula"] ?? '');
     $rol      = trim($_POST["rol"] ?? '');
-    $clase    = trim($_POST["clase"] ?? ''); // 
+    $clase    = trim($_POST["clase"] ?? ''); 
 
-  
     if (empty($nombre) || empty($apellido) || empty($email) || empty($password) || empty($rol)) {
         $_SESSION['error_usuario'] = 'campos_vacios';
         header("Location: registro.php");
         exit;
     }
 
-    
+    // ✅ Validar cédula
     $cedula_int = NULL;
     if (!empty($cedula)) {
         if (!preg_match('/^\d{8}$/', $cedula)) {
@@ -41,21 +66,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 2️⃣ Validación de rol
+    // ✅ Validar rol
     if ($rol !== 'estudiante' && $rol !== 'docente') {
         $_SESSION['error_usuario'] = 'rol_invalido';
         header("Location: registro.php");
         exit;
     }
 
-    // 3️⃣ Validar clase solo si es estudiante
+    // ✅ Validar grupo si es estudiante
     if ($rol === 'estudiante' && empty($clase)) {
         $_SESSION['error_usuario'] = 'clase_requerida';
         header("Location: registro.php");
         exit;
     }
 
-    // 4️⃣ Verificar duplicados (cédula y email)
+    // ✅ Verificar duplicados
     if (consultar_existe_usr($con, $cedula_int)) {
         $_SESSION['error_usuario'] = 'usuario_existente';
         header("Location: registro.php");
@@ -69,14 +94,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 
+    /* ==========================
+       3️⃣ INSERTAR EN BD
+    =========================== */
     $nombrecompleto = $nombre . ' ' . $apellido;
     $telefono = '';  
     $foto = NULL;    
     $asignatura = ($rol === 'docente') ? '' : NULL;
-    $id_grupo = ($rol === 'estudiante') ? $clase : NULL; // 
+    $id_grupo = ($rol === 'estudiante') ? $clase : NULL; 
 
-    // Insertar datos
     if (insertar_datos($con, $cedula_int, $nombrecompleto, $password, $apellido, $email, $rol, $telefono, $foto, $asignatura, $id_grupo)) {
         if ($rol === 'estudiante') {
             $_SESSION['msg_usuario'] = 'guardado';
@@ -88,13 +114,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     } else {
         $_SESSION['error_usuario'] = 'error_general';
-        error_log("Error INSERT: " . mysqli_error($con) . " | Query details: cedula={$cedula_int}, email={$email}, rol={$rol}, clase={$clase}");
+        error_log("Error INSERT: " . mysqli_error($con) . " | Datos: cedula={$cedula_int}, email={$email}, rol={$rol}, clase={$clase}");
         header("Location: registro.php");
         exit;
     }
 }
 
-// Funciones
+/* ==========================
+   FUNCIONES AUXILIARES
+========================== */
+
 function consultar_existe_usr($con, $cedula) {
     if ($cedula === NULL || $cedula === 0) return false;
     $stmt = mysqli_prepare($con, "SELECT cedula FROM usuario WHERE cedula = ?");
