@@ -19,22 +19,17 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
             (id_grupo, docente_cedula, titulo, mensaje, fecha, visto_estudiante, visto_adscripto)
             VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $con->prepare($sql);
-    if(!$stmt){
-        die("Error prepare notificaciones: ".$con->error);
-    }
+    if(!$stmt) die("Error prepare notificaciones: ".$con->error);
 
-    if(!$stmt->bind_param("isssiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto)){
-        die("Error bind_param notificaciones: ".$stmt->error);
-    }
+    if(!$stmt->bind_param("isssiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto))
+        die("Error bind_param: ".$stmt->error);
 
-    if(!$stmt->execute()){
-        die("Error execute notificaciones: ".$stmt->error);
-    }
+    if(!$stmt->execute()) die("Error execute: ".$stmt->error);
 
     $id_notificacion = $stmt->insert_id;
     $stmt->close();
 
-    // INSERT en Recibe para cada estudiante del grupo
+    // INSERT en Recibe
     $sqlEstudiantes = "SELECT cedula FROM usuario WHERE id_grupo = ?";
     $stmtEst = $con->prepare($sqlEstudiantes);
     if(!$stmtEst) die("Error prepare usuarios: ".$con->error);
@@ -55,6 +50,7 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
 
     $stmtEst->close();
     $_SESSION['msg_notificacion'] = "Notificación enviada correctamente";
+
 } else {
     $_SESSION['error_notificacion'] = "Faltan datos obligatorios";
 }
