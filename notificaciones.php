@@ -16,9 +16,11 @@ if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
     $sqlVisto = "UPDATE Recibe SET visto = 1 WHERE id_notificacion = ? AND cedula_usuario = ?";
     $stmtV = $con->prepare($sqlVisto);
-    $stmtV->bind_param("ii", $id_notificacion, $cedula_estudiante);
-    $stmtV->execute();
-    $stmtV->close();
+    if($stmtV){
+        $stmtV->bind_param("ii", $id_notificacion, $cedula_estudiante);
+        $stmtV->execute();
+        $stmtV->close();
+    }
 }
 
 // 3️⃣ Obtener notificaciones del estudiante
@@ -29,9 +31,13 @@ $sql = "SELECT n.id_notificacion, n.titulo, n.mensaje, n.fecha, r.visto
         ORDER BY n.fecha DESC";
 
 $stmt = $con->prepare($sql);
+if(!$stmt) die("Error prepare notificaciones: ".$con->error);
+
 $stmt->bind_param("i", $cedula_estudiante);
 $stmt->execute();
-$result = $stmt->get_result();
+$stmt->store_result(); // Guardar resultados
+
+$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 ?>
 
 <!DOCTYPE html>
@@ -50,13 +56,13 @@ $result = $stmt->get_result();
 <body>
     <h2>Mis Notificaciones</h2>
 
-    <?php while($row = $result->fetch_assoc()): ?>
-        <div class="notificacion <?php echo $row['visto'] ? 'visto' : 'nuevo'; ?>">
-            <h3><?php echo htmlspecialchars($row['titulo']); ?></h3>
-            <p><?php echo nl2br(htmlspecialchars($row['mensaje'])); ?></p>
-            <p class="fecha"><?php echo $row['fecha']; ?></p>
-            <?php if(!$row['visto']): ?>
-                <a href="?marcar_visto=<?php echo $row['id_notificacion']; ?>">Marcar como leído</a>
+    <?php while($stmt->fetch()): ?>
+        <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
+            <h3><?php echo htmlspecialchars($titulo); ?></h3>
+            <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
+            <p class="fecha"><?php echo $fecha; ?></p>
+            <?php if(!$visto): ?>
+                <a href="?marcar_visto=<?php echo $id_notificacion; ?>">Marcar como leído</a>
             <?php else: ?>
                 <span>Leído</span>
             <?php endif; ?>
@@ -70,6 +76,3 @@ $result = $stmt->get_result();
 $stmt->close();
 $con->close();
 ?>
-
-
-
