@@ -324,7 +324,7 @@ $con = conectar_bd();
   </form>
 </section>
 
-===================== -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     <?php
