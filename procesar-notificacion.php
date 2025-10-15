@@ -31,17 +31,36 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
     $stmt->bind_param("isssiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto);
 
     if($stmt->execute()){
-        $_SESSION['msg_notificacion'] = "enviada";
+        $id_notificacion = $stmt->insert_id; // ID de la notificación recién creada
+
+        // 4️⃣ Insertar en 'recibe' para cada estudiante del grupo
+        $sqlEstudiantes = "SELECT cedula FROM usuario WHERE id_grupo = ?";
+        $stmtEst = $con->prepare($sqlEstudiantes);
+        $stmtEst->bind_param("i", $id_grupo);
+        $stmtEst->execute();
+        $resEst = $stmtEst->get_result();
+        while($row = $resEst->fetch_assoc()){
+            $cedula_estudiante = $row['cedula'];
+            $sqlRecibe = "INSERT INTO recibe (cedula_usuario, id_notificacion, visto) VALUES (?, ?, 0)";
+            $stmtRecibe = $con->prepare($sqlRecibe);
+            $stmtRecibe->bind_param("ii", $cedula_estudiante, $id_notificacion);
+            $stmtRecibe->execute();
+            $stmtRecibe->close();
+        }
+        $stmtEst->close();
+
+        $_SESSION['msg_notificacion'] = "Notificación enviada correctamente";
     } else {
         $_SESSION['error_notificacion'] = "Error al enviar notificación: ".$stmt->error;
     }
 
     $stmt->close();
 } else {
-    $_SESSION['error_notificacion'] = "faltan_datos";
+    $_SESSION['error_notificacion'] = "Faltan datos obligatorios";
 }
 
 // Redirigir al panel administrativo
 header("Location: indexadministrativo.php");
 exit();
 ?>
+
