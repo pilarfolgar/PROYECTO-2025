@@ -224,6 +224,12 @@ $con = conectar_bd();
         </select>
       </div>
       <div class="col-12">
+        <label for="recursosAula" class="form-label">Recursos disponibles</label>
+        <textarea class="form-control" id="recursosAula" name="recursos" rows="3" 
+          placeholder="Ej. Proyector, computadora, pizarra digital, aire acondicionado"></textarea>
+        <small class="text-muted">Describe los recursos o equipos disponibles en el aula.</small>
+      </div>
+      <div class="col-12">
         <label for="imagenAula" class="form-label">Imagen</label>
         <input type="file" class="form-control" id="imagenAula" name="imagen" accept="image/*">
       </div>
