@@ -1,0 +1,63 @@
+/* Contenedor de todas las tarjetas */
+.estudiante-container {
+  display: flex;
+  flex-wrap: wrap;             /* Para que se adapten a pantallas chicas */
+  justify-content: center;     /* Centra horizontalmente */
+  gap: 1.5rem;                 /* Espacio entre tarjetas */
+}
+
+/* Tarjeta individual */
+.estudiante-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* Esto empuja el botón al fondo */
+  align-items: center;
+  width: 250px;                     /* Fijá un ancho uniforme */
+  min-height: 320px;                /* Altura mínima igual para todas */
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Zona del ícono */
+.docente-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+/* Título y texto */
+.docente-name {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.docente-subject {
+  flex-grow: 1;           /* Hace que esta sección ocupe el espacio variable */
+  margin-bottom: 1rem;
+}
+
+/* Botón */
+.boton {
+  background-color: #007bff; /* Cambiá al color de tu diseño */
+  color: white;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.boton:hover {
+  background-color: #0056b3;
+}
+
+.boton.w-100 {
+  width: 100%;
+}

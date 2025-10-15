@@ -13,6 +13,7 @@ require("seguridad.php");
 <link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styleestudiante.css">
 </head>
 <body>
 
@@ -66,12 +67,12 @@ require("seguridad.php");
 </section>
 
 <!-- Overlay sugerencia -->
-<div id="overlaySugerencia" class="formulario-overlay"></div>
+<div id="overlaySugerencia" class="formulario-overlay" style="display:none;"></div>
 
 <!-- Formulario flotante sugerencia -->
-<section id="form-sugerencia" class="formulario">
+<section id="form-sugerencia" class="formulario" style="display:none;">
   <button type="button" class="cerrar" id="cerrarSugerencia">✖</button>
-  <form id="sugerenciaForm" method="POST">
+  <form id="sugerenciaForm" method="POST" action="guardar-sugerencia.php">
     <h2 class="form-title">Sugerencia</h2>
     <div class="mb-3">
       <textarea class="form-control" id="mensajeSugerencia" name="mensaje" rows="4" minlength="5" required placeholder="Escribí tu mensaje"></textarea>

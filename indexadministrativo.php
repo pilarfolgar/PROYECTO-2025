@@ -65,6 +65,43 @@ $con = conectar_bd();
 
 <!-- Contenedor donde aparecerán los reportes -->
 <div id="contenedorReportes" style="display:none; margin-top:20px;"></div>
+<?php
+// Consulta los reportes de la base
+$sql_reportes = "SELECT * FROM reportes ORDER BY fecha DESC";
+$result_reportes = $con->query($sql_reportes);
+?>
+
+<div id="listaReportes" style="display:none; margin-top:20px;">
+  <?php if($result_reportes->num_rows > 0): ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Objeto/Área</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php while($reporte = $result_reportes->fetch_assoc()): ?>
+            <tr>
+              <td><?= htmlspecialchars($reporte['nombre']) ?></td>
+              <td><?= htmlspecialchars($reporte['email']) ?></td>
+              <td><?= htmlspecialchars($reporte['objeto']) ?></td>
+              <td><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></td>
+              <td><?= htmlspecialchars($reporte['fecha']) ?></td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php else: ?>
+    <p class="text-center">No hay reportes enviados aún.</p>
+  <?php endif; ?>
+</div>
+
 
 
 
@@ -356,41 +393,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// Al cargar la página, actualizar el contador de reportes
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('obtener-reporte.php')
-    .then(res => res.json())
-    .then(data => {
-        const contador = document.getElementById('contadorReportes');
-        if(data.length > 0){
-            contador.textContent = data.length;
-        } else {
-            contador.style.display = 'none';
-        }
-    });
-});
 function mostrarReportes() {
-    const contenedor = document.getElementById('contenedorReportes');
-    fetch('obtener-reporte.php')
-    .then(res => res.json())
-    .then(data => {
-        let html = '';
-        if(data.length === 0){
-            html = '<p>No hay reportes nuevos.</p>';
-        } else {
-            html = '<ul class="list-group">';
-            data.forEach(r => {
-                html += `<li class="list-group-item">
-                            <strong>De:</strong> ${r.nombre} (${r.email})<br>
-                            <strong>Objeto/Área:</strong> ${r.objeto}<br>
-                            <strong>Descripción:</strong> ${r.descripcion}<br>
-                            <strong>Fecha del reporte:</strong> ${r.fecha}
-                         </li>`;
-            });
-            html += '</ul>';
-        }
-        contenedor.innerHTML = html;
-        contenedor.style.display = 'block';
-    });
+  const contenedor = document.getElementById('listaReportes');
+  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
+    ? 'block' 
+    : 'none';
 }
 </script>
