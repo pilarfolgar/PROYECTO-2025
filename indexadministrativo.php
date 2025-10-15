@@ -325,6 +325,65 @@ $con = conectar_bd();
     <button type="submit" class="boton mt-3">Guardar Aviso</button>
   </form>
 </section>
+<!-- Botón para abrir modal/formulario -->
+<button class="btn btn-primary" id="abrirHorario">Cargar Horario</button>
+
+<!-- Overlay/formulario -->
+<div id="overlayHorario" class="formulario-overlay"></div>
+
+<section id="form-horario" class="formulario">
+  <button type="button" class="cerrar" id="cerrarHorario">✖</button>
+  <form id="horarioForm" action="guardar-horario.php" method="POST" class="needs-validation" novalidate>
+    <h2 class="form-title">Cargar Horario</h2>
+
+    <div class="mb-3">
+      <label for="clase" class="form-label">Clase</label>
+      <select name="id_clase" id="clase" class="form-control" required>
+        <?php
+        $clases = mysqli_query($con, "SELECT * FROM clases");
+        while($c = mysqli_fetch_assoc($clases)){
+            echo "<option value='{$c['id']}'>{$c['nombre_clase']}</option>";
+        }
+        ?>
+      </select>
+      <div class="invalid-feedback">Seleccione una clase.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="dia" class="form-label">Día</label>
+      <select name="dia" id="dia" class="form-control" required>
+        <option>Lunes</option>
+        <option>Martes</option>
+        <option>Miércoles</option>
+        <option>Jueves</option>
+        <option>Viernes</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="hora_inicio" class="form-label">Hora inicio</label>
+      <input type="time" name="hora_inicio" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="hora_fin" class="form-label">Hora fin</label>
+      <input type="time" name="hora_fin" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="materia" class="form-label">Materia</label>
+      <input type="text" name="materia" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="aula" class="form-label">Aula</label>
+      <input type="text" name="aula" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Guardar Horario</button>
+  </form>
+</section>
+
 
 
 <!-- =====================

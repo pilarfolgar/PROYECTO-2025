@@ -3,76 +3,73 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// 1️⃣ Obtener la cédula del usuario logueado
-$usuario_cedula = $_SESSION['cedula'] ?? '';
-$nombre_estudiante = $_SESSION['nombrecompleto'] ?? 'Estudiante';
+// 1️⃣ Cédula del estudiante desde sesión
+$cedula_estudiante = $_SESSION['cedula'] ?? 0;
 
-// 2️⃣ Buscar el grupo del estudiante
-$sqlGrupo = "SELECT id_grupo FROM usuario WHERE cedula = ?";
-$stmtGrupo = $con->prepare($sqlGrupo);
-$stmtGrupo->bind_param("i", $usuario_cedula);
-$stmtGrupo->execute();
-$resGrupo = $stmtGrupo->get_result();
-$grupo_id = 0;
-if ($fila = $resGrupo->fetch_assoc()) {
-    $grupo_id = $fila['id_grupo'];
+if(!$cedula_estudiante){
+    echo "No se ha iniciado sesión.";
+    exit();
 }
 
-// 3️⃣ Traer todas las notificaciones de ese grupo
-$sql = "SELECT id, docente_cedula , titulo, mensaje, fecha, visto_estudiante 
-        FROM notificaciones 
-        WHERE id_grupo = ? 
-        ORDER BY fecha DESC";
+// 2️⃣ Marcar como vistas las notificaciones nuevas
+if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
+    $id_notificacion = intval($_GET['marcar_visto']);
+    $sqlVisto = "UPDATE recibe SET visto = 1 WHERE id_notificacion = ? AND cedula_usuario = ?";
+    $stmtV = $con->prepare($sqlVisto);
+    $stmtV->bind_param("ii", $id_notificacion, $cedula_estudiante);
+    $stmtV->execute();
+    $stmtV->close();
+}
+
+// 3️⃣ Obtener notificaciones del estudiante
+$sql = "SELECT n.id_notificacion, n.titulo, n.mensaje, n.fecha, r.visto
+        FROM notificaciones n
+        INNER JOIN recibe r ON n.id_notificacion = r.id_notificacion
+        WHERE r.cedula_usuario = ?
+        ORDER BY n.fecha DESC";
+
 $stmt = $con->prepare($sql);
-$stmt->bind_param("i", $grupo_id);
+$stmt->bind_param("i", $cedula_estudiante);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notificaciones</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="styleindexdocente.css">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <title>Mis Notificaciones</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .notificacion { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .nuevo { background-color: #e8f4ff; }
+        .visto { background-color: #f4f4f4; }
+        .fecha { font-size: 0.8em; color: #666; }
+    </style>
 </head>
 <body>
-<?php require("header.php"); ?>
+    <h2>Mis Notificaciones</h2>
 
-<section class="mis-cursos my-5">
-  <h2 class="text-center mb-4">
-    📢 Notificaciones de tu grupo – <?php echo htmlspecialchars($nombre_estudiante); ?>
-  </h2>
-  <div class="docentes-grid">
-    <?php if($result->num_rows > 0): ?>
-        <?php while($row = $result->fetch_assoc()): ?>
-        <div class="estudiante-card <?php echo ($row['visto_estudiante'] ? 'leido' : 'no-leido'); ?>">
-          <div class="docente-photo bg-info text-white fs-1 d-flex justify-content-center align-items-center">
-            <i class="bi bi-bell"></i>
-          </div>
-          <div class="docente-name">
-            <?php echo htmlspecialchars($row['titulo']); ?>
-          </div>
-          <div class="docente-subject">
-            <?php echo nl2br(htmlspecialchars($row['mensaje'])); ?>
-          </div>
-          <small class="text-muted">
-            Fecha: <?php echo date("d/m/Y H:i", strtotime($row['fecha'])); ?>
-          </small>
+    <?php while($row = $result->fetch_assoc()): ?>
+        <div class="notificacion <?php echo $row['visto'] ? 'visto' : 'nuevo'; ?>">
+            <h3><?php echo htmlspecialchars($row['titulo']); ?></h3>
+            <p><?php echo nl2br(htmlspecialchars($row['mensaje'])); ?></p>
+            <p class="fecha"><?php echo $row['fecha']; ?></p>
+            <?php if(!$row['visto']): ?>
+                <a href="?marcar_visto=<?php echo $row['id_notificacion']; ?>">Marcar como leído</a>
+            <?php else: ?>
+                <span>Leído</span>
+            <?php endif; ?>
         </div>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p class="text-center">📭 No tienes notificaciones nuevas para tu grupo.</p>
-    <?php endif; ?>
-  </div>
-</section>
+    <?php endwhile; ?>
 
-<footer class="footer">
-  &copy; <?php echo date("Y"); ?> Instituto Tecnológico Superior de Paysandú
-</footer>
 </body>
 </html>
+
+<?php
+$stmt->close();
+$con->close();
+?>
+
+
 
