@@ -13,42 +13,54 @@ $docente_cedula = isset($_SESSION['cedula']) ? intval($_SESSION['cedula']) : 0;
 
 // 3️⃣ Validar datos
 if($id_grupo && $titulo && $mensaje && $docente_cedula){
+
+    $fecha = date("Y-m-d H:i:s");
+    $visto_estudiante = 0;
+    $visto_adscripto  = 0;
+
+    // 4️⃣ Insertar en notificaciones
     $sql = "INSERT INTO notificaciones 
             (id_grupo, docente_cedula, titulo, mensaje, fecha, visto_estudiante, visto_adscripto)
             VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $con->prepare($sql);
     if(!$stmt){
-        $_SESSION['error_notificacion'] = "Error en prepare: ".$con->error;
+        $_SESSION['error_notificacion'] = "Error en prepare (notificaciones): ".$con->error;
         header("Location: indexadministrativo.php");
         exit();
     }
 
-    $fecha = date("Y-m-d H:i:s");
-    $visto_estudiante = 0;
-    $visto_adscripto  = 0;
-
     $stmt->bind_param("isssiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto);
 
     if($stmt->execute()){
-        $id_notificacion = $stmt->insert_id; // ID de la notificación recién creada
+        $id_notificacion = $stmt->insert_id; // ID recién creado
 
-        // 4️⃣ Insertar en 'recibe' para cada estudiante del grupo
+        // 5️⃣ Insertar en 'recibe' para cada estudiante del grupo
         $sqlEstudiantes = "SELECT cedula FROM usuario WHERE id_grupo = ?";
         $stmtEst = $con->prepare($sqlEstudiantes);
+        if(!$stmtEst){
+            $_SESSION['error_notificacion'] = "Error en prepare (usuarios): ".$con->error;
+            header("Location: indexadministrativo.php");
+            exit();
+        }
+
         $stmtEst->bind_param("i", $id_grupo);
         $stmtEst->execute();
         $resEst = $stmtEst->get_result();
+
         while($row = $resEst->fetch_assoc()){
             $cedula_estudiante = $row['cedula'];
-            $sqlRecibe = "INSERT INTO recibe (cedula_usuario, id_notificacion, visto) VALUES (?, ?, 0)";
-            $stmtRecibe = $con->prepare($sqlRecibe);
-            $stmtRecibe->bind_param("ii", $cedula_estudiante, $id_notificacion);
-            $stmtRecibe->execute();
-            $stmtRecibe->close();
-        }
-        $stmtEst->close();
 
+            $sqlRecibe = "INSERT INTO Recibe (cedula_usuario, id_notificacion, visto) VALUES (?, ?, 0)";
+            $stmtRecibe = $con->prepare($sqlRecibe);
+            if($stmtRecibe){
+                $stmtRecibe->bind_param("ii", $cedula_estudiante, $id_notificacion);
+                $stmtRecibe->execute();
+                $stmtRecibe->close();
+            }
+        }
+
+        $stmtEst->close();
         $_SESSION['msg_notificacion'] = "Notificación enviada correctamente";
     } else {
         $_SESSION['error_notificacion'] = "Error al enviar notificación: ".$stmt->error;
@@ -63,4 +75,5 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
 header("Location: indexadministrativo.php");
 exit();
 ?>
+
 
