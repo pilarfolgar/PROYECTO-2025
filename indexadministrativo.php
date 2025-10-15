@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 // Al cargar la página, actualizar el contador de reportes
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('obtener-reportes.php')
+    fetch('obtener-reporte.php')
     .then(res => res.json())
     .then(data => {
         const contador = document.getElementById('contadorReportes');
