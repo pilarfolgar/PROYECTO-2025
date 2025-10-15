@@ -29,7 +29,7 @@
 <!-- MENÚ DESPLEGABLE -->
 <div id="menu" style="display:none;position:absolute;top:90px;right:30px;background:#417899;padding:12px;border-radius:8px;flex-direction:column;">
   <a href="logout.php" style="color:white;text-decoration:none;padding:8px;display:block;">Log Out</a>
-  <a href="perfil.php" style="color:white;text-decoration:none;padding:8px;display:block;">Configuración</a>
+  <a href="perfil.php" style="color:white;text-decoration:none;padding:8px;display:block;">Mi Perfil</a>
 </div>
 
 <!-- MENÚ DE NOTIFICACIONES -->
