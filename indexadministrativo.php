@@ -2,6 +2,10 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
+// Traer los últimos 5 reportes
+$reportes = $con->query("SELECT * FROM reportes ORDER BY creado_en DESC LIMIT 5");
+$nuevos = $reportes->num_rows;
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,6 +22,17 @@ $con = conectar_bd();
 <body>
 
 <?php require("header.php"); ?>
+<div class="position-relative" style="float:right; margin:20px;">
+    <button id="btnReportes" class="btn btn-warning position-relative">
+        <i class="bi bi-bell"></i>
+        <?php if($nuevos>0): ?>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <?= $nuevos ?>
+        </span>
+        <?php endif; ?>
+    </button>
+</div>
+
 
 <main class="contenedor" id="gestion">
   <!-- Tarjetas de acciones -->
@@ -428,3 +443,35 @@ document.addEventListener('DOMContentLoaded', function() {
     ?>
 });
 </script>
+<script>
+document.getElementById('btnReportes').addEventListener('click', function() {
+    <?php if($nuevos > 0): ?>
+        let contenido = "";
+        <?php while($row = $reportes->fetch_assoc()): ?>
+            contenido += `
+                <b>Reporte de: <?= addslashes($row['nombre']) ?></b><br>
+                Email: <?= addslashes($row['email']) ?><br>
+                Objeto: <?= addslashes($row['objeto']) ?><br>
+                Descripción: <?= addslashes($row['descripcion']) ?><br>
+                Fecha del reporte: <?= addslashes($row['fecha']) ?><hr>
+            `;
+        <?php endwhile; ?>
+
+        Swal.fire({
+            title: '🚨 Últimos reportes',
+            html: contenido,
+            icon: 'info',
+            width: 600,
+            confirmButtonText: 'Cerrar'
+        });
+    <?php else: ?>
+        Swal.fire({
+            title: 'No hay reportes',
+            icon: 'success'
+        });
+    <?php endif; ?>
+});
+</script>
+
+</body>
+</html>
