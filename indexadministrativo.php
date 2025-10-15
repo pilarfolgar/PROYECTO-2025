@@ -57,6 +57,15 @@ $con = conectar_bd();
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
 </main>
+<div class="tarjeta">
+  <h3>Reportes de Estudiantes</h3>
+  <p>Ver los reportes enviados por los estudiantes.</p>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
+</div>
+
+<!-- Contenedor donde aparecerán los reportes -->
+<div id="contenedorReportes" style="display:none; margin-top:20px;"></div>
+
 
 
 
@@ -345,4 +354,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     ?>
 });
+</script>
+<script>
+// Al cargar la página, actualizar el contador de reportes
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('obtener-reportes.php')
+    .then(res => res.json())
+    .then(data => {
+        const contador = document.getElementById('contadorReportes');
+        if(data.length > 0){
+            contador.textContent = data.length;
+        } else {
+            contador.style.display = 'none';
+        }
+    });
+});
+function mostrarReportes() {
+    const contenedor = document.getElementById('contenedorReportes');
+    fetch('obtener-reporte.php')
+    .then(res => res.json())
+    .then(data => {
+        let html = '';
+        if(data.length === 0){
+            html = '<p>No hay reportes nuevos.</p>';
+        } else {
+            html = '<ul class="list-group">';
+            data.forEach(r => {
+                html += `<li class="list-group-item">
+                            <strong>De:</strong> ${r.nombre} (${r.email})<br>
+                            <strong>Objeto/Área:</strong> ${r.objeto}<br>
+                            <strong>Descripción:</strong> ${r.descripcion}<br>
+                            <strong>Fecha del reporte:</strong> ${r.fecha}
+                         </li>`;
+            });
+            html += '</ul>';
+        }
+        contenedor.innerHTML = html;
+        contenedor.style.display = 'block';
+    });
+}
 </script>
