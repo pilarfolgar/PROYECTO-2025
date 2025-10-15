@@ -21,7 +21,8 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
     $stmt = $con->prepare($sql);
     if(!$stmt) die("Error prepare notificaciones: ".$con->error);
 
-    if(!$stmt->bind_param("isssiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto))
+    // ⚠️ Cambiado a "iissiii"
+    if(!$stmt->bind_param("iissiii", $id_grupo, $docente_cedula, $titulo, $mensaje, $fecha, $visto_estudiante, $visto_adscripto))
         die("Error bind_param: ".$stmt->error);
 
     if(!$stmt->execute()) die("Error execute: ".$stmt->error);
@@ -58,5 +59,3 @@ if($id_grupo && $titulo && $mensaje && $docente_cedula){
 header("Location: indexadministrativo.php");
 exit();
 ?>
-
-
