@@ -57,11 +57,7 @@ $con = conectar_bd();
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
 </main>
-<div class="tarjeta">
-  <h3>Avisos Generales</h3>
-  <p>Cargar avisos que verán todos los estudiantes.</p>
-  <a href="#" class="boton" onclick="mostrarForm('form-aviso')">➕ Agregar Aviso</a>
-</div>
+
 
 
 <?php require("footer.php"); ?>
