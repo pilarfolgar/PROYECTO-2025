@@ -3,8 +3,9 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
+// Verificar sesión
 if (!isset($_SESSION['email'])) {
-    echo "<div class='container mt-5'><div class='alert alert-danger text-center'>No estás logueado.</div></div>";
+    header("Location: login.php");
     exit;
 }
 
@@ -16,41 +17,25 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
+
 if (!$user) { echo "Usuario no encontrado."; exit; }
 
-// Procesar actualización
-$mensaje = '';
+// Procesar formulario al enviar
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = trim($_POST['nombre'] ?? '');
-    $apellido = trim($_POST['apellido'] ?? '');
-    $telefono = trim($_POST['telefono'] ?? '');
-    $email_nuevo = trim($_POST['email'] ?? '');
-    $asignatura = trim($_POST['asignatura'] ?? '');
-    $id_grupo = intval($_POST['id_grupo'] ?? 0);
+    $nombre = $_POST['nombrecompleto'] ?? '';
+    $apellido = $_POST['apellido'] ?? '';
+    $telefono = $_POST['telefono'] ?? '';
+    $asignatura = $_POST['asignatura'] ?? '';
+    $id_grupo = $_POST['id_grupo'] ?? '';
 
-    $fotoNombre = $user['foto'];
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = 'uploads/' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['foto']['tmp_name'], $fotoNombre);
-    }
+    // Actualizar datos
+    $update = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE email=?");
+    $update->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $email);
+    $update->execute();
+    $update->close();
 
-    if (!$nombre || !$apellido || !$email_nuevo) {
-        $mensaje = '<div class="alert alert-danger">Nombre, apellido y email son obligatorios.</div>';
-    } else {
-        $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, email=?, telefono=?, foto=?, asignatura=?, id_grupo=? WHERE cedula=?");
-        $stmt->bind_param("ssssssii", $nombre, $apellido, $email_nuevo, $telefono, $fotoNombre, $asignatura, $id_grupo, $user['cedula']);
-        $mensaje = $stmt->execute() ? '<div class="alert alert-success">Perfil actualizado ✅</div>' : '<div class="alert alert-danger">Error al actualizar.</div>';
-        $_SESSION['email'] = $email_nuevo;
-        $stmt->close();
-    }
-}
-
-// Grupos solo para estudiantes
-$grupos = [];
-if ($user['rol'] === 'estudiante') {
-    $res = $con->query("SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre");
-    while ($r = $res->fetch_assoc()) $grupos[] = $r;
+    $mensaje = "Perfil actualizado con éxito.";
+    header("Refresh: 2; URL=perfil.php"); // Redirige al perfil después de 2 segundos
 }
 ?>
 
@@ -60,40 +45,61 @@ if ($user['rol'] === 'estudiante') {
 <meta charset="UTF-8">
 <title>Editar Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<style>.perfil-card img { width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom:15px; }</style>
+<style>
+    body { background-color: #f0f4f8; }
+    .edit-card { max-width: 600px; margin: 40px auto; padding: 2rem; border-radius: 12px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .edit-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; }
+</style>
 </head>
 <body>
+
 <?php require("header.php"); ?>
 
-<div class="container my-5">
-    <h2 class="mb-4 text-center">Editar Perfil</h2>
-    <?php if($mensaje) echo $mensaje; ?>
-    <div class="card perfil-card mx-auto p-4 shadow-sm" style="max-width:500px;">
-        <form method="POST" enctype="multipart/form-data">
-            <div class="text-center mb-3">
-                <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
+<div class="container">
+    <div class="edit-card text-center">
+        <h2 class="mb-4">Editar Perfil</h2>
+
+        <?php if(!empty($mensaje)): ?>
+            <div class="alert alert-success"><?= $mensaje ?></div>
+        <?php endif; ?>
+
+        <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
+
+        <form method="post" enctype="multipart/form-data" class="text-start mt-4">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombrecompleto" class="form-control" value="<?= htmlspecialchars($user['nombrecompleto']) ?>" required>
             </div>
-            <input type="text" name="nombre" class="form-control mb-3" value="<?= htmlspecialchars($user['nombrecompleto']) ?>" required placeholder="Nombre">
-            <input type="text" name="apellido" class="form-control mb-3" value="<?= htmlspecialchars($user['apellido']) ?>" required placeholder="Apellido">
-            <input type="email" name="email" class="form-control mb-3" value="<?= htmlspecialchars($user['email']) ?>" required placeholder="Email">
-            <input type="text" name="telefono" class="form-control mb-3" value="<?= htmlspecialchars($user['telefono']) ?>" placeholder="Teléfono">
-            <input type="file" name="foto" class="form-control mb-3">
-            
-            <?php if($user['rol']==='docente'): ?>
-                <input type="text" name="asignatura" class="form-control mb-3" value="<?= htmlspecialchars($user['asignatura']) ?>" placeholder="Asignatura">
+            <div class="mb-3">
+                <label class="form-label">Apellido</label>
+                <input type="text" name="apellido" class="form-control" value="<?= htmlspecialchars($user['apellido']) ?>" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="text" name="telefono" class="form-control" value="<?= htmlspecialchars($user['telefono']) ?>">
+            </div>
+
+            <?php if($user['rol'] === 'docente'): ?>
+            <div class="mb-3">
+                <label class="form-label">Asignatura</label>
+                <input type="text" name="asignatura" class="form-control" value="<?= htmlspecialchars($user['asignatura']) ?>">
+            </div>
             <?php else: ?>
-                <select name="id_grupo" class="form-select mb-3" required>
-                    <option disabled>Seleccione grupo...</option>
-                    <?php foreach($grupos as $g): ?>
-                        <option value="<?= intval($g['id_grupo']) ?>" <?= ($g['id_grupo']==$user['id_grupo'])?'selected':'' ?>>
-                            <?= htmlspecialchars($g['nombre'].' - '.$g['orientacion']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="mb-3">
+                <label class="form-label">Grupo</label>
+                <input type="text" name="id_grupo" class="form-control" value="<?= htmlspecialchars($user['id_grupo']) ?>">
+            </div>
             <?php endif; ?>
 
-            <button type="submit" class="btn btn-success w-100">Guardar cambios</button>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="perfil.php" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
         </form>
+
+        <hr class="my-4">
+
+        <a href="logout.php" class="btn btn-danger w-100">Cerrar Sesión</a>
     </div>
 </div>
 
