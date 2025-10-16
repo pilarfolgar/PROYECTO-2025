@@ -17,7 +17,6 @@ $con = conectar_bd();
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style>
-/* Grid y estilo de docentes */
 .docentes-grid {
     display: flex;
     flex-wrap: wrap;
@@ -38,13 +37,8 @@ $con = conectar_bd();
     border-radius: 50%;
     margin: 0 auto 0.5rem auto;
 }
-.boton {
-    margin-top: 0.5rem;
-}
-.lista-miembros {
-    list-style: none;
-    padding-left: 0;
-}
+.boton { margin-top: 0.5rem; }
+.lista-miembros { list-style: none; padding-left: 0; }
 @media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
 @media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
 </style>
@@ -58,6 +52,7 @@ $con = conectar_bd();
 <section class="mis-cursos container mt-4">
   <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
+    <!-- Aquí podrías cargar dinámicamente los cursos desde la DB si quieres -->
     <div class="docente-card">
       <div class="docente-photo"></div>
       <div class="docente-name fw-bold">1°MA - Lengua</div>
@@ -119,12 +114,11 @@ $con = conectar_bd();
   <h2 class="text-center mb-4">Vista previa de Aulas</h2>
   <div class="row g-4 justify-content-center">
     <?php
-    $sql_aulas = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
-    $result_aulas = $con->query($sql_aulas);
-    while ($row = $result_aulas->fetch_assoc()) {
+    $sql_aulas_preview = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
+    $result_aulas_preview = $con->query($sql_aulas_preview);
+    while ($row = $result_aulas_preview->fetch_assoc()) {
         $img = $row['imagen'] ?: 'default-aula.jpg';
-        echo '
-        <div class="col-md-4">
+        echo '<div class="col-md-4">
           <div class="card h-100 shadow-sm border-0">
             <img src="imagenes/'.$img.'" class="card-img-top" alt="'.$row["codigo"].'">
             <div class="card-body text-center">
@@ -150,25 +144,22 @@ $con = conectar_bd();
       <thead class="table-primary">
         <tr>
           <th>Hora</th>
-          <th>Aula 1</th>
-          <th>Aula 2</th>
-          <th>Aula 3</th>
-          <th>Salón de Actos</th>
-          <th>Salón 1</th>
-          <th>Salón 2</th>
-          <th>Salón 3</th>
-          <th>Salón 4</th>
-          <th>Salón 5</th>
-          <th>Lab. Robótica</th>
-          <th>Lab. Química</th>
-          <th>Lab. Física</th>
-          <th>Taller de Mantenimiento</th>
+          <?php
+          // Cargar todas las aulas desde la base de datos
+          $sql_aulas = "SELECT codigo FROM aula ORDER BY codigo";
+          $result_aulas = $con->query($sql_aulas);
+          $aulas = [];
+          while($row = $result_aulas->fetch_assoc()){
+              $aulas[] = $row['codigo'];
+              echo '<th>'.htmlspecialchars($row['codigo']).'</th>';
+          }
+          ?>
         </tr>
       </thead>
       <tbody>
         <?php
         function sumarMinutos($hora, $minutos) {
-            $h = (int)substr($hora,0,2);   
+            $h = (int)substr($hora,0,2);
             $m = (int)substr($hora,3,2);
             $m += $minutos;
             $h += intdiv($m,60);
@@ -185,15 +176,9 @@ $con = conectar_bd();
             $h = sumarMinutos($h, 45);
         }
 
-        $aulas = [
-            "Aula 1", "Aula 2", "Aula 3",
-            "Salón de Actos", "Salón 1", "Salón 2", "Salón 3", "Salón 4", "Salón 5",
-            "Lab. Robótica", "Lab. Química", "Lab. Física", "Taller de Mantenimiento"
-        ];
-
-        $reservas = [];
         $fecha_actual = date('Y-m-d');
-        foreach ($aulas as $aula) {
+        $reservas = [];
+        foreach($aulas as $aula){
             $reservas[$aula] = [];
             $sql_r = "SELECT hora_inicio, hora_fin FROM reserva WHERE aula='$aula' AND fecha='$fecha_actual'";
             $res = $con->query($sql_r);
@@ -211,14 +196,14 @@ $con = conectar_bd();
             return false;
         }
 
-        foreach ($bloques as $hora) {
+        foreach($bloques as $hora){
             echo '<tr>';
             echo '<td><strong>'.$hora.'</strong></td>';
-            foreach ($aulas as $aula) {
+            foreach($aulas as $aula){
                 if(bloqueOcupado($hora, $reservas[$aula])){
                     echo '<td class="bg-danger text-white"><i class="bi bi-x-circle-fill"></i></td>';
                 } else {
-                    echo '<td class="bg-success text-dark disponible" data-aula="'.$aula.'" data-hora="'.$hora.'" onclick="abrirReservaBloque(this)"><i class="bi bi-check-circle-fill"></i></td>';
+                    echo '<td class="bg-success text-dark disponible" data-aula="'.htmlspecialchars($aula).'" data-hora="'.$hora.'" onclick="abrirReservaBloque(this)"><i class="bi bi-check-circle-fill"></i></td>';
                 }
             }
             echo '</tr>';
@@ -246,7 +231,7 @@ $con = conectar_bd();
           <input type="hidden" name="aula_nombre" id="aulaSeleccionada">
           <div class="mb-3">
             <label class="form-label">Fecha</label>
-            <input type="date" name="fecha" class="form-control" required value="<?= date('Y-m-d') ?>">
+            <input type="date" name="fecha" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
           </div>
           <div class="mb-3">
             <label class="form-label">Hora inicio</label>
@@ -268,7 +253,6 @@ $con = conectar_bd();
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Abrir modal al hacer click en bloque disponible
 function abrirReservaBloque(td){
     const aula = td.getAttribute('data-aula');
     const hora = td.getAttribute('data-hora');
@@ -289,7 +273,6 @@ function abrirReservaBloque(td){
     modal.show();
 }
 
-// Toggle miembros de curso
 document.querySelectorAll('.ver-miembros').forEach(btn => {
     btn.addEventListener('click', () => {
         const ul = btn.nextElementSibling;
