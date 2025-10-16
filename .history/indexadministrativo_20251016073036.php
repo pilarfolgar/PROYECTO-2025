@@ -56,76 +56,51 @@ $con = conectar_bd();
     <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
-  <div class="tarjeta">
+</main>
+<div class="tarjeta">
   <h3>Reportes de Estudiantes</h3>
   <p>Ver los reportes enviados por los estudiantes.</p>
-  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()"> ➕ Ver Reportes</button>
-</div>
-<div class="tarjeta">
-    <h3>Reservas de Aulas</h3>
-    <p>Visualizar y administrar reservas de aulas.</p>
-    <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
-  </div>
-  <div class="tarjeta">
-  <h3>Sugerencias de Estudiantes</h3>
-  <p>Ver las sugerencias enviadas por los estudiantes.</p>
-  <button class="boton" onclick="mostrarSugerencias()"> ➕ Ver Sugerencias</button>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
 </div>
 
-</main>
+<!-- Contenedor donde aparecerán los reportes -->
+<div id="contenedorReportes" style="display:none; margin-top:20px;"></div>
+<?php
+// Consulta los reportes de la base
+$sql_reportes = "SELECT * FROM reportes ORDER BY fecha DESC";
+$result_reportes = $con->query($sql_reportes);
+?>
 
-
-<!-- MODAL REPORTES -->
-<div class="modal fade" id="modalReportes" tabindex="-1" aria-labelledby="modalReportesLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="modalReportesLabel">📄 Reportes de Estudiantes</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <?php
-        // Consulta los reportes de la base
-        $sql_reportes = "SELECT * FROM reportes ORDER BY fecha DESC";
-        $result_reportes = $con->query($sql_reportes);
-        ?>
-
-        <?php if($result_reportes->num_rows > 0): ?>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-              <thead class="table-dark">
-                <tr>
-                  <th>Nombre</th>
-                  <th>Email</th>
-                  <th>Objeto/Área</th>
-                  <th>Descripción</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php while($reporte = $result_reportes->fetch_assoc()): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($reporte['nombre']) ?></td>
-                    <td><?= htmlspecialchars($reporte['email']) ?></td>
-                    <td><?= htmlspecialchars($reporte['objeto']) ?></td>
-                    <td><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></td>
-                    <td><?= htmlspecialchars($reporte['fecha']) ?></td>
-                  </tr>
-                <?php endwhile; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php else: ?>
-          <p class="text-center mb-0">No hay reportes enviados aún.</p>
-        <?php endif; ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+<div id="listaReportes" style="display:none; margin-top:20px;">
+  <?php if($result_reportes->num_rows > 0): ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Objeto/Área</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php while($reporte = $result_reportes->fetch_assoc()): ?>
+            <tr>
+              <td><?= htmlspecialchars($reporte['nombre']) ?></td>
+              <td><?= htmlspecialchars($reporte['email']) ?></td>
+              <td><?= htmlspecialchars($reporte['objeto']) ?></td>
+              <td><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></td>
+              <td><?= htmlspecialchars($reporte['fecha']) ?></td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
     </div>
-  </div>
+  <?php else: ?>
+    <p class="text-center">No hay reportes enviados aún.</p>
+  <?php endif; ?>
 </div>
-
 
 
 <?php
@@ -134,108 +109,51 @@ $con = conectar_bd();
 // ============================
 $sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin, 
                         r.aula, r.nombre AS docente, g.nombre AS grupo
-                 FROM reserva r
+                 FROM reservas r
                  LEFT JOIN grupo g ON r.grupo = g.id_grupo
                  ORDER BY r.fecha DESC, r.hora_inicio ASC";
 $result_reservas = $con->query($sql_reservas);
 ?>
 
-<!-- MODAL RESERVAS -->
-<div class="modal fade" id="modalReservas" tabindex="-1" aria-labelledby="modalReservasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="modalReservasLabel">📅 Reservas de Aulas</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <?php if($result_reservas && $result_reservas->num_rows > 0): ?>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-              <thead class="table-dark">
-                <tr>
-                  <th>Docente (Cédula)</th>
-                  <th>Aula</th>
-                  <th>Grupo</th>
-                  <th>Fecha</th>
-                  <th>Hora Inicio</th>
-                  <th>Hora Fin</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php while($reserva = $result_reservas->fetch_assoc()): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($reserva['docente']) ?></td>
-                    <td><?= htmlspecialchars($reserva['aula']) ?></td>
-                    <td><?= htmlspecialchars($reserva['grupo'] ?? '—') ?></td>
-                    <td><?= htmlspecialchars($reserva['fecha']) ?></td>
-                    <td><?= htmlspecialchars($reserva['hora_inicio']) ?></td>
-                    <td><?= htmlspecialchars($reserva['hora_fin']) ?></td>
-                  </tr>
-                <?php endwhile; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php else: ?>
-          <p class="text-center">No hay reservas registradas aún.</p>
-        <?php endif; ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
+<div class="tarjeta mt-4">
+va<h3>Reservas de Aulas</h3>
+  <p>Listado de reservas realizadas por los docentes.</p>
+  <button class="boton" id="btnVerReservas" onclick="mostrarReservas()">Ver Reservas</button>
 </div>
-<!-- MODAL SUGERENCIAS -->
-<div class="modal fade" id="modalSugerencias" tabindex="-1" aria-labelledby="modalSugerenciasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="modalSugerenciasLabel">💡 Sugerencias de Estudiantes</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <?php
-        $sql_sugerencias = "SELECT s.id_sugerencia, s.mensaje, s.fecha, u.nombrecompleto, u.apellido 
-                            FROM sugerencias s
-                            LEFT JOIN usuario u ON s.cedula = u.cedula
-                            ORDER BY s.fecha DESC";
-        $result_sugerencias = $con->query($sql_sugerencias);
-        ?>
 
-        <?php if($result_sugerencias && $result_sugerencias->num_rows > 0): ?>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-              <thead class="table-dark">
-                <tr>
-                  <th>Estudiante</th>
-                  <th>Mensaje</th>
-                  <th>Fecha</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php while($sug = $result_sugerencias->fetch_assoc()): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($sug['nombrecompleto'] . ' ' . $sug['apellido']) ?></td>
-                    <td><?= nl2br(htmlspecialchars($sug['mensaje'])) ?></td>
-                    <td><?= htmlspecialchars($sug['fecha']) ?></td>
-                    <td><?= htmlspecialchars($sug['estado']) ?></td>
-                  </tr>
-                <?php endwhile; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php else: ?>
-          <p class="text-center mb-0">No hay sugerencias enviadas aún.</p>
-        <?php endif; ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+<div id="contenedorReservas" style="display:none; margin-top:20px;">
+  <?php if($result_reservas && $result_reservas->num_rows > 0): ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Docente (Cédula)</th>
+            <th>Aula</th>
+            <th>Grupo</th>
+            <th>Fecha</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php while($reserva = $result_reservas->fetch_assoc()): ?>
+            <tr>
+              <td><?= htmlspecialchars($reserva['docente']) ?></td>
+              <td><?= htmlspecialchars($reserva['aula']) ?></td>
+              <td><?= htmlspecialchars($reserva['grupo'] ?? '—') ?></td>
+              <td><?= htmlspecialchars($reserva['fecha']) ?></td>
+              <td><?= htmlspecialchars($reserva['hora_inicio']) ?></td>
+              <td><?= htmlspecialchars($reserva['hora_fin']) ?></td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
     </div>
-  </div>
+  <?php else: ?>
+    <p class="text-center">No hay reservas registradas aún.</p>
+  <?php endif; ?>
 </div>
+
 
 
 <?php require("footer.php"); ?>
@@ -526,20 +444,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function mostrarReportes() {
-  const modal = new bootstrap.Modal(document.getElementById('modalReportes'));
-  modal.show();
+  const contenedor = document.getElementById('listaReportes');
+  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
+    ? 'block' 
+    : 'none';
 }
 
 function mostrarReservas() {
-  const modal = new bootstrap.Modal(document.getElementById('modalReservas'));
-  modal.show();
+  const contenedor = document.getElementById('contenedorReservas');
+  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
+    ? 'block' 
+    : 'none';
 }
-function mostrarSugerencias() {
-  const modal = new bootstrap.Modal(document.getElementById('modalSugerencias'));
-  modal.show();
-}
-
-
 </script>
-
-

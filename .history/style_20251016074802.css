@@ -1,0 +1,99 @@
+:root {
+  --primario: #1B3A4B;     
+  --secundario: #588BAE;   
+  --acento: #A2D5F2;       
+  --fondo: #F0F4F8;        
+  --texto: #1B3A4B;        
+  --hover: #417899;        
+}
+
+/* GLOBAL */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; }
+body { background-color: var(--fondo); color: var(--texto); transition: background 0.3s, color 0.3s; display: flex; flex-direction: column; min-height: 100vh; }
+main, .container { flex: 1; }
+img { max-width: 100%; display: block; height: auto; }
+
+/* HEADER */
+header { background-color: var(--primario); padding: 1rem 2rem; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
+.header-left { display: flex; align-items: center; gap: 1rem; order:1; }
+.header-text h2 { font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.2rem; }
+.header-text h4 { font-family: 'Lato', sans-serif; font-size: 0.95rem; font-weight: 400; color: var(--acento); margin-top: 0; }
+.logo { width: 70px; height: 70px; border-radius: 50%; background-color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
+.logo:hover { transform: scale(1.1); }
+.header-right { order:2; margin-left:auto; display:flex; align-items:center; gap:1rem; }
+
+/* NAV */
+nav { background-color: var(--secundario); display: flex; justify-content: center; padding: 0.8rem 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 2rem; }
+nav a { color:white; text-decoration:none; font-weight:600; font-size:1.1rem; padding:0.4rem 0.8rem; border-radius:10px; transition: background 0.3s, transform 0.2s; }
+nav a:hover { background-color: var(--hover); transform: translateY(-2px); }
+
+/* CARRUSEL */
+#carouselExampleInterval { width:100%; max-height:600px; overflow:hidden; border-radius:12px; margin:20px auto;}
+#carouselExampleInterval .carousel-inner img { width:100%; height:100%; object-fit:cover; }
+.carousel-caption { background-color: rgba(27,58,75,0.7); padding:1.5rem 2rem; border-radius:12px; color:white; text-shadow:1px 1px 4px rgba(0,0,0,0.6);}
+.carousel-caption h2 { font-size:2rem; }
+.carousel-caption p { font-size:1rem; }
+
+/* FADE IN / SCROLL REVEAL */
+.reveal { opacity:0; transform: translateY(20px); transition: all 0.6s ease; }
+.reveal.active { opacity:1; transform: translateY(0); }
+
+/* INSCRIPCIONES 2026 */
+.inscripciones { border-left:6px solid var(--primario); background-color: var(--fondo); padding:1.5rem; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center; margin:2rem auto; max-width:700px; animation: fadeInUp 0.8s ease forwards; }
+.inscripciones h3 { color:var(--primario); font-weight:bold; margin-bottom:0.5rem;}
+.inscripciones p { color:#333; font-size:0.95rem; }
+
+/* TARJETAS GENERALES */
+.tarjeta, .carreras { background-color:white; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); padding:1.5rem; transition: transform 0.3s, box-shadow 0.3s; }
+.tarjeta:hover, .carreras:hover { transform:translateY(-5px); box-shadow:0 12px 24px rgba(0,0,0,0.08);}
+.tarjeta h3, .carreras h4 { color:var(--primario); margin-bottom:0.5rem;}
+.carreras table { text-align:center; font-size:0.95rem; }
+
+/* DOCENTES */
+.docentes-grid { display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
+.docente-card { flex:1 1 220px; max-width:250px; background:white; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,0.05); padding:1.5rem; text-align:center; transition: transform 0.3s, box-shadow 0.3s; }
+.docente-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 12px 20px rgba(0,0,0,0.1);}
+.docente-photo { width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:1rem; border:3px solid var(--secundario); background-color:var(--acento);}
+.docente-name { font-size:1.25rem; font-weight:700; color:var(--primario); margin-bottom:0.3rem; }
+.docente-subject { font-size:1rem; font-weight:600; color:var(--hover); }
+.ver-todo-btn { display:block; max-width:220px; margin:2rem auto 0; font-weight:700; background-color:var(--secundario); color:white; border-radius:9999px; padding:0.5rem 1.5rem; text-align:center; transition:0.3s;}
+.ver-todo-btn:hover { background-color:var(--hover); text-decoration:none; }
+
+/* INFO GRID (HISTORIA/MISIÓN/VALORES) */
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.5rem; margin-bottom:2rem; }
+
+/* CONTACTO */
+#contacto p { text-align:center; font-size:1rem; margin-bottom:0.5rem; }
+#contacto i { margin-right:0.5rem; color:var(--primario); }
+
+/* BOTONES */
+.boton, .perfil, .btn-flotante { background-color:var(--acento); color:var(--texto); padding:0.5rem 1rem; border-radius:6px; font-weight:bold; cursor:pointer; transition: background 0.3s, transform 0.2s; text-decoration:none; display:inline-block; }
+.boton:hover, .perfil:hover, .btn-flotante:hover { background-color:var(--hover); transform:translateY(-2px); }
+
+/* MODALES / FORMULARIOS */
+.formulario, .formulario-overlay { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:2rem; border-radius:12px; z-index:1000; display:none; max-width:400px; width:90%; max-height:90vh; overflow-y:auto; }
+.formulario .cerrar { position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--secundario); transition:color 0.3s;}
+.formulario .cerrar:hover { color: var(--hover); }
+
+/* FOOTER */
+.footer { background-color: var(--primario); text-align:center; padding:1rem; margin-top:2rem; font-size:1rem; color:white; box-shadow: inset 0 4px 6px rgba(0,0,0,0.1); }
+.footer a { color:white; text-decoration:underline; transition: color 0.3s; }
+.footer a:hover { color:var(--acento); text-decoration:none; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .carousel-caption h2 { font-size:1.5rem; }
+  .carousel-caption p { font-size:0.9rem; }
+  .docentes-grid { justify-content:center; flex-wrap:wrap; }
+  .docente-card { flex:1 1 180px; max-width:220px; padding:1rem; }
+  .docente-photo { width:90px; height:90px; }
+  nav { flex-direction:column; gap:0.5rem; padding:1rem 0; }
+}
+
+/* MODO OSCURO */
+body.dark-mode { background:#121212; color:#e5e5e5; }
+body.dark-mode header { background:#222; color:#e5e5e5; }
+body.dark-mode nav { background:#333; }
+body.dark-mode a { color:var(--acento);}
+body.dark-mode a:hover { color:#fff; text-decoration:underline; }
+body.dark-mode .footer { background:#222; color:#e5e5e5; }

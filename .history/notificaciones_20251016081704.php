@@ -47,7 +47,7 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 <head>
 <meta charset="UTF-8">
 <title>Mis Notificaciones</title>
-<link rel="stylesheet" href="notificaciones.css">
+<link rel="stylesheet" href="css/notificaciones.css">
 </head>
 <body>
 
@@ -76,6 +76,7 @@ $stmt->close();
 $con->close();
 ?>
 
+<?php include('footer.php'); ?>
 
 <script>
     // Animación simple: revelar notificaciones al cargar
@@ -89,5 +90,3 @@ $con->close();
 
 </body>
 </html>
-
-<?php require('footer.php'); ?>
