@@ -187,49 +187,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-const abrirBtn = document.getElementById("abrirSugerencia");
-const cerrarBtn = document.getElementById("cerrarSugerencia");
-const overlaySugg = document.getElementById("overlaySugerenciaDiv"); // nombre actualizado
+
+// ======= Abrir y cerrar formulario de Sugerencia =======
+const btnAbrirSugerencia = document.getElementById("abrirSugerencia");
 const formSugerencia = document.getElementById("form-sugerencia");
+const overlaySugerencia = document.getElementById("overlaySugerenciaDiv");
+const btnCerrarSugerencia = document.getElementById("cerrarSugerencia");
 
-abrirBtn.addEventListener("click", () => {
-  overlaySugg.style.display = "block";
+btnAbrirSugerencia.addEventListener("click", () => {
   formSugerencia.style.display = "block";
+  overlaySugerencia.style.display = "block";
 });
 
-cerrarBtn.addEventListener("click", () => {
-  overlaySugg.style.display = "none";
+btnCerrarSugerencia.addEventListener("click", () => {
   formSugerencia.style.display = "none";
+  overlaySugerencia.style.display = "none";
 });
 
-const sugerenciaForm = document.getElementById("sugerenciaForm");
-sugerenciaForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const mensaje = document.getElementById("mensajeSugerencia").value.trim();
+overlaySugerencia.addEventListener("click", () => {
+  formSugerencia.style.display = "none";
+  overlaySugerencia.style.display = "none";
+});
 
-  if (mensaje.length < 5) {
-    alert("El mensaje debe tener al menos 5 caracteres.");
-    return;
-  }
+// ======= Enviar sugerencia por AJAX =======
+const sugerenciaForm = document.getElementById("sugerenciaForm");
+
+sugerenciaForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const formData = new FormData(sugerenciaForm);
 
   fetch("guardar-sugerencia.php", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `mensaje=${encodeURIComponent(mensaje)}`
+    body: formData
   })
   .then(res => res.text())
-  .then(res => {
-    if (res.trim() === "ok") {
-      alert("Sugerencia enviada con éxito");
+  .then(data => {
+    if(data.trim() === "ok") {
+      alert("¡Sugerencia enviada!");
       sugerenciaForm.reset();
-      overlaySugg.style.display = "none";
       formSugerencia.style.display = "none";
+      overlaySugerencia.style.display = "none";
     } else {
-      alert("Error al enviar la sugerencia, intente nuevamente.");
+      alert("Hubo un error al enviar la sugerencia.");
     }
   })
-  .catch(err => {
-    console.error(err);
-    alert("Error de conexión.");
-  });
+  .catch(() => alert("Hubo un error al enviar la sugerencia."));
 });
+
+
