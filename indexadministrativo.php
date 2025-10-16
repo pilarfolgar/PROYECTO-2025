@@ -103,6 +103,56 @@ $result_reportes = $con->query($sql_reportes);
 </div>
 
 
+<?php
+// ============================
+// RESERVAS DE AULAS
+// ============================
+$sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin, 
+                        r.aula, r.nombre AS docente, g.nombre AS grupo
+                 FROM reservas r
+                 LEFT JOIN grupo g ON r.grupo = g.id_grupo
+                 ORDER BY r.fecha DESC, r.hora_inicio ASC";
+$result_reservas = $con->query($sql_reservas);
+?>
+
+<div class="tarjeta mt-4">
+  <h3>Reservas de Aulas</h3>
+  <p>Listado de reservas realizadas por los docentes.</p>
+  <button class="boton" id="btnVerReservas" onclick="mostrarReservas()">Ver Reservas</button>
+</div>
+
+<div id="contenedorReservas" style="display:none; margin-top:20px;">
+  <?php if($result_reservas && $result_reservas->num_rows > 0): ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Docente (Cédula)</th>
+            <th>Aula</th>
+            <th>Grupo</th>
+            <th>Fecha</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php while($reserva = $result_reservas->fetch_assoc()): ?>
+            <tr>
+              <td><?= htmlspecialchars($reserva['docente']) ?></td>
+              <td><?= htmlspecialchars($reserva['aula']) ?></td>
+              <td><?= htmlspecialchars($reserva['grupo'] ?? '—') ?></td>
+              <td><?= htmlspecialchars($reserva['fecha']) ?></td>
+              <td><?= htmlspecialchars($reserva['hora_inicio']) ?></td>
+              <td><?= htmlspecialchars($reserva['hora_fin']) ?></td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php else: ?>
+    <p class="text-center">No hay reservas registradas aún.</p>
+  <?php endif; ?>
+</div>
 
 
 
@@ -367,6 +417,7 @@ $result_reportes = $con->query($sql_reportes);
 </section>
 
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     <?php
@@ -391,10 +442,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     ?>
 });
-</script>
-<script>
+
 function mostrarReportes() {
   const contenedor = document.getElementById('listaReportes');
+  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
+    ? 'block' 
+    : 'none';
+}
+
+function mostrarReservas() {
+  const contenedor = document.getElementById('contenedorReservas');
   contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
     ? 'block' 
     : 'none';

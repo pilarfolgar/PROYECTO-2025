@@ -108,7 +108,7 @@ require("seguridad.php");
         <tbody>
           <?php
           function sumarMinutos($hora, $minutos) {
-              $h = (int)substr($hora,0,2);
+              $h = (int)substr($hora,0,2);   
               $m = (int)substr($hora,3,2);
               $m += $minutos;
               $h += intdiv($m,60);
