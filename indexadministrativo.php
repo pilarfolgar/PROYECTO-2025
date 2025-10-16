@@ -109,7 +109,7 @@ $result_reportes = $con->query($sql_reportes);
 // ============================
 $sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin, 
                         r.aula, r.nombre AS docente, g.nombre AS grupo
-                 FROM reservas r
+                 FROM reserva r
                  LEFT JOIN grupo g ON r.grupo = g.id_grupo
                  ORDER BY r.fecha DESC, r.hora_inicio ASC";
 $result_reservas = $con->query($sql_reservas);
@@ -153,8 +153,6 @@ va<h3>Reservas de Aulas</h3>
     <p class="text-center">No hay reservas registradas aún.</p>
   <?php endif; ?>
 </div>
-
-
 
 <?php require("footer.php"); ?>
 
