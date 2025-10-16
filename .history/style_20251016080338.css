@@ -1,0 +1,937 @@
+:root {
+  --primario: #1B3A4B;     /* Azul oscuro: profesionalismo y confianza */
+  --secundario: #588BAE;   /* Azul medio: serenidad y organización */
+  --acento: #A2D5F2;       /* Azul claro: originalidad y frescura */
+  --fondo: #F0F4F8;        /* Gris muy claro: limpieza y tranquilidad */
+  --texto: #1B3A4B;        /* Texto oscuro para legibilidad */
+  --hover: #417899;        /* Azul intermedio para interacciones */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  transition: background 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main, .container {
+  flex: 1;
+}
+
+/* Header */
+header {
+  background-color: var(--primario);
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Contenedor izquierdo con logo y texto */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Texto al lado del logo */
+.header-text h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.header-text h4 {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--acento);
+  margin-top: 0;
+}
+
+/* Logo */
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+/* Botón de ingreso */
+.btn-ingresar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--acento);
+  color: var(--primario);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-ingresar:hover {
+  background-color: var(--hover);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem;
+  }
+  .header-left {
+    justify-content: center;
+  }
+  .header-text h1 {
+    font-size: 2rem;
+  }
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+nav {
+  background-color: var(--secundario);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: background 0.3s;
+  display: inline-block; /* Para consistencia en hover */
+}
+
+nav a:hover {
+  background-color: var(--hover);
+}/* NAV simplificado */
+nav {
+  background-color: var(--secundario);
+  display: flex;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+nav a:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
+}
+
+a {
+    text-decoration: none; /* Quita la línea */
+    color: inherit; /* Mantiene el color del texto, opcional */
+}
+
+/* ---------------- CAROUSEL ---------------- */
+.carousel-inner {
+  max-height: 600px;
+  overflow: hidden;
+}
+.sin-subrayado {
+    text-decoration: none;
+}
+
+
+.carousel-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#carouselExampleInterval {
+  max-width: 600px;
+  height: 300px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+#carouselExampleInterval .carousel-inner img {
+  object-fit: cover;
+  width: 100%;
+  height: 300px;
+}
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* Carrusel overlay */
+.carousel-caption {
+  background-color: rgba(0,0,0,0.5);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+/* ---------------- CONTENEDOR Y TARJETAS GENERALES ---------------- */
+.contenedor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.tarjeta {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tarjeta h3 {
+  color: var(--primario);
+  margin-bottom: 0.5rem;
+}
+
+/* ---------------- BOTONES Y PERFIL ---------------- */
+.boton,
+.perfil {
+  margin-top: 1rem;
+  background-color: var(--acento);
+  color: var(--texto);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-block;
+}
+
+.boton:hover,
+.perfil:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
+}
+
+/* ---------------- DOCENTES (GRID VERTICAL/RESPONSIVE) ---------------- */
+/* Contenedor de docentes en grilla */
+.docentes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas fijas */
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Responsivo: en tablet 2 columnas */
+@media (max-width: 900px) {
+  .docentes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsivo: en celular 1 columna */
+@media (max-width: 600px) {
+  .docentes-grid {
+    grid-template-columns: 3fr;
+  }
+}
+
+.docentes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 3fr));  /* 3-4 columnas en desktop, auto-ajuste */
+  gap: 2rem;
+  padding: 1rem 0;  /* Espacio vertical sin afectar main */
+  max-width: 1200px;  /* Limite para no estirar demasiado */
+  margin: 0 auto;  /* Centrado */
+}
+
+.docente-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centrado vertical en card */
+}
+
+.docente-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.docente-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;  /* Circular para grid (más compacto y moderno) */
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid var(--secundario);
+  background-color: var(--acento);
+  display: block;
+}
+
+.docente-name {
+  font-size: 1.25rem;
+  color: var(--primario);
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.docente-subject {
+  font-size: 1rem;
+  color: var(--hover);
+  font-weight: 600;
+}
+
+/* Opcional: Botón "Ver todos" si agregas más docentes */
+.ver-todo-btn {
+  display: block;
+  max-width: 220px;
+  margin: 2rem auto 0;
+  font-weight: 700;
+  background-color: var(--secundario);
+  color: white;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.ver-todo-btn:hover {
+  background-color: var(--hover);
+  color: white;
+  text-decoration: none;
+}
+
+/* ---------------- CARRERAS ---------------- */
+.carreras {
+  background-color: var(--hover);
+  border-left: 6px solid var(--secundario);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  border-radius: 12px;
+}
+
+.carreras:hover {
+  transform: translateY(-5px);
+  background-color: var(--acento);
+  color: white;
+}
+
+.carreras h4 {
+  color: var(--primario);
+}
+
+.carreras table th,
+.carreras table td {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ---------------- CARDS GENERALES ---------------- */
+.card {
+  border-radius: 15px;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  height: 220px;
+  object-fit: cover;
+  border-radius: 15px 15px 0 0;
+}
+
+/* ---------------- RATIO/IFRAME Y ROWS ---------------- */
+section.container .row {
+  display: flex;
+  align-items: stretch;
+}
+
+.col-md-5.mb-4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.ratio {
+  flex-grow: 1;
+  min-height: 100%;
+  height: 80%;
+}
+
+.ratio iframe {
+  width: 90%;
+  height: 90%;
+  border: 0;
+}
+
+/* ---------------- MODAL RESERVA FLOTANTE ---------------- */
+#modalReserva .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+#modalReserva .modal-header {
+  background-color: var(--primario);
+  color: white;
+  border-radius: 12px 12px 0 0;
+  border-bottom: none;
+  padding: 1.5rem;
+}
+
+#modalReserva .modal-title {
+  font-weight: bold;
+  color: white;
+}
+
+#modalReserva .btn-close {
+  filter: invert(1);
+}
+
+#modalReserva .modal-body {
+  padding: 2rem;
+  background-color: white;
+}
+
+#modalReserva .form-label {
+  color: var(--texto);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+#modalReserva .form-control,
+#modalReserva .form-select {
+  border: 1px solid var(--secundario);
+  border-radius: 6px;
+  padding: 0.75rem;
+  background-color: white;
+  color: var(--texto);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#modalReserva .form-control:focus,
+#modalReserva .form-select:focus {
+  border-color: var(--hover);
+  box-shadow: 0 0 0 0.2rem rgba(89, 139, 174, 0.25);
+  outline: none;
+}
+
+#modalReserva .form-control:invalid:not(:placeholder-shown),
+#modalReserva .form-select:invalid:not(:placeholder-shown) {
+  border-color: #dc3545;
+}
+
+#modalReserva .form-control:valid:not(:placeholder-shown),
+#modalReserva .form-select:valid:not(:placeholder-shown) {
+  border-color: #198754;
+}
+
+#modalReserva .modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid var(--secundario);
+  border-radius: 0 0 12px 12px;
+  padding: 1rem 2rem;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+#modalReserva .btn-primary {
+  background-color: var(--acento);
+  border-color: var(--acento);
+  color: var(--texto);
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#modalReserva .btn-primary:hover {
+  background-color: var(--hover);
+  border-color: var(--hover);
+  color: white;
+  transform: translateY(-2px);
+}
+
+#modalReserva .btn-secondary {
+  background-color: var(--secundario);
+  border-color: var(--secundario);
+  color: white;
+  transition: background-color 0.3s;
+}
+
+#modalReserva .btn-secondary:hover {
+  background-color: var(--hover);
+  border-color: var(--hover);
+}
+
+/* ---------------- FOOTER ---------------- */
+.footer {
+  background-color: var(--primario);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: white;
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------- GLOBAL ---------------- */
+img {
+  height: auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (min-width: 481px) and (max-width: 1024px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .HeaderIzq h1 {
+    font-size: 1.5em;
+    line-height: 1.1;
+    margin: 10px;
+    max-width: 90%;
+    word-break: break-word;
+  }
+
+  .logo {
+    max-width: 150px;
+    height: auto;
+    margin: 0;
+  }
+
+  nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+    justify-items: center;
+  }
+
+  .contenedor {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 10px;
+  }
+
+  .tarjeta {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .HeaderIzq h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .HeaderIzq h6 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .header-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .logo {
+    width: 80px;
+    height: auto;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  nav a,
+  nav .nav-link {
+    display: block;
+    width: 90%;
+    text-align: center;
+  }
+
+  .contenedor {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tarjeta {
+    width: 90%;
+    margin-bottom: 1rem;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive para modal */
+  #modalReserva .modal-dialog {
+    margin: 0.5rem;
+    max-width: 95%;
+  }
+
+  #modalReserva .modal-body {
+    padding: 1rem;
+  }
+
+  #modalReserva .modal-header,
+  #modalReserva .modal-footer {
+    padding: 1rem;
+  }
+
+  .scroll-container {
+    gap: 1rem; /* Menos gap en mobile para scroll */
+  }
+
+  .docente-card {
+    min-width: 180px; /* Más compacto en mobile */
+    padding: 1rem;
+  }
+
+  .docente-photo {
+    width: 90px;
+    height: 90px;
+  }
+}
+/* ---------------- ESTILOS PARA ENLACES EN FOOTER ---------------- */
+.footer a {
+  color: white;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: var(--acento);  /* Azul claro en hover para contraste */
+  text-decoration: none;
+}
+/* ---------------- CLASE GENERAL PARA ESTILOS DE FORMS (HERENCIA DEL MODAL) ---------------- */
+
+
+/* ---------------- FORMULARIOS ADMINISTRATIVOS (ÚNICO: OVERLAY Y CERRAR) ---------------- */
+.formulario {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);  /* Overlay semi-transparente */
+  display: none;
+  z-index: 1050;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.formulario form {
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);  /* Sombra flotante */
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.formulario .form-title {
+  color: var(--primario);
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.formulario .cerrar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--secundario);
+  cursor: pointer;
+  z-index: 1060;
+  transition: color 0.3s;
+  padding: 0.5rem;
+}
+
+.formulario .cerrar:hover {
+  color: var(--hover);
+}
+
+.formulario .boton {
+  /* Hereda de .boton existente: acento, hover, etc. */
+  margin-top: 1rem;
+  display: block;
+  width: auto;
+  margin-left: auto;  /* Alineado a la derecha */
+}
+
+/* Responsive específico para formularios (agrega a media queries existentes si no hay) */
+@media (max-width: 768px) {
+  .formulario {
+    padding: 0.5rem;
+  }
+
+  .formulario form {
+    padding: 1.5rem;
+    margin: 1rem;
+    max-height: 95vh;
+  }
+
+  .formulario .cerrar {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.25rem;
+  }
+
+  .formulario .col-md-6 {
+    margin-bottom: 1rem;  /* Stack con espacio en móvil */
+  }
+}
+/* ---------------- BOTÓN FLOTANTE REPORTAR ---------------- */
+.btn-flotante {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--secundario);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-flotante:hover {
+  background-color: var(--hover);
+  transform: scale(1.05);
+}
+/* ================= MODO OSCURO ================= */
+body.dark-mode {
+  background-color: #121212;
+  color: #e5e5e5;
+}
+
+body.dark-mode header {
+  background-color: #222;
+  color: #e5e5e5;
+}
+
+body.dark-mode nav {
+  background-color: #333;
+}
+
+body.dark-mode a {
+  color: var(--acento); /* Links visibles */
+}
+
+body.dark-mode a:hover {
+  color: #ffffff; /* Hover más visible */
+  text-decoration: underline;
+}
+
+body.dark-mode .footer {
+  background-color: #222;
+  color: #e5e5e5;
+}
+
+body.dark-mode .footer a {
+  color: var(--acento);
+}
+
+/* ================= HEADER AJUSTADO ================= */
+.header-left {
+  order: 1; /* Logo y texto primero */
+}
+
+.header-right {
+  order: 2; /* Menú / botón derecho */
+  margin-left: auto; /* Empuja a la derecha */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Menú hamburguesa en móvil */
+@media (max-width: 768px) {
+  .header-left {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+  
+  .header-right {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+/* Overlay y modal */
+.formulario-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+}
+.formulario {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  z-index: 1000;
+}
+.cerrar {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+/* Botón flotante */
+.btn-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+.btn-flotante:hover {
+  background-color: #0b5ed7;
+}
+
+section h2,
+section p,
+.mis-cursos h2,
+.mis-cursos p,
+#reservas-container h2,
+#reservas-container p,
+.no-reservas {
+    margin: 15px 20px; 
+}
+.docentes-grid {
+  display: flex;
+  flex-wrap: wrap; /* para que baje a otra línea en pantallas pequeñas */
+  gap: 20px; /* espacio entre tarjetas */
+  justify-content: center; /* centra las tarjetas */
+  align-items: stretch; /* iguala altura */
+}
+
+.estudiante-card {
+  flex: 1 1 220px; /* cada tarjeta mínimo 220px y puede crecer */
+  max-width: 250px; /* opcional, para que no crezcan demasiado */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #fff;
+}
+
+.modal-content {
+  border-radius: 15px;
+}
+.modal-header {
+  background: #343a40;
+}
