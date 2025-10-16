@@ -56,16 +56,10 @@ $con = conectar_bd();
     <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
-<div class="tarjeta">
+  <div class="tarjeta">
   <h3>Reportes de Estudiantes</h3>
   <p>Ver los reportes enviados por los estudiantes.</p>
-  <a href="#" class="boton" id="btnVerReportes" onclick="mostrarModalReportes()">➕ Ver Reportes</a>
-</div>
-
-<div class="tarjeta mt-4">
-  <h3>Reservas de Aulas</h3>
-  <p>Listado de reservas realizadas por los docentes.</p>
-  <button class="boton" id="btnVerReservas" onclick="mostrarReservas()">➕ Ver Reservas</button>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
 </div>
 </main>
 
@@ -122,14 +116,7 @@ $con = conectar_bd();
 </div>
 
 
-<div class="modal fade" id="modalReservas" tabindex="-1" aria-labelledby="modalReservasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalReservasLabel">Reservas de Aulas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
+
 <?php
 // ============================
 // RESERVAS DE AULAS
@@ -467,9 +454,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     ?>
 });
+
 function mostrarReportes() {
-  const modal = new bootstrap.Modal(document.getElementById('modalReportes'));
-  modal.show();
+  const contenedor = document.getElementById('listaReportes');
+  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
+    ? 'block' 
+    : 'none';
 }
 
 function mostrarReservas() {
@@ -485,10 +475,3 @@ function mostrarModalReportes() {
   modal.show();
 }
 </script>
-<script>
-  function mostrarModalReservas() {
-    const modal = new bootstrap.Modal(document.getElementById('modalReservas'));
-    modal.show();
-  }
-</script>
-
