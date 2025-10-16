@@ -52,20 +52,56 @@ $con = conectar_bd();
 <section class="mis-cursos container mt-4">
   <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
-    <div class="docente-card">
-      <div class="docente-photo"></div>
-      <div class="docente-name fw-bold">1°MA - Lengua</div>
-      <div class="docente-subject text-muted">Turno matutino</div>
-      <button class="btn btn-outline-primary boton ver-miembros" data-clase="1°MA - Lengua">Ver miembros</button>
-      <ul class="lista-miembros" style="display:none;"></ul>
-    </div>
-    <div class="docente-card">
-      <div class="docente-photo"></div>
-      <div class="docente-name fw-bold">2°BB - Matemática</div>
-      <div class="docente-subject text-muted">Turno vespertino</div>
-      <button class="btn btn-outline-primary boton ver-miembros" data-clase="2°BB - Matemática">Ver miembros</button>
-      <ul class="lista-miembros" style="display:none;"></ul>
-    </div>
+    <?php
+    $docente_cedula = $_SESSION['cedula'];
+
+    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion, a.nombre AS asignatura_nombre, 
+                   u.nombrecompleto, u.apellido
+            FROM docente_asignatura da
+            JOIN asignatura a ON da.id_asignatura = a.id_asignatura
+            JOIN grupo_asignatura ga ON a.id_asignatura = ga.id_asignatura
+            JOIN grupo g ON ga.id_grupo = g.id_grupo
+            LEFT JOIN usuario u ON u.id_grupo = g.id_grupo AND u.rol='estudiante'
+            WHERE da.cedula_docente = ?
+            ORDER BY g.nombre, a.nombre, u.apellido";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $docente_cedula);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $cursos = [];
+    while($row = $result->fetch_assoc()){
+        $key = $row['grupo_nombre'].' - '.$row['asignatura_nombre'];
+        if(!isset($cursos[$key])){
+            $cursos[$key] = [
+                'grupo_id' => $row['id_grupo'],
+                'grupo_nombre' => $row['grupo_nombre'],
+                'asignatura_nombre' => $row['asignatura_nombre'],
+                'orientacion' => $row['orientacion'],
+                'miembros' => []
+            ];
+        }
+        if($row['nombrecompleto']){
+            $cursos[$key]['miembros'][] = $row['nombrecompleto'].' '.$row['apellido'];
+        }
+    }
+
+    $stmt->close();
+
+    foreach($cursos as $curso){
+        echo '<div class="docente-card">';
+        echo '<div class="docente-photo"></div>';
+        echo '<div class="docente-name fw-bold">'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'</div>';
+        echo '<div class="docente-subject text-muted">'.htmlspecialchars($curso['orientacion']).'</div>';
+        echo '<button class="btn btn-outline-primary boton ver-miembros" data-clase="'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'">Ver miembros</button>';
+        echo '<ul class="lista-miembros" style="display:none;">';
+        foreach($curso['miembros'] as $miembro){
+            echo '<li>'.htmlspecialchars($miembro).'</li>';
+        }
+        echo '</ul></div>';
+    }
+    ?>
   </div>
 </section>
 
@@ -74,11 +110,11 @@ $con = conectar_bd();
   <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
     <?php
-    $cedula_docente = $_SESSION['cedula'];
     $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
                      FROM reserva 
-                     WHERE cedula = '$cedula_docente'
+                     WHERE cedula = '$docente_cedula'
                      ORDER BY fecha DESC, hora_inicio ASC";
+
     $result_reservas = $con->query($sql_reservas);
 
     if ($result_reservas && $result_reservas->num_rows > 0) {
@@ -186,7 +222,8 @@ $con = conectar_bd();
         }
 
         function bloqueOcupado($hora_bloque, $reservas_aula){
-            foreach($reservas_aula as $res){                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
+            foreach($reservas_aula as $res){
+                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
                     return true;
                 }
             }
@@ -210,72 +247,28 @@ $con = conectar_bd();
     </table>
     <div class="mt-3 text-start">
       <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Disponible</span>
-      <span class="badge bg-danger ms-2"><i class="bi bi-x-circle-fill"></i> Reservado</span>
+      <span class="badge bg-danger ms-2"><i class="bi bi-x-circle-fill"></i> Ocupado</span>
     </div>
   </div>
 </main>
 
-<!-- MODAL RESERVA -->
-<div class="modal fade" id="modalReserva" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="tituloReserva">Reservar Aula</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="guardar-reserva.php">
-          <input type="hidden" name="aula_nombre" id="aulaSeleccionada">
-          <div class="mb-3">
-            <label class="form-label">Fecha</label>
-            <input type="date" name="fecha" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Hora inicio</label>
-            <input type="time" name="hora_inicio" class="form-control" readonly required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Hora fin</label>
-            <input type="time" name="hora_fin" class="form-control" readonly required>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <?php require("footer.php"); ?>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-function abrirReservaBloque(td){
-    const aula = td.getAttribute('data-aula');
-    const hora = td.getAttribute('data-hora');
-    document.getElementById('tituloReserva').innerText = `Reservar - ${aula}`;
-    document.getElementById('aulaSeleccionada').value = aula;
-    document.querySelector('input[name="hora_inicio"]').value = hora;
-
-    const [h,m] = hora.split(':').map(Number);
-    let horaFinH = h;
-    let horaFinM = m + 45;
-    if(horaFinM >= 60){
-        horaFinH += Math.floor(horaFinM/60);
-        horaFinM = horaFinM % 60;
-    }
-    document.querySelector('input[name="hora_fin"]').value = `${horaFinH.toString().padStart(2,'0')}:${horaFinM.toString().padStart(2,'0')}`;
-
-    const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
-    modal.show();
-}
-
 document.querySelectorAll('.ver-miembros').forEach(btn => {
     btn.addEventListener('click', () => {
         const ul = btn.nextElementSibling;
         ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
     });
 });
+
+function abrirReservaBloque(td){
+    const aula = td.dataset.aula;
+    const hora = td.dataset.hora;
+    alert('Abrir modal para reservar aula '+aula+' a las '+hora);
+}
 </script>
+
 </body>
 </html>
