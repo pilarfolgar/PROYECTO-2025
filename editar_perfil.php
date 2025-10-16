@@ -3,17 +3,17 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Verificar sesión
-if (!isset($_SESSION['email'])) {
+// Verificar sesión usando la cédula
+if (!isset($_SESSION['cedula'])) {
     header("Location: login.php");
     exit;
 }
 
-$email = $_SESSION['email'];
+$cedula = $_SESSION['cedula'];
 
-// Traer datos del usuario
-$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE email=?");
-$stmt->bind_param("s", $email);
+// Traer datos del usuario por cédula
+$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE cedula=?");
+$stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $asignatura = $_POST['asignatura'] ?? '';
     $id_grupo = $_POST['id_grupo'] ?? '';
 
-    // Actualizar datos
-    $update = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE email=?");
-    $update->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $email);
+    // Actualizar datos usando cédula
+    $update = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
+    $update->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
     $update->execute();
     $update->close();
 
@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>Editar Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="perfil.css"> <!-- mismo estilo que perfil.php -->
 <style>
-    body { background-color: #f0f4f8; }
-    .edit-card { max-width: 600px; margin: 40px auto; padding: 2rem; border-radius: 12px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-    .edit-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; }
+    .edit-card { max-width: 600px; margin: 40px auto; padding: 2rem; border-radius: 12px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
+    .edit-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #588BAE; }
 </style>
 </head>
 <body>
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php require("header.php"); ?>
 
 <div class="container">
-    <div class="edit-card text-center">
+    <div class="edit-card">
         <h2 class="mb-4">Editar Perfil</h2>
 
         <?php if(!empty($mensaje)): ?>
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
 
-        <form method="post" enctype="multipart/form-data" class="text-start mt-4">
+        <form method="post" class="text-start mt-4">
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" name="nombrecompleto" class="form-control" value="<?= htmlspecialchars($user['nombrecompleto']) ?>" required>

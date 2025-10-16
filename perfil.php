@@ -3,17 +3,17 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Verificar sesión
-if (!isset($_SESSION['email'])) {
-    echo "<div class='container mt-5'><div class='alert alert-danger text-center'>No estás logueado.</div></div>";
+// Verificar sesión usando la cédula
+if (!isset($_SESSION['cedula'])) {
+    header("Location: login.php");
     exit;
 }
 
-$email = $_SESSION['email'];
+$cedula = $_SESSION['cedula'];
 
-// Traer datos del usuario
-$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE email=?");
-$stmt->bind_param("s", $email);
+// Traer datos del usuario por cédula
+$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE cedula=?");
+$stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
@@ -27,7 +27,7 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
 <meta charset="UTF-8">
 <title>Mi Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="perfil.css">
+<link rel="stylesheet" href="perfil.css">
 </head>
 <body>
 
@@ -46,7 +46,7 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
         <?php else: ?>
             <p><strong>Grupo:</strong> <?= htmlspecialchars($user['id_grupo'] ?: 'No asignado') ?></p>
         <?php endif; ?>
-        
+
         <div class="perfil-actions">
             <a href="editar_perfil.php" class="btn-perfil btn-edit">Editar Perfil</a>
             <a href="logout.php" class="btn-perfil btn-logout">Cerrar Sesión</a>
