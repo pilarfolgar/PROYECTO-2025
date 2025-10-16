@@ -52,7 +52,6 @@ $con = conectar_bd();
 <section class="mis-cursos container mt-4">
   <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
-    <!-- Aquí podrías cargar dinámicamente los cursos desde la DB si quieres -->
     <div class="docente-card">
       <div class="docente-photo"></div>
       <div class="docente-name fw-bold">1°MA - Lengua</div>
@@ -75,15 +74,11 @@ $con = conectar_bd();
   <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
     <?php
-    // Se obtiene la cédula del docente logueado
-    $docente_cedula = $_SESSION['cedula'];
-
-    // Selecciona solo reservas del docente logueado
-$sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
-                 FROM reserva 
-                 WHERE cedula = '$docente_cedula'
-                 ORDER BY fecha DESC, hora_inicio ASC";
-
+    $cedula_docente = $_SESSION['cedula'];
+    $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
+                     FROM reserva 
+                     WHERE cedula = '$cedula_docente'
+                     ORDER BY fecha DESC, hora_inicio ASC";
     $result_reservas = $con->query($sql_reservas);
 
     if ($result_reservas && $result_reservas->num_rows > 0) {
@@ -191,8 +186,7 @@ $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
         }
 
         function bloqueOcupado($hora_bloque, $reservas_aula){
-            foreach($reservas_aula as $res){
-                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
+            foreach($reservas_aula as $res){                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
                     return true;
                 }
             }

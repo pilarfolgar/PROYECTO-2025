@@ -1,7 +1,6 @@
 <?php  
-require("conexion.php");
-
 require("header.php"); 
+require("conexion.php");
 $con = conectar_bd();
 
 session_start();
@@ -167,8 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     </div>
   </div>
 </div>
-<?php require("footer.php"); ?>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>

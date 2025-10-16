@@ -3,17 +3,17 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Verificar sesión (solo muestra perfil si hay sesión)
-if (!isset($_SESSION['email'])) {
-    echo "<div class='container mt-5'><div class='alert alert-danger text-center'>No estás logueado.</div></div>";
+// Verificar sesión usando la cédula
+if (!isset($_SESSION['cedula'])) {
+    header("Location: login.php");
     exit;
 }
 
-$email = $_SESSION['email'];
+$cedula = $_SESSION['cedula'];
 
-// Traer datos del usuario
-$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE email=?");
-$stmt->bind_param("s", $email);
+// Traer datos del usuario por cédula
+$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE cedula=?");
+$stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
@@ -27,18 +27,16 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
 <meta charset="UTF-8">
 <title>Mi Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<style>
-    .perfil-card img { width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom:15px; }
-</style>
+<link rel="stylesheet" href="perfil.css">
 </head>
 <body>
+
 <?php require("header.php"); ?>
 
-<div class="container my-5">
-    <h2 class="mb-4 text-center">Mi Perfil</h2>
-    <div class="card perfil-card mx-auto text-center p-4 shadow-sm" style="max-width:450px;">
+<div class="perfil-container">
+    <div class="perfil-card">
         <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
-        <h4 class="card-title"><?= htmlspecialchars($user['nombrecompleto'] . ' ' . $user['apellido']) ?></h4>
+        <h4><?= htmlspecialchars($user['nombrecompleto'] . ' ' . $user['apellido']) ?></h4>
         <p><strong>Cédula:</strong> <?= htmlspecialchars($user['cedula']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
         <p><strong>Teléfono:</strong> <?= htmlspecialchars($user['telefono'] ?: 'No registrado') ?></p>
@@ -48,7 +46,11 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
         <?php else: ?>
             <p><strong>Grupo:</strong> <?= htmlspecialchars($user['id_grupo'] ?: 'No asignado') ?></p>
         <?php endif; ?>
-        <a href="editar_perfil.php" class="btn btn-primary w-100 mt-3">Editar Perfil</a>
+
+        <div class="perfil-actions">
+            <a href="editar_perfil.php" class="btn-perfil btn-edit">Editar Perfil</a>
+            <a href="logout.php" class="btn-perfil btn-logout">Cerrar Sesión</a>
+        </div>
     </div>
 </div>
 

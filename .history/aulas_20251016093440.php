@@ -1,11 +1,11 @@
 <?php  
-require("conexion.php");
-
 require("header.php"); 
+require("conexion.php");
 $con = conectar_bd();
 
 session_start();
-$cedula_docente = $_SESSION['cedula']; // Usamos la cédula como identificador
+$cedula_docente = $_SESSION['cedula'];
+$nombre_docente = $_SESSION['nombrecompleto'];
 
 // Función para generar bloques horarios
 function generarBloques($horaInicio, $horaFin, $duracion = 45, $recreo = 5) {
@@ -18,13 +18,15 @@ function generarBloques($horaInicio, $horaFin, $duracion = 45, $recreo = 5) {
         $h_fin = $h + ($duracion*60);
         $hora_fin = date("H:i", $h_fin);
         $bloques[] = ['inicio' => $hora_inicio, 'fin' => $hora_fin];
-        $h += ($duracion + $recreo)*60; 
+        $h += ($duracion + $recreo)*60; // 45 min + 5 min recreo
     }
     return $bloques;
 }
 
+// Bloques de horario completo del instituto
 $bloques_horarios = generarBloques("07:00", "23:59");
 
+// Procesar reserva si se envió el formulario
 $mensaje = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     $id_aula = intval($_POST['id_aula']);
@@ -45,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     if($result->num_rows > 0){
         $mensaje = '<div class="alert alert-danger text-center">El aula ya está reservada en ese horario.</div>';
     } else {
-        $sql = "INSERT INTO reserva (id_aula, cedula, aula, fecha, hora_inicio, hora_fin, grupo)
-                VALUES ($id_aula, '$cedula_docente', '$aula_nombre', '$fecha', '$hora_inicio', '$hora_fin', $id_grupo)";
+        $sql = "INSERT INTO reserva (id_aula, cedula, nombre, aula, fecha, hora_inicio, hora_fin, grupo)
+                VALUES ($id_aula, '$cedula_docente', '$nombre_docente', '$aula_nombre', '$fecha', '$hora_inicio', '$hora_fin', $id_grupo)";
         if ($con->query($sql)) {
             $mensaje = '<div class="alert alert-success text-center">Reserva confirmada ✅</div>';
         } else {
@@ -167,8 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     </div>
   </div>
 </div>
-<?php require("footer.php"); ?>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>

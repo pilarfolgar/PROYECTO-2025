@@ -1,7 +1,6 @@
 <?php  
-require("conexion.php");
-
 require("header.php"); 
+require("conexion.php");
 $con = conectar_bd();
 
 session_start();
@@ -66,6 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container my-4">
+    <!-- Botón Volver a Panel -->
+    <div class="mb-3">
+        <a href="indexdocente.php" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a mi panel
+        </a>
+    </div>
+
+    <?php if($mensaje) echo $mensaje; ?>
 
 <div class="container my-4">
     <?php if($mensaje) echo $mensaje; ?>
