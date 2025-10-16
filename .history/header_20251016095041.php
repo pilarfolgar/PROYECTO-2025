@@ -10,6 +10,12 @@
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:15px;position:relative;">
+    <!-- Botón Volver a mi panel -->
+    <a href="indexdocente.php" 
+       style="background:#28a745;color:white;padding:8px 12px;border-radius:6px;text-decoration:none;font-weight:bold;">
+       Volver a mi panel
+    </a>
+
     <!-- Botón menú desplegable -->
     <button id="menuBtn" style="font-size:28px;background:none;border:none;color:white;cursor:pointer;">☰</button>
   </div>

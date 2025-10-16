@@ -1,3 +1,25 @@
+<?php
+session_start();
+require("conexion.php");
+$con = conectar_bd();
+
+// Determinar URL de inicio según rol
+$inicio_url = "index.php"; // fallback
+if (isset($_SESSION['cedula'])) {
+    $cedula = $_SESSION['cedula'];
+    $sql = "SELECT rol FROM usuario WHERE cedula='$cedula' LIMIT 1";
+    $res = $con->query($sql);
+    if ($res && $res->num_rows > 0) {
+        $row = $res->fetch_assoc();
+        if ($row['rol'] === 'estudiante') {
+            $inicio_url = "indexestudiante.php";
+        } elseif ($row['rol'] === 'docente') {
+            $inicio_url = "indexdocente.php";
+        }
+    }
+}
+?>
+
 <!-- HEADER -->
 <header style="display:flex;justify-content:space-between;align-items:center;background:#1B3A4B;color:white;padding:20px 30px;position:relative; height:90px;">
   <div style="display:flex;align-items:center;gap:20px;">
@@ -17,7 +39,7 @@
 
 <!-- NAV ABAJO -->
 <nav style="display:flex;justify-content:center;gap:20px;background:#588BAE;padding:12px;border-top:2px solid #417899;">
-  <a href="index.php" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
+  <a href="<?= $inicio_url ?>" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
   <a href="" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
 </nav>
 

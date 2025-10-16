@@ -10,6 +10,11 @@
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:15px;position:relative;">
+    <!-- Notificaciones neutras -->
+    <button id="notifBtn" style="background:none;border:none;color:#CCCCCC;font-size:24px;cursor:pointer;position:relative;">
+      🔔
+      <span id="notifCount" style="position:absolute;top:-5px;right:-8px;background:red;color:white;font-size:12px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;">3</span>
+    </button>
     <!-- Botón menú desplegable -->
     <button id="menuBtn" style="font-size:28px;background:none;border:none;color:white;cursor:pointer;">☰</button>
   </div>
@@ -27,9 +32,21 @@
   <a href="perfil.php" style="color:white;text-decoration:none;padding:8px;display:block;">Mi Perfil</a>
 </div>
 
+<!-- MENÚ DE NOTIFICACIONES -->
+<div id="notifMenu" style="display:none;position:absolute;top:90px;right:70px;background:#417899;padding:10px;border-radius:8px;flex-direction:column;min-width:200px;">
+  <div style="color:white;padding:5px 8px;border-bottom:1px solid #588BAE;">Nueva reserva aprobada</div>
+  <div style="color:white;padding:5px 8px;border-bottom:1px solid #588BAE;">Tarea pendiente</div>
+  <div style="color:white;padding:5px 8px;">Mensaje del administrador</div>
+</div>
+
 <script>
   // Desplegar o cerrar menú
   const btnMenu = document.getElementById('menuBtn');
   const menu = document.getElementById('menu');
   btnMenu.onclick = () => menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+
+  // Desplegar o cerrar notificaciones
+  const btnNotif = document.getElementById('notifBtn');
+  const notifMenu = document.getElementById('notifMenu');
+  btnNotif.onclick = () => notifMenu.style.display = notifMenu.style.display === 'flex' ? 'none' : 'flex';
 </script>

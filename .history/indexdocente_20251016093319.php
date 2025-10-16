@@ -79,11 +79,10 @@ $con = conectar_bd();
     $docente_cedula = $_SESSION['cedula'];
 
     // Selecciona solo reservas del docente logueado
-$sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
-                 FROM reserva 
-                 WHERE cedula = '$docente_cedula'
-                 ORDER BY fecha DESC, hora_inicio ASC";
-
+    $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
+                     FROM reserva 
+                     WHERE nombre = '$docente_cedula'
+                     ORDER BY fecha DESC, hora_inicio ASC";
     $result_reservas = $con->query($sql_reservas);
 
     if ($result_reservas && $result_reservas->num_rows > 0) {

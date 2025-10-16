@@ -1,7 +1,6 @@
 <?php  
-require("conexion.php");
-
 require("header.php"); 
+require("conexion.php");
 $con = conectar_bd();
 
 session_start();
