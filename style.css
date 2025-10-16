@@ -928,3 +928,10 @@ section p,
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   background-color: #fff;
 }
+
+.modal-content {
+  border-radius: 15px;
+}
+.modal-header {
+  background: #343a40;
+}

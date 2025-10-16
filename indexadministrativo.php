@@ -56,51 +56,65 @@ $con = conectar_bd();
     <p>Informar cambios, avisos o recordatorios a un grupo de estudiantes.</p>
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
-</main>
-<div class="tarjeta">
+  <div class="tarjeta">
   <h3>Reportes de Estudiantes</h3>
   <p>Ver los reportes enviados por los estudiantes.</p>
   <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
 </div>
+</main>
 
-<!-- Contenedor donde aparecerán los reportes -->
-<div id="contenedorReportes" style="display:none; margin-top:20px;"></div>
-<?php
-// Consulta los reportes de la base
-$sql_reportes = "SELECT * FROM reportes ORDER BY fecha DESC";
-$result_reportes = $con->query($sql_reportes);
-?>
 
-<div id="listaReportes" style="display:none; margin-top:20px;">
-  <?php if($result_reportes->num_rows > 0): ?>
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Objeto/Área</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php while($reporte = $result_reportes->fetch_assoc()): ?>
-            <tr>
-              <td><?= htmlspecialchars($reporte['nombre']) ?></td>
-              <td><?= htmlspecialchars($reporte['email']) ?></td>
-              <td><?= htmlspecialchars($reporte['objeto']) ?></td>
-              <td><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></td>
-              <td><?= htmlspecialchars($reporte['fecha']) ?></td>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
+<!-- MODAL REPORTES -->
+<div class="modal fade" id="modalReportes" tabindex="-1" aria-labelledby="modalReportesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="modalReportesLabel">📄 Reportes de Estudiantes</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <?php
+        // Consulta los reportes de la base
+        $sql_reportes = "SELECT * FROM reportes ORDER BY fecha DESC";
+        $result_reportes = $con->query($sql_reportes);
+        ?>
+
+        <?php if($result_reportes->num_rows > 0): ?>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Objeto/Área</th>
+                  <th>Descripción</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php while($reporte = $result_reportes->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($reporte['nombre']) ?></td>
+                    <td><?= htmlspecialchars($reporte['email']) ?></td>
+                    <td><?= htmlspecialchars($reporte['objeto']) ?></td>
+                    <td><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></td>
+                    <td><?= htmlspecialchars($reporte['fecha']) ?></td>
+                  </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+          </div>
+        <?php else: ?>
+          <p class="text-center mb-0">No hay reportes enviados aún.</p>
+        <?php endif; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
-  <?php else: ?>
-    <p class="text-center">No hay reportes enviados aún.</p>
-  <?php endif; ?>
+  </div>
 </div>
+
 
 
 <?php
@@ -453,5 +467,11 @@ function mostrarReservas() {
   contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
     ? 'block' 
     : 'none';
+}
+</script>
+<script>
+function mostrarModalReportes() {
+  const modal = new bootstrap.Modal(document.getElementById('modalReportes'));
+  modal.show();
 }
 </script>
