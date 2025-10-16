@@ -112,11 +112,11 @@ $sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin,
                  FROM reservas r
                  LEFT JOIN grupo g ON r.grupo = g.id_grupo
                  ORDER BY r.fecha DESC, r.hora_inicio ASC";
-$result_reservas = $con->query($sql_reservas);
+$result_reservas = $con->query($sql_reserva);
 ?>
 
 <div class="tarjeta mt-4">
-va<h3>Reservas de Aulas</h3>
+  <h3>Reservas de Aulas</h3>
   <p>Listado de reservas realizadas por los docentes.</p>
   <button class="boton" id="btnVerReservas" onclick="mostrarReservas()">Ver Reservas</button>
 </div>
