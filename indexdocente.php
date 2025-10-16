@@ -13,36 +13,71 @@ $con = conectar_bd();
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+/* Grid y estilo de docentes */
+.docentes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.docente-card {
+    flex: 1 1 calc(25% - 1rem);
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+.docente-photo {
+    width: 80px;
+    height: 80px;
+    background-color: #dee2e6;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem auto;
+}
+.boton {
+    margin-top: 0.5rem;
+}
+.lista-miembros {
+    list-style: none;
+    padding-left: 0;
+}
+@media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
+@media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
+</style>
+
 </head>
 <body>
 
 <?php require("header.php"); ?>
 
 <!-- SECCIÓN MIS CURSOS -->
-<section class="mis-cursos">
-  <h2>Mis cursos</h2>
+<section class="mis-cursos container mt-4">
+  <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
     <div class="docente-card">
       <div class="docente-photo"></div>
-      <div class="docente-name">1°MA - Lengua</div>
-      <div class="docente-subject">Turno matutino</div>
-      <button class="boton ver-miembros" data-clase="1°MA - Lengua">Ver miembros</button>
+      <div class="docente-name fw-bold">1°MA - Lengua</div>
+      <div class="docente-subject text-muted">Turno matutino</div>
+      <button class="btn btn-outline-primary boton ver-miembros" data-clase="1°MA - Lengua">Ver miembros</button>
       <ul class="lista-miembros" style="display:none;"></ul>
     </div>
     <div class="docente-card">
       <div class="docente-photo"></div>
-      <div class="docente-name">2°BB - Matemática</div>
-      <div class="docente-subject">Turno vespertino</div>
-      <button class="boton ver-miembros" data-clase="2°BB - Matemática">Ver miembros</button>
+      <div class="docente-name fw-bold">2°BB - Matemática</div>
+      <div class="docente-subject text-muted">Turno vespertino</div>
+      <button class="btn btn-outline-primary boton ver-miembros" data-clase="2°BB - Matemática">Ver miembros</button>
       <ul class="lista-miembros" style="display:none;"></ul>
     </div>
   </div>
 </section>
 
 <!-- SECCIÓN MIS RESERVAS -->
-<section>
-  <h2>Mis reservas</h2>
+<section class="container mt-5">
+  <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
     <?php
     $docente_actual = $_SESSION['nombre'];
@@ -73,7 +108,7 @@ $con = conectar_bd();
         }
         echo '</tbody></table></div>';
     } else {
-        echo '<div class="no-reservas text-center text-muted">No hay reservas por el momento.</div>';
+        echo '<div class="text-center text-muted">No hay reservas por el momento.</div>';
     }
     ?>
   </div>
@@ -87,11 +122,11 @@ $con = conectar_bd();
     $sql_aulas = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
     $result_aulas = $con->query($sql_aulas);
     while ($row = $result_aulas->fetch_assoc()) {
-        $img = $row['imagen'] ?: 'imagenes/default-aula.jpg';
+        $img = $row['imagen'] ?: 'default-aula.jpg';
         echo '
         <div class="col-md-4">
           <div class="card h-100 shadow-sm border-0">
-            <img src="Imagenes/'.$img.'" class="card-img-top" alt="'.$row["codigo"].'">
+            <img src="imagenes/'.$img.'" class="card-img-top" alt="'.$row["codigo"].'">
             <div class="card-body text-center">
               <h5 class="card-title">'.$row["codigo"].'</h5>
               <p class="card-text">Capacidad: '.$row["capacidad"].' personas</p>
@@ -108,105 +143,97 @@ $con = conectar_bd();
 </section>
 
 <!-- SECCIÓN CALENDARIO DE RESERVAS -->
-<main class="contenedor">
-<div style="width:100vw;max-width:100%;margin-left:calc(-50vw + 50%);margin-right:calc(-50vw + 50%);background:#f0f4f8;padding:2rem 0 2rem 0;">
+<main class="container mb-5">
   <h2 class="text-center mb-4">Calendario diario de aulas</h2>
-  <div class="table-responsive" style="padding:2rem;">
-    <div class="calendario-scroll">
-      <table class="table calendario-aulas-table align-middle text-center" style="min-width:1200px;width:100%;">
-        <thead class="table-primary">
-          <tr>
-            <th style="width:110px;">Hora</th>
-            <th>Aula 1</th>
-            <th>Aula 2</th>
-            <th>Aula 3</th>
-            <th>Salón de Actos</th>
-            <th>Salón 1</th>
-            <th>Salón 2</th>
-            <th>Salón 3</th>
-            <th>Salón 4</th>
-            <th>Salón 5</th>
-            <th>Lab. Robótica</th>
-            <th>Lab. Química</th>
-            <th>Lab. Física</th>
-            <th>Taller de Mantenimiento</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          function sumarMinutos($hora, $minutos) {
-              $h = (int)substr($hora,0,2);   
-              $m = (int)substr($hora,3,2);
-              $m += $minutos;
-              $h += intdiv($m,60);
-              $m = $m % 60;
-              return sprintf('%02d:%02d', $h, $m);
-          }
+  <div class="table-responsive">
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-primary">
+        <tr>
+          <th>Hora</th>
+          <th>Aula 1</th>
+          <th>Aula 2</th>
+          <th>Aula 3</th>
+          <th>Salón de Actos</th>
+          <th>Salón 1</th>
+          <th>Salón 2</th>
+          <th>Salón 3</th>
+          <th>Salón 4</th>
+          <th>Salón 5</th>
+          <th>Lab. Robótica</th>
+          <th>Lab. Química</th>
+          <th>Lab. Física</th>
+          <th>Taller de Mantenimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        function sumarMinutos($hora, $minutos) {
+            $h = (int)substr($hora,0,2);   
+            $m = (int)substr($hora,3,2);
+            $m += $minutos;
+            $h += intdiv($m,60);
+            $m = $m % 60;
+            return sprintf('%02d:%02d', $h, $m);
+        }
 
-          $horaInicio = "07:00";
-          $horaFin = "23:00";
-          $bloques = [];
-          $h = $horaInicio;
-          while ($h < $horaFin) {
-              $bloques[] = $h;
-              $h = sumarMinutos($h, 45);
-          }
-          $horas = $bloques;
+        $horaInicio = "07:00";
+        $horaFin = "23:00";
+        $bloques = [];
+        $h = $horaInicio;
+        while ($h < $horaFin) {
+            $bloques[] = $h;
+            $h = sumarMinutos($h, 45);
+        }
 
-          $aulas = [
+        $aulas = [
             "Aula 1", "Aula 2", "Aula 3",
             "Salón de Actos", "Salón 1", "Salón 2", "Salón 3", "Salón 4", "Salón 5",
             "Lab. Robótica", "Lab. Química", "Lab. Física", "Taller de Mantenimiento"
-          ];
+        ];
 
-          $reservas = [];
-          $fecha_actual = date('Y-m-d');
-          foreach ($aulas as $aula) {
-              $reservas[$aula] = [];
-              $sql_r = "SELECT hora_inicio, hora_fin FROM reserva WHERE aula='$aula' AND fecha='$fecha_actual'";
-              $res = $con->query($sql_r);
-              while($row_r = $res->fetch_assoc()){
-                  $reservas[$aula][] = ['hora_inicio'=>$row_r['hora_inicio'], 'hora_fin'=>$row_r['hora_fin']];
-              }
-          }
+        $reservas = [];
+        $fecha_actual = date('Y-m-d');
+        foreach ($aulas as $aula) {
+            $reservas[$aula] = [];
+            $sql_r = "SELECT hora_inicio, hora_fin FROM reserva WHERE aula='$aula' AND fecha='$fecha_actual'";
+            $res = $con->query($sql_r);
+            while($row_r = $res->fetch_assoc()){
+                $reservas[$aula][] = ['hora_inicio'=>$row_r['hora_inicio'], 'hora_fin'=>$row_r['hora_fin']];
+            }
+        }
 
-          function bloqueOcupado($hora_bloque, $reservas_aula){
-              foreach($reservas_aula as $res){
-                  if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
-                      return true;
-                  }
-              }
-              return false;
-          }
+        function bloqueOcupado($hora_bloque, $reservas_aula){
+            foreach($reservas_aula as $res){
+                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
+                    return true;
+                }
+            }
+            return false;
+        }
 
-          foreach ($horas as $hora) {
-              echo '<tr>';
-              echo '<td><strong>'.$hora.'</strong></td>';
-              foreach ($aulas as $aula) {
-                  if(bloqueOcupado($hora, $reservas[$aula])){
-                      echo '<td class="bg-gradient bg-danger text-white"><span title="Reservado"><span class="badge rounded-pill bg-danger" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-x-circle-fill"></i></span></td>';
-                  } else {
-                      echo '<td class="bg-gradient bg-success text-dark disponible" 
-                               data-aula="'.$aula.'" data-hora="'.$hora.'" 
-                               onclick="abrirReservaBloque(this)">
-                               <span title="Disponible"><span class="badge rounded-pill bg-success" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-check-circle-fill"></i></span>
-                            </td>';
-                  }
-              }
-              echo '</tr>';
-          }
-          ?>
-        </tbody>
-      </table>
-      <div class="mt-3 text-start">
-        <span class="badge bg-success" style="background:#A2D5F2;color:#1B3A4B;"><i class="bi bi-check-circle-fill"></i> Disponible</span>
-        <span class="badge bg-danger ms-2" style="background:#ff6b6b;color:#fff;"><i class="bi bi-x-circle-fill"></i> Reservado</span>
-      </div>
+        foreach ($bloques as $hora) {
+            echo '<tr>';
+            echo '<td><strong>'.$hora.'</strong></td>';
+            foreach ($aulas as $aula) {
+                if(bloqueOcupado($hora, $reservas[$aula])){
+                    echo '<td class="bg-danger text-white"><i class="bi bi-x-circle-fill"></i></td>';
+                } else {
+                    echo '<td class="bg-success text-dark disponible" data-aula="'.$aula.'" data-hora="'.$hora.'" onclick="abrirReservaBloque(this)"><i class="bi bi-check-circle-fill"></i></td>';
+                }
+            }
+            echo '</tr>';
+        }
+        ?>
+      </tbody>
+    </table>
+    <div class="mt-3 text-start">
+      <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Disponible</span>
+      <span class="badge bg-danger ms-2"><i class="bi bi-x-circle-fill"></i> Reservado</span>
     </div>
   </div>
-</div>
+</main>
 
-<!-- FORMULARIO RESERVA MODAL -->
+<!-- MODAL RESERVA -->
 <div class="modal fade" id="modalReserva" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -236,15 +263,12 @@ $con = conectar_bd();
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  &copy; 2025 Instituto Tecnológico Superior de Paysandú
-</footer>
+<?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
+// Abrir modal al hacer click en bloque disponible
 function abrirReservaBloque(td){
     const aula = td.getAttribute('data-aula');
     const hora = td.getAttribute('data-hora');
@@ -264,7 +288,14 @@ function abrirReservaBloque(td){
     const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
     modal.show();
 }
-</script>
 
+// Toggle miembros de curso
+document.querySelectorAll('.ver-miembros').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const ul = btn.nextElementSibling;
+        ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+    });
+});
+</script>
 </body>
 </html>

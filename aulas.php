@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 <div class="container my-4">
     <?php if($mensaje) echo $mensaje; ?>
 
+    <!-- Filtros -->
     <div class="text-center mb-3">
         <button class="btn btn-outline-primary boton-filtro active" id="filtro-todo" onclick="filtrar('todo')">Todos</button>
         <button class="btn btn-outline-primary boton-filtro" id="filtro-aula" onclick="filtrar('aula')">Aulas</button>
@@ -76,13 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
         <button class="btn btn-outline-primary boton-filtro" id="filtro-lab" onclick="filtrar('lab')">Laboratorios</button>
     </div>
 
-    <?php
-    $sql = "SELECT id_aula, codigo, capacidad, ubicacion, imagen, tipo FROM aula ORDER BY codigo";
-    $result = $con->query($sql);
-    ?>
-
+    <!-- Lista de aulas -->
     <div class="row g-3">
-        <?php while($row = $result->fetch_assoc()): ?>
+        <?php
+        $sql = "SELECT id_aula, codigo, capacidad, ubicacion, imagen, tipo FROM aula ORDER BY codigo";
+        $result = $con->query($sql);
+        while($row = $result->fetch_assoc()):
+        ?>
         <div class="col-md-4 espacio <?= htmlspecialchars($row['tipo']) ?>">
             <div class="card h-100 shadow-sm">
                 <img src="<?= $row['imagen'] ?: 'imagenes/default-aula.jpg' ?>" 
@@ -114,40 +115,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
       <div class="modal-body">
         <form method="POST">
           <input type="hidden" name="id_aula" id="idAulaSeleccionada">
+
           <div class="mb-3">
             <label class="form-label">Cédula del usuario</label>
             <input type="number" name="nombre" class="form-control" required>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Aula</label>
             <input type="text" name="aula_nombre" id="aulaSeleccionada" class="form-control" readonly required>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Fecha</label>
             <input type="date" name="fecha" class="form-control" required>
           </div>
+
+          <!-- Hora de inicio -->
           <div class="mb-3">
             <label class="form-label">Hora de inicio</label>
-            <select name="hora_inicio" class="form-select" id="hora_inicio" required>
-              <option selected disabled>Seleccione hora de inicio...</option>
-              <?php
-              foreach($bloques_horarios as $bloque){
-                  echo '<option value="'.$bloque['inicio'].'">'.$bloque['inicio'].' - '.$bloque['fin'].'</option>';
-              }
-              ?>
+            <select name="hora_inicio" class="form-select" required>
+                <option selected disabled>Seleccione hora de inicio...</option>
+                <?php foreach($bloques_horarios as $bloque): ?>
+                    <option value="<?= $bloque['inicio'] ?>"><?= $bloque['inicio'] ?></option>
+                <?php endforeach; ?>
             </select>
           </div>
+
+          <!-- Hora de fin -->
           <div class="mb-3">
             <label class="form-label">Hora de fin</label>
-            <select name="hora_fin" class="form-select" id="hora_fin" required>
-              <option selected disabled>Seleccione hora de fin...</option>
-              <?php
-              foreach($bloques_horarios as $bloque){
-                  echo '<option value="'.$bloque['fin'].'">'.$bloque['inicio'].' - '.$bloque['fin'].'</option>';
-              }
-              ?>
+            <select name="hora_fin" class="form-select" required>
+                <option selected disabled>Seleccione hora de fin...</option>
+                <?php foreach($bloques_horarios as $bloque): ?>
+                    <option value="<?= $bloque['fin'] ?>"><?= $bloque['fin'] ?></option>
+                <?php endforeach; ?>
             </select>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Grupo</label>
             <select name="id_grupo" class="form-select" required>
@@ -156,13 +161,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
               $sql_grupos = "SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre";
               $result_grupos = $con->query($sql_grupos);
               while($grupo = $result_grupos->fetch_assoc()){
-                  echo '<option value="'.intval($grupo['id_grupo']).'">'
-                       .htmlspecialchars($grupo['nombre']).' - '.htmlspecialchars($grupo['orientacion'])
-                       .'</option>';
+                  echo '<option value="'.intval($grupo['id_grupo']).'">'.htmlspecialchars($grupo['nombre']).' - '.htmlspecialchars($grupo['orientacion']).'</option>';
               }
               ?>
             </select>
           </div>
+
           <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
         </form>
       </div>
@@ -183,7 +187,8 @@ function filtrar(categoria) {
 }
 
 function mostrarImagen(img) {
-    document.getElementById('imagenAmpliada').src = img.src;
+    // Aquí puedes implementar un modal para mostrar la imagen ampliada si quieres
+    alert('Imagen: ' + img.alt);
 }
 
 function abrirReserva(idAula, nombreAula) {
@@ -194,5 +199,6 @@ function abrirReserva(idAula, nombreAula) {
     modal.show();
 }
 </script>
+
 </body>
 </html>
