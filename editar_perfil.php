@@ -11,8 +11,8 @@ if (!isset($_SESSION['cedula'])) {
 
 $cedula = $_SESSION['cedula'];
 
-// Traer datos del usuario por cédula
-$stmt = $con->prepare("SELECT cedula, nombrecompleto, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE cedula=?");
+// Traer datos del usuario por cédula, incluyendo password (columna 'pass')
+$stmt = $con->prepare("SELECT cedula, nombrecompleto, pass, apellido, email, rol, telefono, foto, asignatura, id_grupo FROM usuario WHERE cedula=?");
 $stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -27,14 +27,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $_POST['telefono'] ?? '';
     $asignatura = $_POST['asignatura'] ?? '';
     $id_grupo = $_POST['id_grupo'] ?? '';
+    $pass_actual = $_POST['pass_actual'] ?? '';
+    $pass_nueva = $_POST['pass_nueva'] ?? '';
+    $mensaje = '';
 
-    // Actualizar datos usando cédula
+    // Verificar si quieren cambiar contraseña
+    if (!empty($pass_actual) || !empty($pass_nueva)) {
+        if (empty($pass_actual) || empty($pass_nueva)) {
+            $mensaje = "Para cambiar la contraseña, completa ambos campos.";
+        } elseif (!password_verify($pass_actual, $user['pass'])) {
+            $mensaje = "La contraseña actual es incorrecta.";
+        } else {
+            // Cambiar contraseña
+            $pass_hashed = password_hash($pass_nueva, PASSWORD_DEFAULT);
+            $update_pass = $con->prepare("UPDATE usuario SET pass=? WHERE cedula=?");
+            $update_pass->bind_param("ss", $pass_hashed, $cedula);
+            $update_pass->execute();
+            $update_pass->close();
+            $mensaje = "Contraseña actualizada con éxito.";
+        }
+    }
+
+    // Actualizar datos del perfil
     $update = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
     $update->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
     $update->execute();
     $update->close();
 
-    $mensaje = "Perfil actualizado con éxito.";
+    if (empty($mensaje)) $mensaje = "Perfil actualizado con éxito.";
     header("Refresh: 2; URL=perfil.php"); // Redirige al perfil después de 2 segundos
 }
 ?>
@@ -45,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>Editar Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="perfil.css"> <!-- mismo estilo que perfil.php -->
+<link rel="stylesheet" href="perfil.css">
 <style>
     .edit-card { max-width: 600px; margin: 40px auto; padding: 2rem; border-radius: 12px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
     .edit-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #588BAE; }
@@ -90,6 +110,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="id_grupo" class="form-control" value="<?= htmlspecialchars($user['id_grupo']) ?>">
             </div>
             <?php endif; ?>
+
+            <hr>
+            <h5>Cambiar Contraseña</h5>
+            <div class="mb-3">
+                <label class="form-label">Contraseña Actual</label>
+                <input type="password" name="pass_actual" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nueva Contraseña</label>
+                <input type="password" name="pass_nueva" class="form-control">
+            </div>
 
             <div class="d-flex justify-content-between mt-4">
                 <a href="perfil.php" class="btn btn-secondary">Cancelar</a>
