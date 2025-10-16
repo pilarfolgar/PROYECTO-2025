@@ -454,12 +454,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     ?>
 });
-
 function mostrarReportes() {
-  const contenedor = document.getElementById('listaReportes');
-  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
-    ? 'block' 
-    : 'none';
+  const modal = new bootstrap.Modal(document.getElementById('modalReportes'));
+  modal.show();
 }
 
 function mostrarReservas() {
