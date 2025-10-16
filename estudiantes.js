@@ -186,33 +186,61 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
-// ==================== SUGERENCIA ====================
-const btnAbrirSugerencia = document.getElementById('abrirSugerencia');
-const overlaySugerencia = document.getElementById('overlaySugerencia');
-const formSugerencia = document.getElementById('form-sugerencia');
-const btnCerrarSugerencia = document.getElementById('cerrarSugerencia');
-const formSugerenciaForm = document.getElementById('sugerenciaForm');
-const mensajeSugerencia = document.getElementById('mensajeSugerencia');
+document.addEventListener("DOMContentLoaded", function() {
+    const abrirSugerencia = document.getElementById("abrirSugerencia");
+    const cerrarSugerencia = document.getElementById("cerrarSugerencia");
+    const overlaySugerencia = document.getElementById("overlaySugerencia");
+    const formSugerencia = document.getElementById("form-sugerencia");
+    const sugerenciaForm = document.getElementById("sugerenciaForm");
 
-btnAbrirSugerencia.addEventListener('click', () => {
-  overlaySugerencia.style.display = 'block';
-  formSugerencia.style.display = 'block';
-});
+    // Abrir formulario
+    abrirSugerencia.addEventListener("click", () => {
+        formSugerencia.style.display = "block";
+        overlaySugerencia.style.display = "block";
+    });
 
-btnCerrarSugerencia.addEventListener('click', cerrarSugerencia);
-overlaySugerencia.addEventListener('click', cerrarSugerencia);
+    // Cerrar formulario
+    cerrarSugerencia.addEventListener("click", () => {
+        formSugerencia.style.display = "none";
+        overlaySugerencia.style.display = "none";
+    });
 
-function cerrarSugerencia() {
-  overlaySugerencia.style.display = 'none';
-  formSugerencia.style.display = 'none';
-}
+    overlaySugerencia.addEventListener("click", () => {
+        formSugerencia.style.display = "none";
+        overlaySugerencia.style.display = "none";
+    });
 
-// Validación simple
-formSugerenciaForm.addEventListener('submit', function(event){
-  if(mensajeSugerencia.value.trim().length < 5){
-    event.preventDefault();
-    mensajeSugerencia.classList.add('is-invalid');
-  } else {
-    mensajeSugerencia.classList.remove('is-invalid');
-  }
+    // Enviar formulario con AJAX
+    sugerenciaForm.addEventListener("submit", function(e) {
+        e.preventDefault(); // evitar recarga
+        const mensaje = document.getElementById("mensajeSugerencia").value.trim();
+
+        if(mensaje.length < 5){
+            alert("Escribí al menos 5 caracteres");
+            return;
+        }
+
+        fetch("guardar-sugerencia.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "mensaje=" + encodeURIComponent(mensaje)
+        })
+        .then(response => response.text())
+        .then(data => {
+            if(data.trim() === "ok"){
+                alert("Sugerencia enviada correctamente");
+                sugerenciaForm.reset();
+                formSugerencia.style.display = "none";
+                overlaySugerencia.style.display = "none";
+            } else {
+                alert("Hubo un error al enviar la sugerencia");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Hubo un error en la comunicación con el servidor");
+        });
+    });
 });
