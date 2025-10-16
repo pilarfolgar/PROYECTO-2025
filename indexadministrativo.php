@@ -506,7 +506,7 @@ $result_reservas = $con->query($sql_reservas);
     <button type="submit" class="boton mt-3">Enviar</button>
   </form>
 </section>
-
+<?php require("footer.php"); ?>
 
 
 <script>
@@ -551,3 +551,5 @@ function mostrarSugerencias() {
 
 
 </script>
+</body>
+</html>
