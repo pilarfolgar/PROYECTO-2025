@@ -65,7 +65,7 @@ $con = conectar_bd();
         while ($row = $result_reservas->fetch_assoc()) {
             echo '<tr>
                     <td>'.htmlspecialchars($row['aula']).'</td>
-                    <td>'.htmlspecialchars($row['grupo']).'</td>
+                    <td>'.htmlspecialchars($row['grupo'] ?? 'Sin grupo').'</td>
                     <td>'.htmlspecialchars($row['fecha']).'</td>
                     <td>'.htmlspecialchars($row['hora_inicio']).'</td>
                     <td>'.htmlspecialchars($row['hora_fin']).'</td>
@@ -149,7 +149,7 @@ $con = conectar_bd();
           $h = $horaInicio;
           while ($h < $horaFin) {
               $bloques[] = $h;
-              $h = sumarMinutos($h, 45); // 45 min bloques + recreo 5 min si quieres agregar 50
+              $h = sumarMinutos($h, 45);
           }
           $horas = $bloques;
 
@@ -159,7 +159,6 @@ $con = conectar_bd();
             "Lab. Robótica", "Lab. Química", "Lab. Física", "Taller de Mantenimiento"
           ];
 
-          // Cargar reservas de la BD
           $reservas = [];
           $fecha_actual = date('Y-m-d');
           foreach ($aulas as $aula) {
@@ -207,42 +206,35 @@ $con = conectar_bd();
   </div>
 </div>
 
-<!-- BOTÓN Y FORMULARIO DE REPORTE -->
-<button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
-<div id="overlayReporte" class="formulario-overlay"></div>
-<section id="form-reporte" class="formulario">
-  <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
-  <form id="reporteForm" action="guardar-reporte-.php" method="POST" class="needs-validation form-reserva-style" novalidate>
-    <h2 class="form-title">Reportar Objeto Dañado</h2>
-    <div class="mb-3">
-      <label for="nombreReporte" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombreReporte" name="nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$">
-      <div class="invalid-feedback">Por favor, ingrese un nombre válido (solo letras).</div>
+<!-- FORMULARIO RESERVA MODAL -->
+<div class="modal fade" id="modalReserva" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="tituloReserva">Reservar Aula</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="guardar-reserva.php">
+          <input type="hidden" name="aula_nombre" id="aulaSeleccionada">
+          <div class="mb-3">
+            <label class="form-label">Fecha</label>
+            <input type="date" name="fecha" class="form-control" required value="<?= date('Y-m-d') ?>">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora inicio</label>
+            <input type="time" name="hora_inicio" class="form-control" readonly required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora fin</label>
+            <input type="time" name="hora_fin" class="form-control" readonly required>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="emailReporte" class="form-label">Email</label>
-      <input type="email" class="form-control" id="emailReporte" name="email" required>
-      <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
-    </div>
-    <div class="mb-3">
-      <label for="objetoReporte" class="form-label">Objeto o área</label>
-      <input type="text" class="form-control" id="objetoReporte" name="objeto" required>
-      <div class="invalid-feedback">Este campo es obligatorio.</div>
-    </div>
-    <div class="mb-3">
-      <label for="descripcionReporte" class="form-label">Descripción del problema</label>
-      <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="3" minlength="10" required></textarea>
-      <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
-    </div>
-    <div class="mb-3">
-      <label for="fechaReporte" class="form-label">Fecha del reporte</label>
-      <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
-      <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
-    <div id="mensajeReporte" class="mt-3 text-center"></div>
-  </form>
-</section>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -250,8 +242,6 @@ $con = conectar_bd();
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="docentes.js"></script>
-<script src="estudiantes.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -264,12 +254,13 @@ function abrirReservaBloque(td){
 
     const [h,m] = hora.split(':').map(Number);
     let horaFinH = h;
-    let horaFinM = m + 45; // Bloque de 45 min
+    let horaFinM = m + 45;
     if(horaFinM >= 60){
         horaFinH += Math.floor(horaFinM/60);
         horaFinM = horaFinM % 60;
     }
     document.querySelector('input[name="hora_fin"]').value = `${horaFinH.toString().padStart(2,'0')}:${horaFinM.toString().padStart(2,'0')}`;
+
     const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
     modal.show();
 }

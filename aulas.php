@@ -20,7 +20,7 @@ function generarBloques($horaInicio, $horaFin, $duracion = 45, $recreo = 5) {
 }
 
 // Bloques de horario completo del instituto
-$bloques_horarios = generarBloques("07:00", "00:00");
+$bloques_horarios = generarBloques("07:00", "23:59");
 
 // Procesar reserva si se envió el formulario
 $mensaje = '';
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
           </div>
           <div class="mb-3">
             <label class="form-label">Hora de inicio</label>
-            <select name="hora_inicio" class="form-select" required>
+            <select name="hora_inicio" class="form-select" id="hora_inicio" required>
               <option selected disabled>Seleccione hora de inicio...</option>
               <?php
               foreach($bloques_horarios as $bloque){
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
           </div>
           <div class="mb-3">
             <label class="form-label">Hora de fin</label>
-            <select name="hora_fin" class="form-select" required>
+            <select name="hora_fin" class="form-select" id="hora_fin" required>
               <option selected disabled>Seleccione hora de fin...</option>
               <?php
               foreach($bloques_horarios as $bloque){
