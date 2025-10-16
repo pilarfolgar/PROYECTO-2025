@@ -187,6 +187,65 @@ $result_reservas = $con->query($sql_reservas);
   </div>
 </div>
 
+<!-- MODAL SUGERENCIAS -->
+<div class="modal fade" id="modalSugerencias" tabindex="-1" aria-labelledby="modalSugerenciasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="modalSugerenciasLabel">💡 Sugerencias de Estudiantes</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <?php
+        $sql_sugerencias = "SELECT s.id_sugerencia, s.mensaje, s.fecha, s.estado, 
+                                   u.nombrecompleto, u.apellido 
+                            FROM sugerencias s 
+                            LEFT JOIN usuario u ON s.cedula = u.cedula 
+                            ORDER BY s.fecha DESC";
+        $result_sugerencias = $con->query($sql_sugerencias);
+        ?>
+
+        <?php if($result_sugerencias && $result_sugerencias->num_rows > 0): ?>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Estudiante</th>
+                  <th>Mensaje</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php while($s = $result_sugerencias->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($s['nombrecompleto'].' '.$s['apellido']) ?></td>
+                    <td><?= nl2br(htmlspecialchars($s['mensaje'])) ?></td>
+                    <td><?= htmlspecialchars($s['fecha']) ?></td>
+                    <td>
+                      <?php if($s['estado'] == 'pendiente'): ?>
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                      <?php else: ?>
+                        <span class="badge bg-success">Leído</span>
+                      <?php endif; ?>
+                    </td>
+                  </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+          </div>
+        <?php else: ?>
+          <p class="text-center mb-0">No hay sugerencias enviadas aún.</p>
+        <?php endif; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <?php require("footer.php"); ?>
 
@@ -484,5 +543,11 @@ function mostrarReservas() {
   const modal = new bootstrap.Modal(document.getElementById('modalReservas'));
   modal.show();
 }
+
+function mostrarSugerencias() {
+  const modal = new bootstrap.Modal(document.getElementById('modalSugerencias'));
+  modal.show();
+}
+
 
 </script>

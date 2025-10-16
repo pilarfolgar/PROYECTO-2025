@@ -186,61 +186,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
-document.addEventListener("DOMContentLoaded", function() {
-    const abrirSugerencia = document.getElementById("abrirSugerencia");
-    const cerrarSugerencia = document.getElementById("cerrarSugerencia");
-    const overlaySugerencia = document.getElementById("overlaySugerencia");
-    const formSugerencia = document.getElementById("form-sugerencia");
-    const sugerenciaForm = document.getElementById("sugerenciaForm");
 
-    // Abrir formulario
-    abrirSugerencia.addEventListener("click", () => {
-        formSugerencia.style.display = "block";
-        overlaySugerencia.style.display = "block";
-    });
+// Abrir y cerrar formulario de sugerencia
+const abrirBtn = document.getElementById("abrirSugerencia");
+const cerrarBtn = document.getElementById("cerrarSugerencia");
+const overlaySugg = document.getElementById("overlaySugerencia");
+const formSugerencia = document.getElementById("form-sugerencia");
 
-    // Cerrar formulario
-    cerrarSugerencia.addEventListener("click", () => {
-        formSugerencia.style.display = "none";
-        overlaySugerencia.style.display = "none";
-    });
+abrirBtn.addEventListener("click", () => {
+  overlaySugg.style.display = "block";
+  formSugerencia.style.display = "block";
+});
 
-    overlaySugerencia.addEventListener("click", () => {
-        formSugerencia.style.display = "none";
-        overlaySugerencia.style.display = "none";
-    });
+cerrarBtn.addEventListener("click", () => {
+  overlaySugg.style.display = "none";
+  formSugerencia.style.display = "none";
+});
 
-    // Enviar formulario con AJAX
-    sugerenciaForm.addEventListener("submit", function(e) {
-        e.preventDefault(); // evitar recarga
-        const mensaje = document.getElementById("mensajeSugerencia").value.trim();
+// Enviar formulario con fetch
+const sugerenciaForm = document.getElementById("sugerenciaForm");
+sugerenciaForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const mensaje = document.getElementById("mensajeSugerencia").value.trim();
 
-        if(mensaje.length < 5){
-            alert("Escribí al menos 5 caracteres");
-            return;
-        }
+  if (mensaje.length < 5) {
+    alert("El mensaje debe tener al menos 5 caracteres.");
+    return;
+  }
 
-        fetch("guardar-sugerencia.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "mensaje=" + encodeURIComponent(mensaje)
-        })
-        .then(response => response.text())
-        .then(data => {
-            if(data.trim() === "ok"){
-                alert("Sugerencia enviada correctamente");
-                sugerenciaForm.reset();
-                formSugerencia.style.display = "none";
-                overlaySugerencia.style.display = "none";
-            } else {
-                alert("Hubo un error al enviar la sugerencia");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Hubo un error en la comunicación con el servidor");
-        });
-    });
+  fetch("guardar-sugerencia.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `mensaje=${encodeURIComponent(mensaje)}`
+  })
+  .then(res => res.text())
+  .then(res => {
+    if (res === "ok") {
+      alert("Sugerencia enviada con éxito");
+      sugerenciaForm.reset();
+      overlaySugg.style.display = "none";
+      formSugerencia.style.display = "none";
+    } else {
+      alert("Error al enviar la sugerencia, intente nuevamente.");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error de conexión.");
+  });
 });
