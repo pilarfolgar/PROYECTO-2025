@@ -47,47 +47,33 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 <head>
 <meta charset="UTF-8">
 <title>Mis Notificaciones</title>
-<link rel="stylesheet" href="notificaciones.css">
+<style>
+body { font-family: Arial, sans-serif; }
+.notificacion { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+.nuevo { background-color: #e8f4ff; }
+.visto { background-color: #f4f4f4; }
+.fecha { font-size: 0.8em; color: #666; }
+</style>
 </head>
 <body>
+<h2>Mis Notificaciones</h2>
 
-<?php include('header.php'); ?>
-
-<main>
-    <h2>Mis Notificaciones</h2>
-    <div class="notificaciones-container">
-        <?php while($stmt->fetch()): ?>
-            <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
-                <h3><?php echo htmlspecialchars($titulo); ?></h3>
-                <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
-                <p class="fecha"><?php echo $fecha; ?></p>
-                <?php if(!$visto): ?>
-                    <a href="?marcar_visto=<?php echo $id_notificacion; ?>" class="btn-marcar">Marcar como leído</a>
-                <?php else: ?>
-                    <span class="leido">Leído</span>
-                <?php endif; ?>
-            </div>
-        <?php endwhile; ?>
+<?php while($stmt->fetch()): ?>
+    <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
+        <h3><?php echo htmlspecialchars($titulo); ?></h3>
+        <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
+        <p class="fecha"><?php echo $fecha; ?></p>
+        <?php if(!$visto): ?>
+            <a href="?marcar_visto=<?php echo $id_notificacion; ?>">Marcar como leído</a>
+        <?php else: ?>
+            <span>Leído</span>
+        <?php endif; ?>
     </div>
-</main>
+<?php endwhile; ?>
 
 <?php
 $stmt->close();
 $con->close();
 ?>
-
-
-<script>
-    // Animación simple: revelar notificaciones al cargar
-    document.addEventListener('DOMContentLoaded', () => {
-        const notis = document.querySelectorAll('.notificacion');
-        notis.forEach((n, i) => {
-            setTimeout(() => n.classList.add('visible'), i * 100);
-        });
-    });
-</script>
-
 </body>
 </html>
-
-<?php require('footer.php'); ?>

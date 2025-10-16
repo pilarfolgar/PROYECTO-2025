@@ -76,6 +76,7 @@ $stmt->close();
 $con->close();
 ?>
 
+<?php require('footer.php'); ?>
 
 <script>
     // Animación simple: revelar notificaciones al cargar
@@ -89,5 +90,3 @@ $con->close();
 
 </body>
 </html>
-
-<?php require('footer.php'); ?>
