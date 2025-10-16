@@ -15,7 +15,7 @@ $con = conectar_bd();
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="admin-script.js"></script>
 </head>
-<body>
+<>
 
 <?php require("header.php"); ?>
 

@@ -57,8 +57,8 @@ $con = conectar_bd();
     <a href="#" class="boton" onclick="mostrarForm('form-notificacion')">➕ Enviar Notificación</a>
   </div>
   <div class="tarjeta">
-  <h3>Reportes Objetos Rotos</h3>
-  <p>Ver los reportes.</p>
+  <h3>Reportes de Estudiantes</h3>
+  <p>Ver los reportes enviados por los estudiantes.</p>
   <button class="boton" id="btnVerReportes" onclick="mostrarReportes()"> ➕ Ver Reportes</button>
 </div>
 <div class="tarjeta">
