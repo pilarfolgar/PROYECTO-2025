@@ -247,7 +247,6 @@ $result_reservas = $con->query($sql_reservas);
 
 
 
-<?php require("footer.php"); ?>
 
 <!-- =====================
    FORMULARIOS
