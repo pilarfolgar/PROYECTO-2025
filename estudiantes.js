@@ -187,10 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// Abrir y cerrar formulario de sugerencia
 const abrirBtn = document.getElementById("abrirSugerencia");
 const cerrarBtn = document.getElementById("cerrarSugerencia");
-const overlaySugg = document.getElementById("overlaySugerencia");
+const overlaySugg = document.getElementById("overlaySugerenciaDiv"); // nombre actualizado
 const formSugerencia = document.getElementById("form-sugerencia");
 
 abrirBtn.addEventListener("click", () => {
@@ -203,7 +202,6 @@ cerrarBtn.addEventListener("click", () => {
   formSugerencia.style.display = "none";
 });
 
-// Enviar formulario con fetch
 const sugerenciaForm = document.getElementById("sugerenciaForm");
 sugerenciaForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -221,7 +219,7 @@ sugerenciaForm.addEventListener("submit", (e) => {
   })
   .then(res => res.text())
   .then(res => {
-    if (res === "ok") {
+    if (res.trim() === "ok") {
       alert("Sugerencia enviada con éxito");
       sugerenciaForm.reset();
       overlaySugg.style.display = "none";

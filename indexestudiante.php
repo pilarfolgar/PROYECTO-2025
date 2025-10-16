@@ -66,12 +66,15 @@ require("seguridad.php");
 </section>
 
 <!-- Overlay sugerencia -->
-<div id="overlaySugerencia" class="formulario-overlay"></div>
+<!-- Overlay sugerencia -->
+<div id="overlaySugerenciaDiv" class="formulario-overlay"></div>
+
 
 <!-- Formulario flotante sugerencia -->
 <section id="form-sugerencia" class="formulario">
   <button type="button" class="cerrar" id="cerrarSugerencia">✖</button>
-  <form id="sugerenciaForm" method="POST">
+ <form id="sugerenciaForm" method="POST" action="guardar-sugerencia.php">
+
     <h2 class="form-title">Sugerencia</h2>
     <div class="mb-3">
       <textarea class="form-control" id="mensajeSugerencia" name="mensaje" rows="4" minlength="5" required placeholder="Escribí tu mensaje"></textarea>
