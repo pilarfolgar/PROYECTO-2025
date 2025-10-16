@@ -52,20 +52,48 @@ $con = conectar_bd();
 <section class="mis-cursos container mt-4">
   <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
-    <div class="docente-card">
-      <div class="docente-photo"></div>
-      <div class="docente-name fw-bold">1°MA - Lengua</div>
-      <div class="docente-subject text-muted">Turno matutino</div>
-      <button class="btn btn-outline-primary boton ver-miembros" data-clase="1°MA - Lengua">Ver miembros</button>
-      <ul class="lista-miembros" style="display:none;"></ul>
-    </div>
-    <div class="docente-card">
-      <div class="docente-photo"></div>
-      <div class="docente-name fw-bold">2°BB - Matemática</div>
-      <div class="docente-subject text-muted">Turno vespertino</div>
-      <button class="btn btn-outline-primary boton ver-miembros" data-clase="2°BB - Matemática">Ver miembros</button>
-      <ul class="lista-miembros" style="display:none;"></ul>
-    </div>
+    <?php
+    $docente_cedula = $_SESSION['cedula'];
+    
+   $stmt = $con->prepare("SELECT DISTINCT g.id_grupo, g.nombre, g.orientacion, g.cantidad_estudiantes
+                       FROM grupo g
+                       JOIN grupo_asignatura ga ON g.id_grupo = ga.id_grupo
+                       JOIN docente_asignatura da ON ga.id_asignatura = da.id_asignatura
+                       WHERE da.cedula_docente = ?
+                       ORDER BY g.nombre");
+$stmt->bind_param("s", $docente_cedula);
+$stmt->execute();
+$result_grupos = $stmt->get_result();
+
+    $result_grupos = $con->query($sql_grupos);
+
+    if ($result_grupos && $result_grupos->num_rows > 0) {
+        while ($row = $result_grupos->fetch_assoc()) {
+            echo '<div class="docente-card">';
+            echo '<div class="docente-photo"></div>';
+            echo '<div class="docente-name fw-bold">'.htmlspecialchars($row['nombre']).'</div>';
+            echo '<div class="docente-subject text-muted">'.htmlspecialchars($row['orientacion']).'</div>';
+            echo '<button class="btn btn-outline-primary boton ver-miembros" data-clase="'.htmlspecialchars($row['nombre']).'">Ver miembros</button>';
+            echo '<ul class="lista-miembros" style="display:none;">';
+            
+            // Cargar miembros del grupo
+            $id_grupo = $row['id_grupo'];
+            $sql_miembros = "SELECT nombre_estudiante FROM estudiante WHERE id_grupo = '$id_grupo' ORDER BY nombre_estudiante";
+            $res_miembros = $con->query($sql_miembros);
+            if($res_miembros && $res_miembros->num_rows > 0){
+                while($miembro = $res_miembros->fetch_assoc()){
+                    echo '<li>'.htmlspecialchars($miembro['nombre_estudiante']).'</li>';
+                }
+            } else {
+                echo '<li>No hay miembros</li>';
+            }
+
+            echo '</ul></div>';
+        }
+    } else {
+        echo '<div class="text-muted">No tienes cursos asignados.</div>';
+    }
+    ?>
   </div>
 </section>
 
@@ -74,11 +102,11 @@ $con = conectar_bd();
   <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
     <?php
-    $cedula_docente = $_SESSION['cedula'];
     $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
                      FROM reserva 
-                     WHERE cedula = '$cedula_docente'
+                     WHERE cedula = '$docente_cedula'
                      ORDER BY fecha DESC, hora_inicio ASC";
+
     $result_reservas = $con->query($sql_reservas);
 
     if ($result_reservas && $result_reservas->num_rows > 0) {
@@ -147,7 +175,7 @@ $con = conectar_bd();
           $sql_aulas = "SELECT codigo FROM aula ORDER BY codigo";
           $result_aulas = $con->query($sql_aulas);
           $aulas = [];
-          while($row = $result_aulas->fetch_assoc()){
+          while($row=$result_aulas->fetch_assoc()){
               $aulas[] = $row['codigo'];
               echo '<th>'.htmlspecialchars($row['codigo']).'</th>';
           }
@@ -186,7 +214,8 @@ $con = conectar_bd();
         }
 
         function bloqueOcupado($hora_bloque, $reservas_aula){
-            foreach($reservas_aula as $res){                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
+            foreach($reservas_aula as $res){
+                if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
                     return true;
                 }
             }
