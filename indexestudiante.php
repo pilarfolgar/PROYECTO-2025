@@ -15,7 +15,6 @@ require("seguridad.php");
 <link rel="stylesheet" href="styleestudiante.css">
 </head>
 <body>
-
 <?php require("header.php"); ?>
 
 <section class="mis-cursos my-5">
