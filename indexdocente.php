@@ -45,9 +45,47 @@ require("seguridad.php");
 <section>
   <h2>Mis reservas</h2>
   <div id="reservas-container">
-    <div class="no-reservas">No hay reservas por el momento.</div>
+    <?php
+    require("conexion.php");
+    $con = conectar_bd();
+
+    // Recuperar el nombre o cédula del docente actual
+    $docente_actual = $_SESSION['nombre']; // o $_SESSION['cedula'], según tu login
+
+    // Obtener sus reservas
+    $sql_reservas = "SELECT aula, grupo, fecha, hora_inicio, hora_fin 
+                     FROM reserva 
+                     WHERE nombre = '$docente_actual'
+                     ORDER BY fecha DESC, hora_inicio ASC";
+    $result = $con->query($sql_reservas);
+
+    if ($result && $result->num_rows > 0) {
+        echo '<div class="table-responsive">';
+        echo '<table class="table table-bordered table-striped text-center">';
+        echo '<thead class="table-primary"><tr>
+                <th>Aula</th>
+                <th>Grupo</th>
+                <th>Fecha</th>
+                <th>Hora inicio</th>
+                <th>Hora fin</th>
+              </tr></thead><tbody>';
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
+                    <td>'.htmlspecialchars($row['aula']).'</td>
+                    <td>'.htmlspecialchars($row['grupo']).'</td>
+                    <td>'.htmlspecialchars($row['fecha']).'</td>
+                    <td>'.htmlspecialchars($row['hora_inicio']).'</td>
+                    <td>'.htmlspecialchars($row['hora_fin']).'</td>
+                  </tr>';
+        }
+        echo '</tbody></table></div>';
+    } else {
+        echo '<div class="no-reservas text-center text-muted">No hay reservas por el momento.</div>';
+    }
+    ?>
   </div>
 </section>
+
 
 <!-- ✅ VISTA PREVIA DE AULAS (limitada a 5 aulas desde la base) -->
 <section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
