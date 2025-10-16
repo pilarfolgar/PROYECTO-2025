@@ -45,11 +45,8 @@ $con = conectar_bd();
   <h2>Mis reservas</h2>
   <div id="reservas-container">
     <?php
-    // Recuperar el nombre del docente logueado
     $docente_actual = $_SESSION['nombre'];
-
-    // Consulta reservas del docente
-    $sql_reservas = "SELECT aula, grupo, fecha, hora_inicio, hora_fin 
+    $sql_reservas = "SELECT aula, fecha, hora_inicio, hora_fin, grupo
                      FROM reserva 
                      WHERE nombre = '$docente_actual'
                      ORDER BY fecha DESC, hora_inicio ASC";
@@ -152,7 +149,7 @@ $con = conectar_bd();
           $h = $horaInicio;
           while ($h < $horaFin) {
               $bloques[] = $h;
-              $h = sumarMinutos($h, 45);
+              $h = sumarMinutos($h, 45); // 45 min bloques + recreo 5 min si quieres agregar 50
           }
           $horas = $bloques;
 
@@ -162,25 +159,39 @@ $con = conectar_bd();
             "Lab. Robótica", "Lab. Química", "Lab. Física", "Taller de Mantenimiento"
           ];
 
-          // Cargar reservas reales desde la BD
+          // Cargar reservas de la BD
           $reservas = [];
+          $fecha_actual = date('Y-m-d');
           foreach ($aulas as $aula) {
               $reservas[$aula] = [];
-              $sql_r = "SELECT hora_inicio FROM reserva WHERE aula='$aula'";
+              $sql_r = "SELECT hora_inicio, hora_fin FROM reserva WHERE aula='$aula' AND fecha='$fecha_actual'";
               $res = $con->query($sql_r);
               while($row_r = $res->fetch_assoc()){
-                  $reservas[$aula][] = $row_r['hora_inicio'];
+                  $reservas[$aula][] = ['hora_inicio'=>$row_r['hora_inicio'], 'hora_fin'=>$row_r['hora_fin']];
               }
+          }
+
+          function bloqueOcupado($hora_bloque, $reservas_aula){
+              foreach($reservas_aula as $res){
+                  if($hora_bloque >= $res['hora_inicio'] && $hora_bloque < $res['hora_fin']){
+                      return true;
+                  }
+              }
+              return false;
           }
 
           foreach ($horas as $hora) {
               echo '<tr>';
               echo '<td><strong>'.$hora.'</strong></td>';
               foreach ($aulas as $aula) {
-                  if (in_array($hora, $reservas[$aula])) {
+                  if(bloqueOcupado($hora, $reservas[$aula])){
                       echo '<td class="bg-gradient bg-danger text-white"><span title="Reservado"><span class="badge rounded-pill bg-danger" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-x-circle-fill"></i></span></td>';
                   } else {
-                      echo '<td class="bg-gradient bg-success text-dark"><span title="Disponible"><span class="badge rounded-pill bg-success" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-check-circle-fill"></i></span></td>';
+                      echo '<td class="bg-gradient bg-success text-dark disponible" 
+                               data-aula="'.$aula.'" data-hora="'.$hora.'" 
+                               onclick="abrirReservaBloque(this)">
+                               <span title="Disponible"><span class="badge rounded-pill bg-success" style="font-size:1em;padding:0.6em 1.2em"><i class="bi bi-check-circle-fill"></i></span>
+                            </td>';
                   }
               }
               echo '</tr>';
@@ -241,6 +252,28 @@ $con = conectar_bd();
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="docentes.js"></script>
 <script src="estudiantes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function abrirReservaBloque(td){
+    const aula = td.getAttribute('data-aula');
+    const hora = td.getAttribute('data-hora');
+    document.getElementById('tituloReserva').innerText = `Reservar - ${aula}`;
+    document.getElementById('aulaSeleccionada').value = aula;
+    document.querySelector('input[name="hora_inicio"]').value = hora;
+
+    const [h,m] = hora.split(':').map(Number);
+    let horaFinH = h;
+    let horaFinM = m + 45; // Bloque de 45 min
+    if(horaFinM >= 60){
+        horaFinH += Math.floor(horaFinM/60);
+        horaFinM = horaFinM % 60;
+    }
+    document.querySelector('input[name="hora_fin"]').value = `${horaFinH.toString().padStart(2,'0')}:${horaFinM.toString().padStart(2,'0')}`;
+    const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
+    modal.show();
+}
+</script>
 
 </body>
 </html>

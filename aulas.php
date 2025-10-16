@@ -3,6 +3,25 @@ require("header.php");
 require("conexion.php");
 $con = conectar_bd();
 
+// Función para generar bloques horarios
+function generarBloques($horaInicio, $horaFin, $duracion = 45, $recreo = 5) {
+    $bloques = [];
+    $h = strtotime($horaInicio);
+    $fin = strtotime($horaFin);
+
+    while ($h + ($duracion*60) <= $fin) {
+        $hora_inicio = date("H:i", $h);
+        $h_fin = $h + ($duracion*60);
+        $hora_fin = date("H:i", $h_fin);
+        $bloques[] = ['inicio' => $hora_inicio, 'fin' => $hora_fin];
+        $h += ($duracion + $recreo)*60; // 45 min + 5 min recreo
+    }
+    return $bloques;
+}
+
+// Bloques de horario completo del instituto
+$bloques_horarios = generarBloques("07:00", "00:00");
+
 // Procesar reserva si se envió el formulario
 $mensaje = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
@@ -109,11 +128,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
           </div>
           <div class="mb-3">
             <label class="form-label">Hora de inicio</label>
-            <input type="time" name="hora_inicio" class="form-control" required>
+            <select name="hora_inicio" class="form-select" required>
+              <option selected disabled>Seleccione hora de inicio...</option>
+              <?php
+              foreach($bloques_horarios as $bloque){
+                  echo '<option value="'.$bloque['inicio'].'">'.$bloque['inicio'].' - '.$bloque['fin'].'</option>';
+              }
+              ?>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Hora de fin</label>
-            <input type="time" name="hora_fin" class="form-control" required>
+            <select name="hora_fin" class="form-select" required>
+              <option selected disabled>Seleccione hora de fin...</option>
+              <?php
+              foreach($bloques_horarios as $bloque){
+                  echo '<option value="'.$bloque['fin'].'">'.$bloque['inicio'].' - '.$bloque['fin'].'</option>';
+              }
+              ?>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Grupo</label>
