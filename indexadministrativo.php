@@ -59,8 +59,13 @@ $con = conectar_bd();
   <div class="tarjeta">
   <h3>Reportes de Estudiantes</h3>
   <p>Ver los reportes enviados por los estudiantes.</p>
-  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()"> ➕ Ver Reportes</button>
 </div>
+<div class="tarjeta">
+    <h3>Reservas de Aulas</h3>
+    <p>Visualizar y administrar reservas de aulas.</p>
+    <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
+  </div>
 </main>
 
 
@@ -129,43 +134,51 @@ $sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin,
 $result_reservas = $con->query($sql_reservas);
 ?>
 
-<div class="tarjeta mt-4">
-  <h3>Reservas de Aulas</h3>
-  <p>Listado de reservas realizadas por los docentes.</p>
-  <button class="boton" id="btnVerReservas" onclick="mostrarReservas()">Ver Reservas</button>
-</div>
-
-<div id="contenedorReservas" style="display:none; margin-top:20px;">
-  <?php if($result_reservas && $result_reservas->num_rows > 0): ?>
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>Docente (Cédula)</th>
-            <th>Aula</th>
-            <th>Grupo</th>
-            <th>Fecha</th>
-            <th>Hora Inicio</th>
-            <th>Hora Fin</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php while($reserva = $result_reservas->fetch_assoc()): ?>
-            <tr>
-              <td><?= htmlspecialchars($reserva['docente']) ?></td>
-              <td><?= htmlspecialchars($reserva['aula']) ?></td>
-              <td><?= htmlspecialchars($reserva['grupo'] ?? '—') ?></td>
-              <td><?= htmlspecialchars($reserva['fecha']) ?></td>
-              <td><?= htmlspecialchars($reserva['hora_inicio']) ?></td>
-              <td><?= htmlspecialchars($reserva['hora_fin']) ?></td>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
+<!-- MODAL RESERVAS -->
+<div class="modal fade" id="modalReservas" tabindex="-1" aria-labelledby="modalReservasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="modalReservasLabel">📅 Reservas de Aulas</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <?php if($result_reservas && $result_reservas->num_rows > 0): ?>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th>Docente (Cédula)</th>
+                  <th>Aula</th>
+                  <th>Grupo</th>
+                  <th>Fecha</th>
+                  <th>Hora Inicio</th>
+                  <th>Hora Fin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php while($reserva = $result_reservas->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($reserva['docente']) ?></td>
+                    <td><?= htmlspecialchars($reserva['aula']) ?></td>
+                    <td><?= htmlspecialchars($reserva['grupo'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($reserva['fecha']) ?></td>
+                    <td><?= htmlspecialchars($reserva['hora_inicio']) ?></td>
+                    <td><?= htmlspecialchars($reserva['hora_fin']) ?></td>
+                  </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+          </div>
+        <?php else: ?>
+          <p class="text-center">No hay reservas registradas aún.</p>
+        <?php endif; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
-  <?php else: ?>
-    <p class="text-center">No hay reservas registradas aún.</p>
-  <?php endif; ?>
+  </div>
 </div>
 
 <?php require("footer.php"); ?>
@@ -456,22 +469,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function mostrarReportes() {
-  const contenedor = document.getElementById('listaReportes');
-  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
-    ? 'block' 
-    : 'none';
-}
-
-function mostrarReservas() {
-  const contenedor = document.getElementById('contenedorReservas');
-  contenedor.style.display = (contenedor.style.display === 'none' || contenedor.style.display === '') 
-    ? 'block' 
-    : 'none';
-}
-</script>
-<script>
-function mostrarModalReportes() {
   const modal = new bootstrap.Modal(document.getElementById('modalReportes'));
   modal.show();
 }
+
+function mostrarReservas() {
+  const modal = new bootstrap.Modal(document.getElementById('modalReservas'));
+  modal.show();
+}
+
 </script>
