@@ -182,6 +182,18 @@ $result_reservas = $con->query($sql_reservas);
   </div>
 </div>
 
+<?php
+$sql_asignaturas = "SELECT a.id_asignatura, a.nombre, a.codigo, 
+        GROUP_CONCAT(u.nombrecompleto, ' ', u.apellido SEPARATOR ', ') AS docentes
+        FROM asignatura a
+        LEFT JOIN docente_asignatura da ON a.id_asignatura = da.id_asignatura
+        LEFT JOIN usuario u ON da.cedula_docente = u.cedula
+        GROUP BY a.id_asignatura
+        ORDER BY a.nombre";
+$result = $con->query($sql_asignaturas);
+?>
+
+
 <h2>Asignaturas Registradas</h2>
 <table class="table table-bordered table-striped">
   <thead class="table-dark">
