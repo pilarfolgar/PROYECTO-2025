@@ -233,7 +233,7 @@ $con = conectar_bd();
             <td><?= $row['id_grupo'] ?></td>
             <td><?= htmlspecialchars($row['nombre']) ?></td>
             <td><?= htmlspecialchars($row['orientacion']) ?></td>
-            <td><?= $row['cantidad'] ?></td>
+            <td><?= $row['cantidad_estudiantes'] ?></td>
             <td><?= htmlspecialchars($row['asignaturas'] ?? '—') ?></td>
             <td>
               <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
