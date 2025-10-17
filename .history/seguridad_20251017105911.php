@@ -3,7 +3,7 @@
 session_start();
 
 // Tiempo de vida de la sesión en segundos (opcional)
-$tiempo_sesion = 10; // 30 minutos
+$tiempo_sesion = 1800; // 30 minutos
 
 // Inicializar variable de control de navegación
 if (!isset($_SESSION['navegando'])) {
