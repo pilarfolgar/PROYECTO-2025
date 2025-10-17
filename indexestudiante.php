@@ -1,41 +1,45 @@
 <?php 
-require("seguridad.php");
+session_start();
 require("conexion.php"); // Conexión a la base de datos
 
-// Obtener nombre del grupo del estudiante
-$grupoNombre = "";
+// Verificar que la conexión esté OK
+if (!$conn) {
+    die("Error: La conexión a la base de datos falló.");
+}
 
-if (isset($_SESSION['cedula'])) {
-    $cedula = $_SESSION['cedula'];
-
-    // Obtenemos id_grupo del usuario
-    $stmt = $conn->prepare("SELECT id_grupo FROM usuario WHERE cedula = ?");
-    $stmt->bind_param("s", $cedula);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-
-    if ($fila = $resultado->fetch_assoc()) {
-        $idGrupo = $fila['id_grupo'];
-
-        // Obtenemos nombre del grupo desde la tabla grupos
-        $stmt2 = $conn->prepare("SELECT nombre_grupo FROM grupos WHERE id = ?");
-        $stmt2->bind_param("i", $idGrupo);
-        $stmt2->execute();
-        $resultado2 = $stmt2->get_result();
-        if ($fila2 = $resultado2->fetch_assoc()) {
-            $grupoNombre = $fila2['nombre_grupo'];
-        } else {
-            die("Error: No se encontró el nombre del grupo.");
-        }
-        $stmt2->close();
-    } else {
-        die("Error: No se encontró el grupo del usuario.");
-    }
-
-    $stmt->close();
-} else {
+// Verificar que el usuario esté logueado
+if (!isset($_SESSION['cedula'])) {
     die("Error: Usuario no identificado.");
 }
+
+$cedula = $_SESSION['cedula'];
+$grupoNombre = "";
+
+// Obtener id_grupo del usuario
+$stmt = $conn->prepare("SELECT id_grupo FROM usuario WHERE cedula = ?");
+$stmt->bind_param("s", $cedula);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+if ($fila = $resultado->fetch_assoc()) {
+    $idGrupo = $fila['id_grupo'];
+
+    // Obtener nombre del grupo desde tabla grupo
+    $stmt2 = $conn->prepare("SELECT nombre_grupo FROM grupo WHERE id = ?");
+    $stmt2->bind_param("i", $idGrupo);
+    $stmt2->execute();
+    $resultado2 = $stmt2->get_result();
+
+    if ($fila2 = $resultado2->fetch_assoc()) {
+        $grupoNombre = $fila2['nombre_grupo'];
+    } else {
+        $grupoNombre = "Grupo no encontrado";
+    }
+    $stmt2->close();
+} else {
+    $grupoNombre = "Grupo no asignado";
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +90,6 @@ if (isset($_SESSION['cedula'])) {
       <div class="docente-subject">
         <?php echo htmlspecialchars($grupoNombre); ?>
       </div>
-      <!-- Sin enlace -->
     </div>
 
   </div>
@@ -120,4 +123,22 @@ if (isset($_SESSION['cedula'])) {
     </div>
     <div class="mb-3">
       <label for="descripcionReporte" class="form-label">Descripción del problema</label>
-      <textarea class="form-control" id="descripcionReporte" name="descri
+      <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="3" minlength="10" required></textarea>
+      <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
+    </div>
+    <div class="mb-3">
+      <label for="fechaReporte" class="form-label">Fecha del reporte</label>
+      <input type="date" class="form-control" id="fechaReporte" name="fecha" required>
+      <div class="invalid-feedback">Seleccione una fecha válida (no futura).</div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Enviar Reporte</button>
+    <div id="mensajeReporte" class="mt-3 text-center"></div>
+  </form>
+</section>
+
+<?php require("footer.php"); ?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="estudiantes.js"></script>
+</body>
+</html>
