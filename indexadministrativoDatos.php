@@ -161,46 +161,53 @@ $con = conectar_bd();
   </section>
 
   <!-- AULAS -->
-  <section class="mb-5">
-    <h3>Aulas</h3>
-    <?php
-    $sql = "SELECT * FROM aula ORDER BY codigo";
-    $result = $con->query($sql);
-    if($result && $result->num_rows > 0):
-    ?>
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>Código</th>
-            <th>Capacidad</th>
-            <th>Ubicación</th>
-            <th>Tipo</th>
-            <th>Recursos</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-        <?php while($row = $result->fetch_assoc()): ?>
-          <tr>
-            <td><?= htmlspecialchars($row['codigo']) ?></td>
-            <td><?= $row['capacidad'] ?></td>
-            <td><?= htmlspecialchars($row['ubicacion']) ?></td>
-            <td><?= htmlspecialchars($row['tipo']) ?></td>
-            <td><?= htmlspecialchars($row['recursos']) ?></td>
-            <td>
-              <a href="editar-aula.php?codigo=<?= $row['codigo'] ?>" class="btn btn-sm btn-primary">Editar</a>
-              <a href="eliminar-aula.php?codigo=<?= $row['codigo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta aula?');">Eliminar</a>
-            </td>
-          </tr>
-        <?php endwhile; ?>
-        </tbody>
-      </table>
-    </div>
-    <?php else: ?>
-      <p>No hay aulas registradas.</p>
-    <?php endif; ?>
-  </section>
+<section class="mb-5">
+  <h3>Aulas</h3>
+  <?php
+  $sql = "SELECT a.*, 
+                 GROUP_CONCAT(r.nombre SEPARATOR ', ') AS recursos
+          FROM aula a
+          LEFT JOIN aula_recurso ar ON a.id_aula = ar.id_aula
+          LEFT JOIN recurso r ON ar.id_recurso = r.id_recurso
+          GROUP BY a.id_aula
+          ORDER BY a.codigo";
+  $result = $con->query($sql);
+  if($result && $result->num_rows > 0):
+  ?>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Código</th>
+          <th>Capacidad</th>
+          <th>Ubicación</th>
+          <th>Tipo</th>
+          <th>Recursos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+          <td><?= htmlspecialchars($row['codigo']) ?></td>
+          <td><?= htmlspecialchars($row['capacidad']) ?></td>
+          <td><?= htmlspecialchars($row['ubicacion']) ?></td>
+          <td><?= htmlspecialchars($row['tipo']) ?></td>
+          <td><?= htmlspecialchars($row['recursos'] ?? '—') ?></td>
+          <td>
+            <a href="editar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-primary">Editar</a>
+            <a href="eliminar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta aula?');">Eliminar</a>
+          </td>
+        </tr>
+      <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
+  <?php else: ?>
+    <p>No hay aulas registradas.</p>
+  <?php endif; ?>
+</section>
+
 
   <!-- GRUPOS -->
   <section class="mb-5">
