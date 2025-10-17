@@ -4,7 +4,7 @@ require("conexion.php");
 require("validador_ci.php");
 
 $con = conectar_bd();
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Depuración MySQLi
 
 $secretKey = "6LfHIusrAAAAAJV9s4pN0LI7aceKeahhvZqJRS3w";
 
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // 2️⃣ Recibir datos
+    // 2️⃣ Recibir y sanitizar datos
     $nombre    = trim($_POST["nombre"] ?? '');
     $apellido  = trim($_POST["apellido"] ?? '');
     $email     = strtolower(trim($_POST["email"] ?? ''));
@@ -92,20 +92,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // 5️⃣ Verificar duplicados por cédula
+    // 5️⃣ Verificar duplicados
     $stmt = $con->prepare("SELECT cedula FROM usuario WHERE cedula = ?");
     $stmt->bind_param("i", $cedula_int);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        $_SESSION['error_usuario'] = 'cedula_existente';
+        $_SESSION['error_usuario'] = 'usuario_existente';
         $stmt->close();
         header("Location: registro.php");
         exit;
     }
     $stmt->close();
 
-    // Verificar duplicados por email
     $stmt = $con->prepare("SELECT email FROM usuario WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -146,9 +145,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     );
 
     if ($stmt->execute()) {
-        $_SESSION['msg_usuario'] = 'guardado';
-        $_SESSION['registro_exitoso'] = true;
-        header("Location: registro.php");
+        $_SESSION['msg_usuario'] = ($rol === 'estudiante') ? 'guardado' : 'pendiente_verificacion';
+        $redirect = ($rol === 'estudiante') ? "indexestudiante.php" : "registro.php";
+        header("Location: $redirect");
         exit;
     } else {
         error_log("Error INSERT usuario: " . $stmt->error);

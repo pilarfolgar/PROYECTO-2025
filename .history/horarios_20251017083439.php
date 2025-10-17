@@ -1,4 +1,5 @@
 <?php
+require("seguridad.php"); // ya maneja login y recarga
 require("conexion.php");
 $con = conectar_bd();
 
