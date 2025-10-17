@@ -1,40 +1,6 @@
+
 <?php 
-session_start();
-require("conexion.php"); // Conexión a la base de datos
-
-// Verificar que el usuario esté logueado
-if (!isset($_SESSION['cedula'])) {
-    die("Error: Usuario no identificado.");
-}
-
-$cedula = $_SESSION['cedula'];
-$grupoNombre = "";
-
-// Obtener id_grupo del usuario
-$stmt = $conn->prepare("SELECT id_grupo FROM usuario WHERE cedula = ?");
-$stmt->bind_param("s", $cedula);
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-if ($fila = $resultado->fetch_assoc()) {
-    $idGrupo = $fila['id_grupo'];
-
-    // Obtener nombre del grupo desde tabla grupo
-    $stmt2 = $conn->prepare("SELECT nombre FROM grupo WHERE id_grupo = ?");
-    $stmt2->bind_param("i", $idGrupo);
-    $stmt2->execute();
-    $resultado2 = $stmt2->get_result();
-
-    if ($fila2 = $resultado2->fetch_assoc()) {
-        $grupoNombre = $fila2['nombre'];
-    } else {
-        $grupoNombre = "Grupo no encontrado";
-    }
-    $stmt2->close();
-} else {
-    $grupoNombre = "Grupo no asignado";
-}
-$stmt->close();
+require("seguridad.php");
 ?>
 
 <!DOCTYPE html>
@@ -83,9 +49,11 @@ $stmt->close();
       </div>
       <div class="docente-name">Mi Clase</div>
       <div class="docente-subject">
-        <?php echo htmlspecialchars($grupoNombre); ?>
-      </div>
-    </div>
+        <?php
+          // Muestra el grupo al que pertenece el estudiante desde la sesión
+          echo isset($_SESSION['grupo']) ? $_SESSION['grupo'] : "Sin asignar";
+        ?>
+    
 
   </div>
 </section>
@@ -136,4 +104,4 @@ $stmt->close();
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="estudiantes.js"></script>
 </body>
-</html>
+</html> 
