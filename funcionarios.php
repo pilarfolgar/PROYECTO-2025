@@ -19,22 +19,8 @@ $result = $con->query($sql);
   <link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-  <header>
-    <div class="HeaderIzq">
-      <h1>InfraLex</h1>
-      <h6>Instituto Tecnológico Superior de Paysandú</h6>
-    </div>
-    <div class="header-right">
-      <a href="index.php">
-        <img src="imagenes/logopoyecto.png" alt="Logo InfraLex" class="logo" />
-      </a>
-    </div>
-  </header>
+<?php require("HeaderIndex.php"); ?>
 
-  <nav>
-    <a href="masinfo.php"><i class="fas fa-info-circle"></i> Más información</a>
-    <a href="registro.php"><i class="fas fa-sign-in-alt"></i> Ingresar</a>
-  </nav>
 
   <main class="container">
     <div class="docentes-grid" tabindex="0" aria-label="Lista de docentes">
@@ -54,11 +40,6 @@ $result = $con->query($sql);
     </div>
   </main>
 
-  <footer class="footer">
-    © 2025 Instituto Tecnológico Superior de Paysandú | Contacto:
-    <a href="mailto:evolutionit2008@gmail.com">
-      evolutionit2008@gmail.com
-    </a>
-  </footer>
+<?php require("footer.php"); ?>
 </body>
 </html>
