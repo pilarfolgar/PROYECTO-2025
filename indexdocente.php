@@ -2,6 +2,30 @@
 require("seguridad.php");
 require("conexion.php");
 $con = conectar_bd();
+
+// ================================
+// 🔹 PETICIÓN AJAX: OBTENER MIEMBROS
+// ================================
+if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
+    $id_grupo = intval($_GET['id_grupo'] ?? 0);
+
+    $sql = "SELECT nombrecompleto, apellido 
+            FROM usuario 
+            WHERE rol='estudiante' AND id_grupo = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id_grupo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $miembros = [];
+    while ($row = $result->fetch_assoc()) {
+        $miembros[] = $row;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($miembros);
+    exit; // 🔸 Detiene el resto del HTML
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,9 +35,10 @@ $con = conectar_bd();
 <title>Panel Docentes - InfraLex</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="styleindexdocente.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style>
 .docentes-grid {
@@ -40,8 +65,9 @@ $con = conectar_bd();
 .lista-miembros { 
     list-style: none; 
     padding-left: 0; 
-    margin-top: 0.5rem; 
-    text-align: left; 
+    display: none;
+    margin-top: 0.5rem;
+    text-align: left;
 }
 .lista-miembros li {
     background: #f1f3f5;
@@ -52,25 +78,26 @@ $con = conectar_bd();
 @media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
 @media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
 </style>
+
 </head>
 <body>
 
 <?php require("header.php"); ?>
 
+<!-- ========================= -->
 <!-- SECCIÓN MIS CURSOS -->
+<!-- ========================= -->
 <section class="mis-cursos container mt-4">
   <h2 class="mb-3">Mis cursos</h2>
   <div class="docentes-grid">
     <?php
     $docente_cedula = $_SESSION['cedula'];
 
-    // 1️⃣ OBTENER los grupos y asignaturas del docente
-    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion,
-                   a.id_asignatura, a.nombre AS asignatura_nombre
+    $sql = "SELECT DISTINCT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion, a.nombre AS asignatura_nombre
             FROM docente_asignatura da
             JOIN asignatura a ON da.id_asignatura = a.id_asignatura
-            JOIN grupo_asignatura ga ON ga.id_asignatura = a.id_asignatura
-            JOIN grupo g ON g.id_grupo = ga.id_grupo
+            JOIN grupo_asignatura ga ON a.id_asignatura = ga.id_asignatura
+            JOIN grupo g ON ga.id_grupo = g.id_grupo
             WHERE da.cedula_docente = ?
             ORDER BY g.nombre, a.nombre";
 
@@ -79,54 +106,23 @@ $con = conectar_bd();
     $stmt->execute();
     $result = $stmt->get_result();
 
-    $cursos = [];
-    while($row = $result->fetch_assoc()){
-        $key = $row['id_grupo'].'-'.$row['id_asignatura'];
-        $cursos[$key] = [
-            'grupo_id' => $row['id_grupo'],
-            'grupo_nombre' => $row['grupo_nombre'],
-            'asignatura_nombre' => $row['asignatura_nombre'],
-            'orientacion' => $row['orientacion']
-        ];
-    }
-    $stmt->close();
-
-    // 2️⃣ MOSTRAR cada curso con botón de miembros
-    foreach($cursos as $curso){
+    while ($row = $result->fetch_assoc()) {
         echo '<div class="docente-card">';
         echo '<div class="docente-photo"></div>';
-        echo '<div class="fw-bold">'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'</div>';
-        echo '<div class="text-muted">'.htmlspecialchars($curso['orientacion']).'</div>';
-        echo '<button class="btn btn-outline-primary boton ver-miembros" 
-                data-grupo="'.htmlspecialchars($curso['grupo_id']).'" 
-                data-curso="'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'">
-                Ver miembros
-              </button>';
+        echo '<div class="docente-name fw-bold">'.htmlspecialchars($row['grupo_nombre'].' - '.$row['asignatura_nombre']).'</div>';
+        echo '<div class="docente-subject text-muted">'.htmlspecialchars($row['orientacion']).'</div>';
+        echo '<button class="btn btn-outline-primary boton ver-miembros" data-grupo="'.$row['id_grupo'].'">Ver miembros</button>';
+        echo '<ul class="lista-miembros" id="miembros-'.$row['id_grupo'].'"></ul>';
         echo '</div>';
     }
+    $stmt->close();
     ?>
   </div>
 </section>
 
-<!-- MODAL DE MIEMBROS -->
-<div class="modal fade" id="modalMiembros" tabindex="-1" aria-labelledby="modalMiembrosLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalMiembrosLabel">Miembros del grupo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <ul id="listaMiembros" class="lista-miembros"></ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!-- ========================= -->
 <!-- SECCIÓN MIS RESERVAS -->
+<!-- ========================= -->
 <section class="container mt-5">
   <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
@@ -165,7 +161,9 @@ $con = conectar_bd();
   </div>
 </section>
 
+<!-- ========================= -->
 <!-- SECCIÓN VISTA PREVIA DE AULAS -->
+<!-- ========================= -->
 <section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
   <h2 class="text-center mb-4">Vista previa de Aulas</h2>
   <div class="row g-4 justify-content-center">
@@ -192,7 +190,9 @@ $con = conectar_bd();
   </div>
 </section>
 
+<!-- ========================= -->
 <!-- SECCIÓN CALENDARIO DE RESERVAS -->
+<!-- ========================= -->
 <main class="container mb-5">
   <h2 class="text-center mb-4">Calendario diario de aulas</h2>
   <div class="table-responsive">
@@ -204,7 +204,7 @@ $con = conectar_bd();
           $sql_aulas = "SELECT codigo FROM aula ORDER BY codigo";
           $result_aulas = $con->query($sql_aulas);
           $aulas = [];
-          while($row = $result_aulas->fetch_assoc()){
+          while ($row = $result_aulas->fetch_assoc()) {
               $aulas[] = $row['codigo'];
               echo '<th>'.htmlspecialchars($row['codigo']).'</th>';
           }
@@ -277,37 +277,51 @@ $con = conectar_bd();
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Mostrar miembros en modal
+// ==============================
+// 🔹 Ver miembros (AJAX dinámico)
+// ==============================
 document.querySelectorAll('.ver-miembros').forEach(btn => {
   btn.addEventListener('click', async () => {
     const grupoId = btn.dataset.grupo;
-    const curso = btn.dataset.curso;
-    document.getElementById('modalMiembrosLabel').textContent = curso;
+    const ul = document.getElementById('miembros-' + grupoId);
 
-    // Petición AJAX para traer miembros
-    const response = await fetch('obtener_miembros.php?id_grupo=' + grupoId);
-    const data = await response.json();
-
-    const ul = document.getElementById('listaMiembros');
-    ul.innerHTML = '';
-
-    if (data.length > 0) {
-      data.forEach(m => {
-        ul.innerHTML += `<li>${m.nombrecompleto} ${m.apellido}</li>`;
-      });
-    } else {
-      ul.innerHTML = '<li><em>Sin estudiantes asignados</em></li>';
+    if (ul.style.display === 'block') {
+      ul.style.display = 'none';
+      btn.textContent = 'Ver miembros';
+      return;
     }
 
-    const modal = new bootstrap.Modal(document.getElementById('modalMiembros'));
-    modal.show();
+    btn.textContent = 'Cargando...';
+    try {
+      const res = await fetch(`indexdocente.php?ajax=miembros&id_grupo=${grupoId}`);
+      const data = await res.json();
+      ul.innerHTML = '';
+
+      if (data.length > 0) {
+        data.forEach(m => {
+          const li = document.createElement('li');
+          li.textContent = `${m.nombrecompleto} ${m.apellido}`;
+          ul.appendChild(li);
+        });
+      } else {
+        ul.innerHTML = '<li class="text-muted">Sin estudiantes registrados</li>';
+      }
+      ul.style.display = 'block';
+      btn.textContent = 'Ocultar miembros';
+    } catch (error) {
+      console.error(error);
+      btn.textContent = 'Error';
+    }
   });
 });
 
-function abrirReservaBloque(td){
+// ==============================
+// 🔹 Reservar bloque (demo)
+// ==============================
+function abrirReservaBloque(td) {
   const aula = td.dataset.aula;
   const hora = td.dataset.hora;
-  alert('Abrir modal para reservar aula '+aula+' a las '+hora);
+  alert('Abrir modal para reservar aula ' + aula + ' a las ' + hora);
 }
 </script>
 
