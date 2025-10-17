@@ -319,14 +319,11 @@ $result_reservas = $con->query($sql_reservas);
 </section>
 
 <!-- FORM HORARIO -->
-<!-- FORM HORARIO -->
 <section id="form-horario" class="formulario" style="display:none;">
   <button type="button" class="cerrar" onclick="cerrarForm('form-horario')">✖</button>
   <form action="procesar-horario.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Horario</h2>
     <div class="row g-3">
-      
-      <!-- Asignatura -->
       <div class="col-md-6">
         <label for="asignaturaHorario" class="form-label">Asignatura</label>
         <select class="form-select" id="asignaturaHorario" name="id_asignatura" required>
@@ -340,8 +337,6 @@ $result_reservas = $con->query($sql_reservas);
           ?>
         </select>
       </div>
-
-      <!-- Día -->
       <div class="col-md-6">
         <label for="diaHorario" class="form-label">Día</label>
         <select class="form-select" id="diaHorario" name="dia" required>
@@ -353,20 +348,14 @@ $result_reservas = $con->query($sql_reservas);
           <option value="viernes">Viernes</option>
         </select>
       </div>
-
-      <!-- Hora de inicio -->
       <div class="col-md-6">
         <label for="horaInicioHorario" class="form-label">Hora de inicio</label>
         <input type="time" class="form-control" id="horaInicioHorario" name="hora_inicio" required>
       </div>
-
-      <!-- Hora de fin -->
       <div class="col-md-6">
         <label for="horaFinHorario" class="form-label">Hora de fin</label>
         <input type="time" class="form-control" id="horaFinHorario" name="hora_fin" required>
       </div>
-
-      <!-- Grupo -->
       <div class="col-md-6">
         <label for="grupoHorario" class="form-label">Grupo</label>
         <select class="form-select" id="grupoHorario" name="id_grupo" required>
@@ -384,28 +373,6 @@ $result_reservas = $con->query($sql_reservas);
           ?>
         </select>
       </div>
-
-      <!-- Clase -->
-      <div class="col-md-6">
-        <label for="claseHorario" class="form-label">Clase</label>
-        <input type="text" class="form-control" id="claseHorario" name="clase" required placeholder="Ej. Teoría / Práctica">
-      </div>
-
-      <!-- Aula -->
-      <div class="col-md-6">
-        <label for="aulaHorario" class="form-label">Aula</label>
-        <select class="form-select" id="aulaHorario" name="aula" required>
-          <option value="">Seleccione aula...</option>
-          <?php
-          $sql = "SELECT codigo FROM aula ORDER BY codigo";
-          $result = $con->query($sql);
-          while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['codigo'].'">'.$row['codigo'].'</option>';
-          }
-          ?>
-        </select>
-      </div>
-
     </div>
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
