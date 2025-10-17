@@ -51,37 +51,7 @@ require("seguridad.php");
       <a href="horarios.php" class="boton w-100 text-center">Ver Horario</a>
     </div>
 
-    <!-- Tarjeta Enviar Sugerencia -->
-    <div class="estudiante-card">
-      <div class="docente-photo bg-danger text-white fs-1 d-flex justify-content-center align-items-center">
-        <i class="bi bi-pencil-square"></i>
-      </div>
-      <div class="docente-name">Enviar Sugerencia</div>
-      <div class="docente-subject">Reporta un problema o sugerencia</div>
-      <button class="boton w-100 text-center" id="abrirSugerencia">Enviar</button>
-    </div>
 
-  </div>
-</section>
-
-<!-- Overlay sugerencia -->
-<!-- Overlay sugerencia -->
-<div id="overlaySugerenciaDiv" class="formulario-overlay"></div>
-
-
-<!-- Formulario flotante sugerencia -->
-<section id="form-sugerencia" class="formulario">
-  <button type="button" class="cerrar" id="cerrarSugerencia">✖</button>
- <form id="sugerenciaForm" method="POST" action="guardar-sugerencia.php">
-
-    <h2 class="form-title">Sugerencia</h2>
-    <div class="mb-3">
-      <textarea class="form-control" id="mensajeSugerencia" name="mensaje" rows="4" minlength="5" required placeholder="Escribí tu mensaje"></textarea>
-      <div class="invalid-feedback">Debe escribir al menos 5 caracteres.</div>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Enviar</button>
-  </form>
-</section>
 
 <!-- Botón flotante Reporte -->
 <button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>

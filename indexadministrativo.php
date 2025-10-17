@@ -66,11 +66,6 @@ $con = conectar_bd();
     <p>Visualizar y administrar reservas de aulas.</p>
     <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
   </div>
-  <div class="tarjeta">
-  <h3>Sugerencias de Estudiantes</h3>
-  <p>Ver las sugerencias enviadas por los estudiantes.</p>
-  <button class="boton" onclick="mostrarSugerencias()"> ➕ Ver Sugerencias</button>
-</div>
 
 </main>
 
