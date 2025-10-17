@@ -12,8 +12,6 @@ $con = conectar_bd();
   <title>Panel Administrativo - Gestión de Datos</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
-      <link rel="stylesheet" href="styleindexadministrativo.css">
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -259,42 +257,6 @@ $con = conectar_bd();
   </section>
 
 </main>
-<?php
-// Mostrar SweetAlert si hay mensaje de éxito o error
-$tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura'];
-
-foreach ($tipos as $tipo) {
-    if (isset($_SESSION["msg_$tipo"])) {
-        $mensaje = $_SESSION["msg_$tipo"];
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: '$mensaje',
-                confirmButtonColor: '#3085d6'
-            });
-        </script>";
-        unset($_SESSION["msg_$tipo"]);
-    }
-
-    if (isset($_SESSION["error_$tipo"])) {
-        $mensaje = $_SESSION["error_$tipo"];
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '$mensaje',
-                confirmButtonColor: '#d33'
-            });
-        </script>";
-        unset($_SESSION["error_$tipo"]);
-    }
-}
-?>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 
 <?php require("footer.php"); ?>
 </body>

@@ -904,3 +904,149 @@ section p,
   background: #343a40;
 }
 
+/* =================== TABLAS ADMINISTRATIVAS =================== */
+section {
+  margin-bottom: 4rem;
+}
+
+/* Contenedor general */
+.table-responsive {
+  overflow-x: visible !important; /* Evita el scroll lateral */
+  -webkit-overflow-scrolling: auto;
+}
+
+/* Contenedor principal del panel */
+main.contenedor {
+  max-width: 1400px;
+  margin: 3rem auto;
+  background-color: white;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Título principal */
+main h1 {
+  color: var(--primario);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Subtítulos (secciones) */
+section h3 {
+  color: var(--secundario);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-left: 6px solid var(--acento);
+  padding-left: 10px;
+}
+
+/* Tabla */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* Encabezado */
+.table thead {
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.table th {
+  padding: 14px;
+  text-align: center;
+}
+
+/* Filas */
+.table td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Hover suave */
+.table tbody tr {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f7fb;
+  transform: scale(1.01);
+}
+
+/* Bordes más suaves */
+.table-bordered {
+  border: none;
+}
+
+/* Botones */
+.table .btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.table .btn-primary {
+  background-color: var(--secundario);
+  color: white;
+}
+.table .btn-primary:hover {
+  background-color: var(--hover);
+}
+
+.table .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+.table .btn-danger:hover {
+  background-color: #b02a37;
+}
+
+/* Mensajes cuando no hay registros */
+section p {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  main.contenedor {
+    padding: 2rem;
+  }
+
+  .table th, .table td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 10px;
+  }
+
+  .table th, .table td {
+    min-width: 120px;
+  }
+}

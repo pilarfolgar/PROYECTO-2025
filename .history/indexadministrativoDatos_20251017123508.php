@@ -259,42 +259,6 @@ $con = conectar_bd();
   </section>
 
 </main>
-<?php
-// Mostrar SweetAlert si hay mensaje de éxito o error
-$tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura'];
-
-foreach ($tipos as $tipo) {
-    if (isset($_SESSION["msg_$tipo"])) {
-        $mensaje = $_SESSION["msg_$tipo"];
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: '$mensaje',
-                confirmButtonColor: '#3085d6'
-            });
-        </script>";
-        unset($_SESSION["msg_$tipo"]);
-    }
-
-    if (isset($_SESSION["error_$tipo"])) {
-        $mensaje = $_SESSION["error_$tipo"];
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '$mensaje',
-                confirmButtonColor: '#d33'
-            });
-        </script>";
-        unset($_SESSION["error_$tipo"]);
-    }
-}
-?>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 
 <?php require("footer.php"); ?>
 </body>
