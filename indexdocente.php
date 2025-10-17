@@ -11,10 +11,9 @@ $con = conectar_bd();
 <title>Panel Docentes - InfraLex</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="styleindexdocente.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style>
 .docentes-grid {
@@ -38,11 +37,21 @@ $con = conectar_bd();
     margin: 0 auto 0.5rem auto;
 }
 .boton { margin-top: 0.5rem; }
-.lista-miembros { list-style: none; padding-left: 0; }
+.lista-miembros { 
+    list-style: none; 
+    padding-left: 0; 
+    margin-top: 0.5rem; 
+    text-align: left; 
+}
+.lista-miembros li {
+    background: #f1f3f5;
+    margin-bottom: 4px;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
 @media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
 @media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
 </style>
-
 </head>
 <body>
 
@@ -55,15 +64,15 @@ $con = conectar_bd();
     <?php
     $docente_cedula = $_SESSION['cedula'];
 
-    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion, a.nombre AS asignatura_nombre, 
-                   u.nombrecompleto, u.apellido
+    // 1️⃣ OBTENER los grupos y asignaturas del docente
+    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion,
+                   a.id_asignatura, a.nombre AS asignatura_nombre
             FROM docente_asignatura da
             JOIN asignatura a ON da.id_asignatura = a.id_asignatura
-            JOIN grupo_asignatura ga ON a.id_asignatura = ga.id_asignatura
-            JOIN grupo g ON ga.id_grupo = g.id_grupo
-            LEFT JOIN usuario u ON u.id_grupo = g.id_grupo AND u.rol='estudiante'
+            JOIN grupo_asignatura ga ON ga.id_asignatura = a.id_asignatura
+            JOIN grupo g ON g.id_grupo = ga.id_grupo
             WHERE da.cedula_docente = ?
-            ORDER BY g.nombre, a.nombre, u.apellido";
+            ORDER BY g.nombre, a.nombre";
 
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $docente_cedula);
@@ -72,38 +81,50 @@ $con = conectar_bd();
 
     $cursos = [];
     while($row = $result->fetch_assoc()){
-        $key = $row['grupo_nombre'].' - '.$row['asignatura_nombre'];
-        if(!isset($cursos[$key])){
-            $cursos[$key] = [
-                'grupo_id' => $row['id_grupo'],
-                'grupo_nombre' => $row['grupo_nombre'],
-                'asignatura_nombre' => $row['asignatura_nombre'],
-                'orientacion' => $row['orientacion'],
-                'miembros' => []
-            ];
-        }
-        if($row['nombrecompleto']){
-            $cursos[$key]['miembros'][] = $row['nombrecompleto'].' '.$row['apellido'];
-        }
+        $key = $row['id_grupo'].'-'.$row['id_asignatura'];
+        $cursos[$key] = [
+            'grupo_id' => $row['id_grupo'],
+            'grupo_nombre' => $row['grupo_nombre'],
+            'asignatura_nombre' => $row['asignatura_nombre'],
+            'orientacion' => $row['orientacion']
+        ];
     }
-
     $stmt->close();
 
+    // 2️⃣ MOSTRAR cada curso con botón de miembros
     foreach($cursos as $curso){
         echo '<div class="docente-card">';
         echo '<div class="docente-photo"></div>';
-        echo '<div class="docente-name fw-bold">'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'</div>';
-        echo '<div class="docente-subject text-muted">'.htmlspecialchars($curso['orientacion']).'</div>';
-        echo '<button class="btn btn-outline-primary boton ver-miembros" data-clase="'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'">Ver miembros</button>';
-        echo '<ul class="lista-miembros" style="display:none;">';
-        foreach($curso['miembros'] as $miembro){
-            echo '<li>'.htmlspecialchars($miembro).'</li>';
-        }
-        echo '</ul></div>';
+        echo '<div class="fw-bold">'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'</div>';
+        echo '<div class="text-muted">'.htmlspecialchars($curso['orientacion']).'</div>';
+        echo '<button class="btn btn-outline-primary boton ver-miembros" 
+                data-grupo="'.htmlspecialchars($curso['grupo_id']).'" 
+                data-curso="'.htmlspecialchars($curso['grupo_nombre'].' - '.$curso['asignatura_nombre']).'">
+                Ver miembros
+              </button>';
+        echo '</div>';
     }
     ?>
   </div>
 </section>
+
+<!-- MODAL DE MIEMBROS -->
+<div class="modal fade" id="modalMiembros" tabindex="-1" aria-labelledby="modalMiembrosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalMiembrosLabel">Miembros del grupo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <ul id="listaMiembros" class="lista-miembros"></ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- SECCIÓN MIS RESERVAS -->
 <section class="container mt-5">
@@ -256,17 +277,37 @@ $con = conectar_bd();
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// Mostrar miembros en modal
 document.querySelectorAll('.ver-miembros').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const ul = btn.nextElementSibling;
-        ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
-    });
+  btn.addEventListener('click', async () => {
+    const grupoId = btn.dataset.grupo;
+    const curso = btn.dataset.curso;
+    document.getElementById('modalMiembrosLabel').textContent = curso;
+
+    // Petición AJAX para traer miembros
+    const response = await fetch('obtener_miembros.php?id_grupo=' + grupoId);
+    const data = await response.json();
+
+    const ul = document.getElementById('listaMiembros');
+    ul.innerHTML = '';
+
+    if (data.length > 0) {
+      data.forEach(m => {
+        ul.innerHTML += `<li>${m.nombrecompleto} ${m.apellido}</li>`;
+      });
+    } else {
+      ul.innerHTML = '<li><em>Sin estudiantes asignados</em></li>';
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('modalMiembros'));
+    modal.show();
+  });
 });
 
 function abrirReservaBloque(td){
-    const aula = td.dataset.aula;
-    const hora = td.dataset.hora;
-    alert('Abrir modal para reservar aula '+aula+' a las '+hora);
+  const aula = td.dataset.aula;
+  const hora = td.dataset.hora;
+  alert('Abrir modal para reservar aula '+aula+' a las '+hora);
 }
 </script>
 
