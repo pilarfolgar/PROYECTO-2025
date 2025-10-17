@@ -54,6 +54,8 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
             $_SESSION['rol'] = $fila['rol'];
             
     $_SESSION['acceso_panel'] = true;
+     echo '<script>
+                    sessionStorage.setItem("token_pestana", "acceso");';
 
             // Redirección según rol
             switch ($fila['rol']) {
