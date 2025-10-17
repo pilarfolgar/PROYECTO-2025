@@ -22,11 +22,11 @@ if(!$grupo) die("Grupo no encontrado");
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $orientacion = $_POST['orientacion'];
-    $cantidad = $_POST['cantidad'];
+    $cantidad_estudiantes = (int)$_POST['cantidad_estudiantes'];
 
-    $sql = "UPDATE grupo SET nombre=?, orientacion=?, cantidad=? WHERE id_grupo=?";
+    $sql = "UPDATE grupo SET nombre=?, orientacion=?, cantidad_estudiantes=? WHERE id_grupo=?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("ssii", $nombre, $orientacion, $cantidad, $id);
+    $stmt->bind_param("ssii", $nombre, $orientacion, $cantidad_estudiantes, $id);
     $stmt->execute();
 
     $_SESSION['msg_grupo'] = "Grupo actualizado con éxito";
@@ -68,8 +68,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="mb-3">
-      <label for="cantidad" class="form-label">Cantidad de estudiantes</label>
-      <input type="number" class="form-control" id="cantidad" name="cantidad" value="<?= $grupo['cantidad'] ?>" min="1" required>
+      <label for="cantidad_estudiantes" class="form-label">Cantidad de estudiantes</label>
+      <input type="number" class="form-control" id="cantidad_estudiantes" name="cantidad_estudiantes" value="<?= $grupo['cantidad_estudiantes'] ?>" min="1" required>
     </div>
 
     <button type="submit" class="boton mt-3">Guardar cambios</button>
@@ -79,4 +79,4 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php require("footer.php"); ?>
 </body>
-</html>
+</htm
