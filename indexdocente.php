@@ -204,7 +204,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
           $sql_aulas = "SELECT codigo FROM aula ORDER BY codigo";
           $result_aulas = $con->query($sql_aulas);
           $aulas = [];
-          while ($row = $result_aulas->fetch_assoc()) {
+          while($row = $result_aulas->fetch_assoc()){
               $aulas[] = $row['codigo'];
               echo '<th>'.htmlspecialchars($row['codigo']).'</th>';
           }
