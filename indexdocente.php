@@ -8,12 +8,6 @@ $con = conectar_bd();
 // ================================
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $id_grupo = intval($_GET['id_grupo'] ?? 0);
-    
-    if ($id_grupo <= 0) {
-        header('Content-Type: application/json');
-        echo json_encode([]);
-        exit;
-    }
 
     $sql = "SELECT nombrecompleto, apellido 
             FROM usuario 
@@ -28,10 +22,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         $miembros[] = $row;
     }
 
-    if (ob_get_length()) ob_end_clean(); // Limpiar buffer antes de JSON
     header('Content-Type: application/json');
     echo json_encode($miembros);
-    exit;
+    exit; // 🔸 Detiene el resto del HTML
 }
 ?>
 <!DOCTYPE html>
@@ -211,7 +204,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
           $sql_aulas = "SELECT codigo FROM aula ORDER BY codigo";
           $result_aulas = $con->query($sql_aulas);
           $aulas = [];
-          while($row = $result_aulas->fetch_assoc()){
+          while ($row = $result_aulas->fetch_assoc()) {
               $aulas[] = $row['codigo'];
               echo '<th>'.htmlspecialchars($row['codigo']).'</th>';
           }
