@@ -1,64 +1,70 @@
 <?php
-require("seguridad.php");
 require("conexion.php");
+
 $con = conectar_bd();
+$id_grupo = $_SESSION['id_grupo']; // ID del grupo del estudiante desde la sesión
 
-// Cedula del usuario logueado
-$cedula = $_SESSION['cedula'];
-
-// Busco a qué grupo pertenece el usuario
-$query_grupo = "SELECT id_grupo FROM usuario WHERE cedula = '$cedula'";
-$res_grupo = mysqli_query($con, $query_grupo);
-$grupo = mysqli_fetch_assoc($res_grupo)['id_grupo'] ?? null;
-
-// Si el usuario tiene un grupo asignado, obtengo sus horarios
-if ($grupo) {
-    $query_horarios = "
-        SELECT h.dia, h.hora_inicio, h.hora_fin, a.nombre_asignatura
+// Consultamos los horarios del grupo
+$sql = "SELECT h.id_horario, a.nombre AS asignatura, h.dia, h.hora_inicio, h.hora_fin
         FROM horarios h
-        INNER JOIN asignaturas a ON h.id_asignatura = a.id_asignatura
-        WHERE h.id_grupo = '$grupo'
-        ORDER BY FIELD(h.dia,'Lunes','Martes','Miércoles','Jueves','Viernes'), h.hora_inicio
-    ";
-    $result = mysqli_query($con, $query_horarios);
-} else {
-    $result = null;
-}
+        INNER JOIN grupo_horario gh ON h.id_horario = gh.id_horario
+        INNER JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+        WHERE gh.id_grupo = ?
+        ORDER BY FIELD(h.dia, 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'), h.hora_inicio";
+
+$stmt = $con->prepare($sql);
+$stmt->bind_param("i", $id_grupo);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Mi horario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horario del Grupo</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4">
-    <h2 class="mb-4">Mi horario</h2>
+<body>
+<?php require("header.php"); ?>
 
-    <?php if ($result && mysqli_num_rows($result) > 0): ?>
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Día</th>
-                    <th>Hora Inicio</th>
-                    <th>Hora Fin</th>
-                    <th>Asignatura</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                    <tr>
-                        <td><?php echo $row['dia']; ?></td>
-                        <td><?php echo $row['hora_inicio']; ?></td>
-                        <td><?php echo $row['hora_fin']; ?></td>
-                        <td><?php echo $row['nombre_asignatura']; ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+<main class="container my-5">
+    <h2 class="text-center mb-4">Horario de tu grupo</h2>
+
+    <?php if($result->num_rows > 0): ?>
+    <table class="table table-bordered table-striped mx-auto" style="max-width:800px;">
+        <thead class="table-dark">
+            <tr>
+                <th>Asignatura</th>
+                <th>Día</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['asignatura']) ?></td>
+                <td><?= htmlspecialchars($row['dia']) ?></td>
+                <td><?= htmlspecialchars($row['hora_inicio']) ?></td>
+                <td><?= htmlspecialchars($row['hora_fin']) ?></td>
+            </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
     <?php else: ?>
-        <p>No hay horarios cargados para tu grupo.</p>
+        <div class="alert alert-info text-center">No hay horarios cargados para tu grupo.</div>
     <?php endif; ?>
+</main>
+
+<?php
+$stmt->close();
+$con->close();
+require("footer.php");
+?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

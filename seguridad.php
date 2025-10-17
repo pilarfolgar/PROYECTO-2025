@@ -7,25 +7,19 @@ if (!isset($_SESSION['cedula'])) {
     exit();
 }
 
-// Verifica que haya "acceso autorizado" desde login
+// Si no existe el flag de acceso desde login, pedimos login
 if (!isset($_SESSION['acceso_panel']) || $_SESSION['acceso_panel'] !== true) {
-    // Si no hay acceso autorizado y no es una recarga de la misma sesión
-    if (!isset($_SESSION['pagina_actual']) || $_SESSION['pagina_actual'] !== $_SERVER['REQUEST_URI']) {
-        session_unset();
-        session_destroy();
-        header("Location: iniciosesion.php");
-        exit();
-    }
+    // Si no hay el flag, significa que es un acceso directo desde link
+    session_unset();
+    session_destroy();
+    header("Location: iniciosesion.php");
+    exit();
 }
 
-// Si no está seteada la página actual, la guardamos (primer acceso)
-if (!isset($_SESSION['pagina_actual'])) {
-    $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
-}
+// Consumir acceso_panel solo la primera vez
+unset($_SESSION['acceso_panel']);
 
-// Consumir acceso_panel solo en el primer acceso
-if (isset($_SESSION['acceso_panel'])) {
-    unset($_SESSION['acceso_panel']);
-}
+// Desde aquí en adelante, mientras dure la sesión, el usuario puede recargar
 ?>
+
 
