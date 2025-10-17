@@ -2,11 +2,6 @@
 session_start();
 require("conexion.php"); // Conexión a la base de datos
 
-// Verificar que la conexión esté OK
-if (!$conn) {
-    die("Error: La conexión a la base de datos falló.");
-}
-
 // Verificar que el usuario esté logueado
 if (!isset($_SESSION['cedula'])) {
     die("Error: Usuario no identificado.");
@@ -25,13 +20,13 @@ if ($fila = $resultado->fetch_assoc()) {
     $idGrupo = $fila['id_grupo'];
 
     // Obtener nombre del grupo desde tabla grupo
-    $stmt2 = $conn->prepare("SELECT nombre_grupo FROM grupo WHERE id = ?");
+    $stmt2 = $conn->prepare("SELECT nombre FROM grupo WHERE id_grupo = ?");
     $stmt2->bind_param("i", $idGrupo);
     $stmt2->execute();
     $resultado2 = $stmt2->get_result();
 
     if ($fila2 = $resultado2->fetch_assoc()) {
-        $grupoNombre = $fila2['nombre_grupo'];
+        $grupoNombre = $fila2['nombre'];
     } else {
         $grupoNombre = "Grupo no encontrado";
     }
