@@ -1,5 +1,20 @@
 <?php 
 require("seguridad.php");
+require("conexion.php"); // Archivo donde conectas a la base de datos
+
+// Obtener grupo del estudiante desde la base de datos
+$grupo = "Sin asignar"; // Valor por defecto
+if (isset($_SESSION['id_usuario'])) {
+    $idUsuario = $_SESSION['id_usuario'];
+    $stmt = $conn->prepare("SELECT grupo FROM estudiantes WHERE id = ?");
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    if ($fila = $resultado->fetch_assoc()) {
+        $grupo = $fila['grupo'];
+    }
+    $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -48,12 +63,9 @@ require("seguridad.php");
       </div>
       <div class="docente-name">Mi Clase</div>
       <div class="docente-subject">
-        <?php
-          // Muestra el grupo al que pertenece el estudiante desde la sesión
-          echo isset($_SESSION['grupo']) ? $_SESSION['grupo'] : "Sin asignar";
-        ?>
+        <?php echo htmlspecialchars($grupo); ?>
       </div>
-      <a href="mi-clase.php" class="boton w-100 text-center">Ver Clase</a>
+      <!-- Sin enlace -->
     </div>
 
   </div>
