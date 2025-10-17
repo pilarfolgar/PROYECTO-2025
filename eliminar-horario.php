@@ -1,17 +1,20 @@
 <?php
+session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+$id = $_GET['id'] ?? null;
+if ($id) {
+    $sql = "DELETE FROM horarios WHERE id_horario = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id);
 
-    $sql = "DELETE FROM horarios WHERE id_horario = $id";
-    if ($con->query($sql)) {
-        header("Location: indexadministrativoDatos.php?msg=Horario eliminado correctamente");
+    if ($stmt->execute()) {
+        $_SESSION['msg_horario'] = "Horario eliminado correctamente 🗑️";
     } else {
-        echo "Error al eliminar horario: " . $con->error;
+        $_SESSION['error_horario'] = "Error al eliminar horario: " . $stmt->error;
     }
-} else {
-    echo "ID de horario no especificado.";
 }
+header("Location: indexadministrativoDatos.php");
+exit();
 ?>

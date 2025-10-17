@@ -4,23 +4,7 @@ require("conexion.php");
 $con = conectar_bd();
 
 $cedula = $_GET['cedula'] ?? null;
-
-if(!$cedula){
-    header("Location: indexadministrativoDatos.php");
-    exit();
-}
-
-// Guardar cambios
-if(isset($_POST['guardar'])){
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $email = $_POST['email'];
-    $telefono = $_POST['telefono'];
-
-    $sql = "UPDATE usuario SET nombrecompleto=?, apellido=?, email=?, telefono=? WHERE cedula=?";
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("ssssi",$nombre,$apellido,$email,$telefono,$cedula);
-    $stmt->execute();
+if (!$cedula) {
     header("Location: indexadministrativoDatos.php");
     exit();
 }
@@ -28,12 +12,34 @@ if(isset($_POST['guardar'])){
 // Traer datos actuales
 $sql = "SELECT * FROM usuario WHERE cedula=?";
 $stmt = $con->prepare($sql);
-$stmt->bind_param("i",$cedula);
+$stmt->bind_param("i", $cedula);
 $stmt->execute();
 $result = $stmt->get_result();
 $docente = $result->fetch_assoc();
-?>
 
+if (!$docente) {
+    $_SESSION['error_docente'] = "Docente no encontrado.";
+    header("Location: indexadministrativoDatos.php");
+    exit();
+}
+
+// Guardar cambios
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $email = $_POST['email'];
+    $telefono = $_POST['telefono'];
+
+    $sql = "UPDATE usuario SET nombrecompleto=?, apellido=?, email=?, telefono=? WHERE cedula=?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssssi", $nombre, $apellido, $email, $telefono, $cedula);
+    $stmt->execute();
+
+    $_SESSION['msg_docente'] = "Docente modificado con éxito ✅";
+    header("Location: indexadministrativoDatos.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,27 +49,12 @@ $docente = $result->fetch_assoc();
 </head>
 <body>
 <div class="container mt-4">
-    <h2>Editar Docente</h2>
-    <form method="POST">
-        <div class="mb-3">
-            <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($docente['nombrecompleto']) ?>" required>
-        </div>
-        <div class="mb-3">
-            <label>Apellido</label>
-            <input type="text" name="apellido" class="form-control" value="<?= htmlspecialchars($docente['apellido']) ?>" required>
-        </div>
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($docente['email']) ?>" required>
-        </div>
-        <div class="mb-3">
-            <label>Teléfono</label>
-            <input type="text" name="telefono" class="form-control" value="<?= htmlspecialchars($docente['telefono']) ?>">
-        </div>
-        <button type="submit" name="guardar" class="btn btn-success">Guardar Cambios</button>
-        <a href="indexadministrativoDatos.php" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
-</body>
-</html>
+<h2>✏️ Editar Docente</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label>Nombre</label>
+        <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($docente['nombrecompleto']) ?>" required>
+    </div>
+    <div class="mb-3">
+        <label>Apellido</label>
+        <input type="text" name

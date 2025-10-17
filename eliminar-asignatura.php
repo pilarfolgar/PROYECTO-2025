@@ -1,17 +1,20 @@
 <?php
+session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+$id = $_GET['id'] ?? null;
+if ($id) {
+    $sql = "DELETE FROM asignatura WHERE id_asignatura = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id);
 
-    $sql = "DELETE FROM asignaturas WHERE id_asignatura = $id";
-    if ($con->query($sql)) {
-        header("Location: indexadministrativoDatos.php?msg=Asignatura eliminada correctamente");
+    if ($stmt->execute()) {
+        $_SESSION['msg_asignatura'] = "Asignatura eliminada correctamente 🗑️";
     } else {
-        echo "Error al eliminar asignatura: " . $con->error;
+        $_SESSION['error_asignatura'] = "Error al eliminar asignatura: " . $stmt->error;
     }
-} else {
-    echo "ID de asignatura no especificado.";
 }
+header("Location: indexadministrativoDatos.php");
+exit();
 ?>

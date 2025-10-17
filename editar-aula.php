@@ -1,13 +1,17 @@
 <?php
+session_start();
 require("conexion.php");
 $con = conectar_bd();
 
 if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
 
-    // Traer datos actuales
-    $sql = "SELECT * FROM aula WHERE codigo = '$codigo'";
-    $result = $con->query($sql);
+    // Traer datos actuales de forma segura
+    $sql = "SELECT * FROM aula WHERE codigo = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $codigo);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $aula = $result->fetch_assoc();
 }
 
@@ -17,35 +21,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ubicacion = $_POST['ubicacion'];
     $tipo = $_POST['tipo'];
 
-    $sql = "UPDATE aula SET capacidad='$capacidad', ubicacion='$ubicacion', tipo='$tipo' WHERE codigo='$codigo'";
-    if ($con->query($sql)) {
-        header("Location: indexadministrativoDatos.php?msg=Aula actualizada correctamente");
+    // Actualizar con prepared statement
+    $sql = "UPDATE aula SET capacidad = ?, ubicacion = ?, tipo = ? WHERE codigo = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssss", $capacidad, $ubicacion, $tipo, $codigo);
+
+    if ($stmt->execute()) {
+        $_SESSION['msg_aula'] = "Aula modificada con éxito ✅";
+        header("Location: indexadministrativoDatos.php");
+        exit();
     } else {
-        echo "Error al actualizar: " . $con->error;
+        echo "Error al actualizar: " . $stmt->error;
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Editar Aula</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h2>Editar Aula</h2>
-<form method="POST">
-    <input type="hidden" name="codigo" value="<?= htmlspecialchars($aula['codigo']) ?>">
-    <label>Capacidad:</label>
-    <input type="text" name="capacidad" value="<?= htmlspecialchars($aula['capacidad']) ?>" required><br>
+<div class="container mt-4">
+    <h2>✏️ Editar Aula</h2>
+    <form method="POST">
+        <input type="hidden" name="codigo" value="<?= htmlspecialchars($aula['codigo']) ?>">
+        
+        <div class="mb-3">
+            <label>Capacidad:</label>
+            <input type="text" name="capacidad" class="form-control" value="<?= htmlspecialchars($aula['capacidad']) ?>" required>
+        </div>
 
-    <label>Ubicación:</label>
-    <input type="text" name="ubicacion" value="<?= htmlspecialchars($aula['ubicacion']) ?>" required><br>
+        <div class="mb-3">
+            <label>Ubicación:</label>
+            <input type="text" name="ubicacion" class="form-control" value="<?= htmlspecialchars($aula['ubicacion']) ?>" required>
+        </div>
 
-    <label>Tipo:</label>
-    <input type="text" name="tipo" value="<?= htmlspecialchars($aula['tipo']) ?>" required><br>
+        <div class="mb-3">
+            <label>Tipo:</label>
+            <input type="text" name="tipo" class="form-control" value="<?= htmlspecialchars($aula['tipo']) ?>" required>
+        </div>
 
-    <button type="submit">Guardar Cambios</button>
-</form>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <a href="indexadministrativoDatos.php" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
 </body>
 </html>
