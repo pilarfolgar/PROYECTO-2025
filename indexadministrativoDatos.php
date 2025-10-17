@@ -3,7 +3,7 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Asignaturas con docentes
+// Consultas...
 $sql_asignaturas = "SELECT a.id_asignatura, a.nombre, a.codigo, 
         GROUP_CONCAT(u.nombrecompleto, ' ', u.apellido SEPARATOR ', ') AS docentes
         FROM asignatura a
@@ -13,15 +13,12 @@ $sql_asignaturas = "SELECT a.id_asignatura, a.nombre, a.codigo,
         ORDER BY a.nombre";
 $result_asignaturas = $con->query($sql_asignaturas);
 
-// Docentes
 $sql_docentes = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
 $result_docentes = $con->query($sql_docentes);
 
-// Aulas
 $sql_aulas = "SELECT * FROM aula ORDER BY codigo";
 $result_aulas = $con->query($sql_aulas);
 
-// Grupos
 $sql_grupos = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
                FROM grupo g
                LEFT JOIN grupo_asignatura ga ON g.id_grupo = ga.id_grupo
@@ -30,7 +27,6 @@ $sql_grupos = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
                ORDER BY g.nombre";
 $result_grupos = $con->query($sql_grupos);
 
-// Horarios
 $sql_horarios = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
                  FROM horario h
                  LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
@@ -39,58 +35,75 @@ $sql_horarios = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
 $result_horarios = $con->query($sql_horarios);
 ?>
 
-<h2>Asignaturas</h2>
-<table class="table table-bordered table-striped">
-  <thead class="table-dark">
-    <tr>
-      <th>Nombre</th>
-      <th>Código</th>
-      <th>Docentes</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php while($asignatura = $result_asignaturas->fetch_assoc()): ?>
-      <tr>
-        <td><?= htmlspecialchars($asignatura['nombre']) ?></td>
-        <td><?= htmlspecialchars($asignatura['codigo']) ?></td>
-        <td><?= htmlspecialchars($asignatura['docentes'] ?? '—') ?></td>
-        <td>
-          <a href="editar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
-          <a href="eliminar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar esta asignatura?');">🗑️ Eliminar</a>
-        </td>
-      </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos Administrativos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">📋 Datos Administrativos</h1>
 
-<h2>Docentes</h2>
-<table class="table table-bordered table-striped">
-  <thead class="table-dark">
-    <tr>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Cédula</th>
-      <th>Email</th>
-      <th>Teléfono</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php while($docente = $result_docentes->fetch_assoc()): ?>
-      <tr>
-        <td><?= htmlspecialchars($docente['nombrecompleto']) ?></td>
-        <td><?= htmlspecialchars($docente['apellido']) ?></td>
-        <td><?= htmlspecialchars($docente['cedula']) ?></td>
-        <td><?= htmlspecialchars($docente['email']) ?></td>
-        <td><?= htmlspecialchars($docente['telefono']) ?></td>
-        <td>
-          <a href="editar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
-          <a href="eliminar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar este docente?');">🗑️ Eliminar</a>
-        </td>
-      </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
+    <h2>Asignaturas</h2>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Código</th>
+          <th>Docentes</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while($asignatura = $result_asignaturas->fetch_assoc()): ?>
+          <tr>
+            <td><?= htmlspecialchars($asignatura['nombre']) ?></td>
+            <td><?= htmlspecialchars($asignatura['codigo']) ?></td>
+            <td><?= htmlspecialchars($asignatura['docentes'] ?? '—') ?></td>
+            <td>
+              <a href="editar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
+              <a href="eliminar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar esta asignatura?');">🗑️ Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
 
-<!-- Repetir similar para Aulas, Grupos y Horarios -->
+    <h2>Docentes</h2>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Cédula</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while($docente = $result_docentes->fetch_assoc()): ?>
+          <tr>
+            <td><?= htmlspecialchars($docente['nombrecompleto']) ?></td>
+            <td><?= htmlspecialchars($docente['apellido']) ?></td>
+            <td><?= htmlspecialchars($docente['cedula']) ?></td>
+            <td><?= htmlspecialchars($docente['email']) ?></td>
+            <td><?= htmlspecialchars($docente['telefono']) ?></td>
+            <td>
+              <a href="editar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
+              <a href="eliminar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar este docente?');">🗑️ Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+
+    <!-- Aquí agregas tablas para Aulas, Grupos y Horarios de forma similar -->
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
