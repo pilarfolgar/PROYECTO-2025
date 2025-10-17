@@ -2,108 +2,255 @@
 session_start();
 require("conexion.php");
 $con = conectar_bd();
-
-// Consultas...
-$sql_asignaturas = "SELECT a.id_asignatura, a.nombre, a.codigo, 
-        GROUP_CONCAT(u.nombrecompleto, ' ', u.apellido SEPARATOR ', ') AS docentes
-        FROM asignatura a
-        LEFT JOIN docente_asignatura da ON a.id_asignatura = da.id_asignatura
-        LEFT JOIN usuario u ON da.cedula_docente = u.cedula
-        GROUP BY a.id_asignatura
-        ORDER BY a.nombre";
-$result_asignaturas = $con->query($sql_asignaturas);
-
-$sql_docentes = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
-$result_docentes = $con->query($sql_docentes);
-
-$sql_aulas = "SELECT * FROM aula ORDER BY codigo";
-$result_aulas = $con->query($sql_aulas);
-
-$sql_grupos = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
-               FROM grupo g
-               LEFT JOIN grupo_asignatura ga ON g.id_grupo = ga.id_grupo
-               LEFT JOIN asignatura a ON ga.id_asignatura = a.id_asignatura
-               GROUP BY g.id_grupo
-               ORDER BY g.nombre";
-$result_grupos = $con->query($sql_grupos);
-
-$sql_horarios = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
-                 FROM horario h
-                 LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
-                 LEFT JOIN grupo g ON h.id_grupo = g.id_grupo
-                 ORDER BY h.dia, h.hora_inicio";
-$result_horarios = $con->query($sql_horarios);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos Administrativos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrativo - Gestión de Datos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-<div class="container mt-4">
-    <h1 class="mb-4">📋 Datos Administrativos</h1>
+<?php require("header.php"); ?>
 
-    <h2>Asignaturas</h2>
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Código</th>
-          <th>Docentes</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php while($asignatura = $result_asignaturas->fetch_assoc()): ?>
+<main class="contenedor">
+  <h1 class="mb-4">📊 Gestión de Datos</h1>
+
+  <!-- DOCENTES -->
+  <section class="mb-5">
+    <h3>Docentes</h3>
+    <?php
+    $sql = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
           <tr>
-            <td><?= htmlspecialchars($asignatura['nombre']) ?></td>
-            <td><?= htmlspecialchars($asignatura['codigo']) ?></td>
-            <td><?= htmlspecialchars($asignatura['docentes'] ?? '—') ?></td>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= $row['cedula'] ?></td>
+            <td><?= htmlspecialchars($row['nombrecompleto']) ?></td>
+            <td><?= htmlspecialchars($row['apellido']) ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= htmlspecialchars($row['telefono']) ?></td>
             <td>
-              <a href="editar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
-              <a href="eliminar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar esta asignatura?');">🗑️ Eliminar</a>
+              <a href="editar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este docente?');">Eliminar</a>
             </td>
           </tr>
         <?php endwhile; ?>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay docentes registrados.</p>
+    <?php endif; ?>
+  </section>
 
-    <h2>Docentes</h2>
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Cédula</th>
-          <th>Email</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php while($docente = $result_docentes->fetch_assoc()): ?>
+  <!-- ASIGNATURAS -->
+  <section class="mb-5">
+    <h3>Asignaturas</h3>
+    <?php
+    $sql = "SELECT a.*, GROUP_CONCAT(u.nombrecompleto,' ',u.apellido SEPARATOR ', ') AS docentes_asignados
+            FROM asignatura a
+            LEFT JOIN docente_asignatura da ON a.id_asignatura = da.id_asignatura
+            LEFT JOIN usuario u ON da.cedula_docente = u.cedula
+            GROUP BY a.id_asignatura
+            ORDER BY a.nombre";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
           <tr>
-            <td><?= htmlspecialchars($docente['nombrecompleto']) ?></td>
-            <td><?= htmlspecialchars($docente['apellido']) ?></td>
-            <td><?= htmlspecialchars($docente['cedula']) ?></td>
-            <td><?= htmlspecialchars($docente['email']) ?></td>
-            <td><?= htmlspecialchars($docente['telefono']) ?></td>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Código</th>
+            <th>Docentes</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= $row['id_asignatura'] ?></td>
+            <td><?= htmlspecialchars($row['nombre']) ?></td>
+            <td><?= htmlspecialchars($row['codigo']) ?></td>
+            <td><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
             <td>
-              <a href="editar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
-              <a href="eliminar-docente.php?id=<?= $docente['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que desea eliminar este docente?');">🗑️ Eliminar</a>
+              <a href="editar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asignatura?');">Eliminar</a>
             </td>
           </tr>
         <?php endwhile; ?>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay asignaturas registradas.</p>
+    <?php endif; ?>
+  </section>
 
-    <!-- Aquí agregas tablas para Aulas, Grupos y Horarios de forma similar -->
+  <!-- HORARIOS -->
+  <section class="mb-5">
+    <h3>Horarios</h3>
+    <?php
+    $sql = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
+            FROM horarios h
+            LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+            LEFT JOIN grupo g ON h.id_grupo = g.id_grupo
+            ORDER BY h.dia, h.hora_inicio";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Asignatura</th>
+            <th>Día</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+            <th>Grupo</th>
+            <th>Clase</th>
+            <th>Aula</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= $row['id_horario'] ?></td>
+            <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
+            <td><?= $row['dia'] ?></td>
+            <td><?= $row['hora_inicio'] ?></td>
+            <td><?= $row['hora_fin'] ?></td>
+            <td><?= htmlspecialchars($row['grupo'] ?? '—') ?></td>
+            <td><?= htmlspecialchars($row['clase']) ?></td>
+            <td><?= htmlspecialchars($row['aula']) ?></td>
+            <td>
+              <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay horarios registrados.</p>
+    <?php endif; ?>
+  </section>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AULAS -->
+  <section class="mb-5">
+    <h3>Aulas</h3>
+    <?php
+    $sql = "SELECT * FROM aula ORDER BY codigo";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Código</th>
+            <th>Capacidad</th>
+            <th>Ubicación</th>
+            <th>Tipo</th>
+            <th>Recursos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= htmlspecialchars($row['codigo']) ?></td>
+            <td><?= $row['capacidad'] ?></td>
+            <td><?= htmlspecialchars($row['ubicacion']) ?></td>
+            <td><?= htmlspecialchars($row['tipo']) ?></td>
+            <td><?= htmlspecialchars($row['recursos']) ?></td>
+            <td>
+              <a href="editar-aula.php?codigo=<?= $row['codigo'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-aula.php?codigo=<?= $row['codigo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta aula?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay aulas registradas.</p>
+    <?php endif; ?>
+  </section>
+
+  <!-- GRUPOS -->
+  <section class="mb-5">
+    <h3>Grupos</h3>
+    <?php
+    $sql = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
+            FROM grupo g
+            LEFT JOIN grupo_asignatura ga ON g.id_grupo = ga.id_grupo
+            LEFT JOIN asignatura a ON ga.id_asignatura = a.id_asignatura
+            GROUP BY g.id_grupo
+            ORDER BY g.nombre";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Orientación</th>
+            <th>Cant. Estudiantes</th>
+            <th>Asignaturas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= $row['id_grupo'] ?></td>
+            <td><?= htmlspecialchars($row['nombre']) ?></td>
+            <td><?= htmlspecialchars($row['orientacion']) ?></td>
+            <td><?= $row['cantidad'] ?></td>
+            <td><?= htmlspecialchars($row['asignaturas'] ?? '—') ?></td>
+            <td>
+              <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay grupos registrados.</p>
+    <?php endif; ?>
+  </section>
+
+</main>
+
+<?php require("footer.php"); ?>
 </body>
 </html>
