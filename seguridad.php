@@ -28,3 +28,4 @@ if (isset($_SESSION['acceso_panel'])) {
     unset($_SESSION['acceso_panel']);
 }
 ?>
+
