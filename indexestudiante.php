@@ -31,16 +31,6 @@ require("seguridad.php");
       <a href="notificaciones.php" class="boton w-100 text-center">Ir a Notificaciones</a>
     </div>
 
-    <!-- Tarjeta Avisos -->
-    <div class="estudiante-card">
-      <div class="docente-photo bg-success text-white fs-1 d-flex justify-content-center align-items-center">
-        <i class="bi bi-clipboard"></i>
-      </div>
-      <div class="docente-name">Avisos</div>
-      <div class="docente-subject">Consulta los avisos generales</div>
-      <a href="avisos.php" class="boton w-100 text-center">Ir a Avisos</a>
-    </div>
-
     <!-- Tarjeta Horario -->
     <div class="estudiante-card">
       <div class="docente-photo bg-warning text-white fs-1 d-flex justify-content-center align-items-center">
@@ -51,7 +41,23 @@ require("seguridad.php");
       <a href="horarios.php" class="boton w-100 text-center">Ver Horario</a>
     </div>
 
+    <!-- Tarjeta Clase del Estudiante -->
+    <div class="estudiante-card">
+      <div class="docente-photo bg-info text-white fs-1 d-flex justify-content-center align-items-center">
+        <i class="bi bi-people"></i>
+      </div>
+      <div class="docente-name">Mi Clase</div>
+      <div class="docente-subject">
+        <?php
+          // Muestra el grupo al que pertenece el estudiante desde la sesión
+          echo isset($_SESSION['grupo']) ? $_SESSION['grupo'] : "Sin asignar";
+        ?>
+      </div>
+      <a href="mi-clase.php" class="boton w-100 text-center">Ver Clase</a>
+    </div>
 
+  </div>
+</section>
 
 <!-- Botón flotante Reporte -->
 <button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
@@ -100,4 +106,3 @@ require("seguridad.php");
 <script src="estudiantes.js"></script>
 </body>
 </html>
-
