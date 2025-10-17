@@ -1,4 +1,5 @@
 <?php
+require("seguridad.php");
 require("conexion.php");
 $con = conectar_bd();
 
@@ -47,10 +48,10 @@ if ($grupo) {
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['dia']); ?></td>
-                        <td><?php echo htmlspecialchars($row['hora_inicio']); ?></td>
-                        <td><?php echo htmlspecialchars($row['hora_fin']); ?></td>
-                        <td><?php echo htmlspecialchars($row['nombre_asignatura']); ?></td>
+                        <td><?php echo $row['dia']; ?></td>
+                        <td><?php echo $row['hora_inicio']; ?></td>
+                        <td><?php echo $row['hora_fin']; ?></td>
+                        <td><?php echo $row['nombre_asignatura']; ?></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
