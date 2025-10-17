@@ -11,7 +11,7 @@ if (isset($_GET['codigo'])) {
     // Eliminamos el aula
     $sql = "DELETE FROM aula WHERE codigo = '$codigo'";
     if ($con->query($sql)) {
-        header("Location: indexadministrativo_datos.php?msg=Aula eliminada correctamente");
+        header("Location: indexadministrativoDatos.php?msg=Aula eliminada correctamente");
     } else {
         echo "Error al eliminar el aula: " . $con->error;
     }

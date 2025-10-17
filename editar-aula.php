@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sql = "UPDATE aula SET capacidad='$capacidad', ubicacion='$ubicacion', tipo='$tipo' WHERE codigo='$codigo'";
     if ($con->query($sql)) {
-        header("Location: indexadministrativo_datos.php?msg=Aula actualizada correctamente");
+        header("Location: indexadministrativoDatos.php?msg=Aula actualizada correctamente");
     } else {
         echo "Error al actualizar: " . $con->error;
     }

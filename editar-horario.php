@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             SET id_asignatura='$id_asignatura', dia='$dia', hora_inicio='$hora_inicio', hora_fin='$hora_fin', aula='$aula', clase='$clase' 
             WHERE id_horario=$id";
     if ($con->query($sql)) {
-        header("Location: indexadministrativo_datos.php?msg=Horario actualizado correctamente");
+        header("Location: indexadministrativoDatos.php?msg=Horario actualizado correctamente");
     } else {
         echo "Error al actualizar: " . $con->error;
     }

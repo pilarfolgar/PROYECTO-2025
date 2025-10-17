@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sql = "UPDATE asignaturas SET nombre='$nombre', profesor='$profesor' WHERE id_asignatura=$id";
     if ($con->query($sql)) {
-        header("Location: indexadministrativo_datos.php?msg=Asignatura actualizada correctamente");
+        header("Location: indexadministrativoDatos.php?msg=Asignatura actualizada correctamente");
     } else {
         echo "Error al actualizar: " . $con->error;
     }
