@@ -18,7 +18,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $id = (int) $_GET['id'];
 
-// Primero eliminamos relaciones (grupo_asignatura y grupo_horario)
+// Eliminar relaciones con otras tablas (grupo_asignatura y grupo_horario)
 $sql_rel1 = "DELETE FROM grupo_asignatura WHERE id_grupo = ?";
 $sql_rel2 = "DELETE FROM grupo_horario WHERE id_grupo = ?";
 
@@ -35,7 +35,7 @@ if ($stmt_rel1 && $stmt_rel2) {
     $stmt_rel2->close();
 }
 
-// Ahora sí, eliminar el grupo
+// Eliminar el grupo principal
 $sql = "DELETE FROM grupo WHERE id_grupo = ?";
 $stmt = $con->prepare($sql);
 
@@ -48,7 +48,7 @@ if (!$stmt) {
 $stmt->bind_param("i", $id);
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
-        $_SESSION['msg_grupo'] = "Grupo eliminado con éxito ✅";
+        $_SESSION['msg_grupo'] = "✅ Grupo eliminado correctamente.";
     } else {
         $_SESSION['error_grupo'] = "No se encontró el grupo o ya fue eliminado.";
     }
@@ -59,7 +59,7 @@ if ($stmt->execute()) {
 $stmt->close();
 $con->close();
 
-// Redirigir al panel
+// Redirigir al panel principal
 header("Location: indexadministrativoDatos.php");
 exit;
 ?>
