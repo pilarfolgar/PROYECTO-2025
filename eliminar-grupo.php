@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("conexion.php");
+
 $con = conectar_bd();
 if (!$con) {
     $_SESSION['error_grupo'] = "Error de conexión con la base de datos.";
@@ -8,6 +9,7 @@ if (!$con) {
     exit;
 }
 
+// Validar ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     $_SESSION['error_grupo'] = "ID de grupo no válido.";
     header("Location: indexadministrativoDatos.php");
@@ -16,26 +18,26 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $id = (int) $_GET['id'];
 
-// Primero eliminamos relaciones (grupo_asignatura y grupo_horario)
-$sql_rel1 = "DELETE FROM grupo_asignatura WHERE id_grupo = ?";
-$sql_rel2 = "DELETE FROM grupo_horario WHERE id_grupo = ?";
-
-$stmt_rel1 = $con->prepare($sql_rel1);
-$stmt_rel2 = $con->prepare($sql_rel2);
+// Eliminar relaciones con otras tablas
+$stmt_rel1 = $con->prepare("DELETE FROM grupo_asignatura WHERE id_grupo = ?");
+$stmt_rel2 = $con->prepare("DELETE FROM grupo_horario WHERE id_grupo = ?");
 
 if ($stmt_rel1 && $stmt_rel2) {
     $stmt_rel1->bind_param("i", $id);
     $stmt_rel1->execute();
     $stmt_rel1->close();
 
-$stmt_rel2->bind_param("i",$id);
-$stmt_rel2->execute();
-$stmt_rel2->close();
+    $stmt_rel2->bind_param("i", $id);
+    $stmt_rel2->execute();
+    $stmt_rel2->close();
+} else {
+    $_SESSION['error_grupo'] = "Error al preparar eliminación de relaciones: " . $con->error;
+    header("Location: indexadministrativoDatos.php");
+    exit;
+}
 
-// Ahora sí, eliminar el grupo
-$sql = "DELETE FROM grupo WHERE id_grupo = ?";
-$stmt = $con->prepare($sql);
-
+// Eliminar el grupo
+$stmt = $con->prepare("DELETE FROM grupo WHERE id_grupo = ?");
 if (!$stmt) {
     $_SESSION['error_grupo'] = "Error en la consulta: " . $con->error;
     header("Location: indexadministrativoDatos.php");
@@ -50,7 +52,7 @@ if ($stmt->execute()) {
         $_SESSION['error_grupo'] = "No se encontró el grupo o ya fue eliminado.";
     }
 } else {
-    $_SESSION['error_grupo'] = "Error al eliminar el grupo: ".$stmt->error;
+    $_SESSION['error_grupo'] = "Error al eliminar el grupo: " . $stmt->error;
 }
 
 $stmt->close();
