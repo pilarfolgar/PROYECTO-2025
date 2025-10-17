@@ -1,4 +1,5 @@
 <?php
+session_start();  // <<<<<<--- Esto es obligatorio para usar $_SESSION
 require("conexion.php");
 
 $con = conectar_bd();
@@ -6,6 +7,9 @@ $con = conectar_bd();
 if (!isset($_SESSION['cedula'])) {
     die("Error: Usuario no identificado.");
 }
+
+// ... el resto de tu código
+
 
 // Obtener el id_grupo del estudiante
 $cedula = $_SESSION['cedula'];
