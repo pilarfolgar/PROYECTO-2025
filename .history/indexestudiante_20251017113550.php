@@ -1,0 +1,72 @@
+<?php 
+require("seguridad.php"); 
+require("conexion.php");
+
+$con = conectar_bd();
+
+// Obtener id_grupo del estudiante
+$cedula = $_SESSION['cedula'];
+$stmt = $con->prepare("SELECT id_grupo FROM usuario WHERE cedula = ?");
+$stmt->bind_param("s", $cedula);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $id_grupo = $row['id_grupo'];
+} else {
+    $id_grupo = null;
+}
+$stmt->close();
+
+// Traer horarios solo si tiene grupo asignado
+$horarios = [];
+if ($id_grupo) {
+    $sql = "SELECT h.dia, h.hora_inicio, h.hora_fin, h.clase, h.aula, a.nombre AS asignatura
+            FROM horarios h
+            INNER JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+            WHERE h.id_grupo = ?
+            ORDER BY FIELD(h.dia,'lunes','martes','miercoles','jueves','viernes'), h.hora_inicio ASC";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id_grupo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $horarios = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+?>
+
+<!-- ========================= -->
+<!-- SECCIÓN HORARIO DEL ESTUDIANTE -->
+<!-- ========================= -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Horario de tu Grupo</h2>
+    <?php if(count($horarios) > 0): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Día</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Clase</th>
+                        <th>Aula</th>
+                        <th>Asignatura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($horarios as $h): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($h['dia']) ?></td>
+                        <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
+                        <td><?= htmlspecialchars($h['hora_fin']) ?></td>
+                        <td><?= htmlspecialchars($h['clase']) ?></td>
+                        <td><?= htmlspecialchars($h['aula']) ?></td>
+                        <td><?= htmlspecialchars($h['asignatura']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <p class="text-center text-muted">No hay horarios asignados para tu grupo aún.</p>
+    <?php endif; ?>
+</section>

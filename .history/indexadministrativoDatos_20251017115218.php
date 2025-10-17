@@ -27,12 +27,12 @@ $sql_grupos = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
                ORDER BY g.nombre";
 $result_grupos = $con->query($sql_grupos);
 
-$sql_horarios = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
-                 FROM horarios h
+$sql_horario = "SELECT h.*, a.nombre AS asignatura, g.nombre AS grupo
+                 FROM horario h
                  LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
                  LEFT JOIN grupo g ON h.id_grupo = g.id_grupo
                  ORDER BY h.dia, h.hora_inicio";
-$result_horarios = $con->query($sql_horarios);
+$result_horarios = $con->query($sql_horario);
 ?>
 
 <!DOCTYPE html>

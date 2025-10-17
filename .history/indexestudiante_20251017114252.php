@@ -70,75 +70,6 @@ foreach ($horarios as $h) {
 <link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link rel="stylesheet" href="styleestudiante.css">
-<style>
-/* Estilo moderno para los horarios y tarjetas */
-.docentes-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-.estudiante-card {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 250px;
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.estudiante-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-.boton {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 15px;
-    background: #0d6efd;
-    color: #fff;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background 0.3s;
-}
-.boton:hover {
-    background: #0b5ed7;
-}
-#horarioGrupo {
-    display: none; /* oculto hasta hacer clic */
-}
-.accordion-button {
-    background: #0d6efd;
-    color: #fff;
-}
-.accordion-button:not(.collapsed) {
-    background: #0b5ed7;
-}
-.table {
-    margin-bottom: 0;
-}
-.btn-flotante {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #ffc107;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
-}
-.btn-flotante:hover {
-    transform: scale(1.1);
-}
-</style>
 </head>
 <body>
 <?php require("header.php"); ?>
@@ -164,7 +95,7 @@ foreach ($horarios as $h) {
       </div>
       <div class="docente-name">Horario del Grupo</div>
       <div class="docente-subject">Visualiza tus clases y aulas</div>
-      <a href="#horarioGrupo" id="verHorarioBtn" class="boton w-100 text-center">Ver Horario</a>
+      <a href="#horarioGrupo" class="boton w-100 text-center">Ver Horario</a>
     </div>
 
     <!-- Tarjeta Mi Clase -->
@@ -178,7 +109,9 @@ foreach ($horarios as $h) {
   </div>
 </section>
 
+<!-- ========================= -->
 <!-- SECCIÓN HORARIO DEL ESTUDIANTE POR DÍAS (ACORDEÓN) -->
+<!-- ========================= -->
 <section class="container my-5" id="horarioGrupo">
     <h2 class="text-center mb-4">Horario de tu Grupo</h2>
     <?php if(count($horarios) > 0): ?>
@@ -229,9 +162,9 @@ foreach ($horarios as $h) {
 </section>
 
 <!-- Botón flotante Reporte -->
-<button id="btnAbrirReporte" class="btn-flotante">📝</button>
+<button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
 
-<!-- Overlay y Formulario Reporte -->
+<!-- Overlay y Formulario Reporte (igual que tu anterior código) -->
 <div id="overlayReporte" class="formulario-overlay"></div>
 <section id="form-reporte" class="formulario">
   <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
@@ -271,14 +204,5 @@ foreach ($horarios as $h) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="estudiantes.js"></script>
-<script>
-// Mostrar horario solo al hacer clic
-document.getElementById('verHorarioBtn').addEventListener('click', function(e){
-    e.preventDefault();
-    const horario = document.getElementById('horarioGrupo');
-    horario.style.display = horario.style.display === 'none' ? 'block' : 'none';
-    horario.scrollIntoView({behavior: "smooth"});
-});
-</script>
 </body>
 </html>

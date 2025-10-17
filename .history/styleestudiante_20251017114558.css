@@ -1,0 +1,137 @@
+/* Contenedor de todas las tarjetas */
+.estudiante-container {
+  display: flex;
+  flex-wrap: wrap;             /* Para que se adapten a pantallas chicas */
+  justify-content: center;     /* Centra horizontalmente */
+  gap: 1.5rem;                 /* Espacio entre tarjetas */
+}
+
+/* Tarjeta individual */
+.estudiante-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* Esto empuja el botón al fondo */
+  align-items: center;
+  width: 250px;                     /* Fijá un ancho uniforme */
+  min-height: 320px;                /* Altura mínima igual para todas */
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Zona del ícono */
+.docente-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+/* Título y texto */
+.docente-name {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.docente-subject {
+  flex-grow: 1;           /* Hace que esta sección ocupe el espacio variable */
+  margin-bottom: 1rem;
+}
+
+/* Botón */
+.boton {
+  background-color: #007bff; /* Cambiá al color de tu diseño */
+  color: white;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.boton:hover {
+  background-color: #0056b3;
+}
+
+.boton.w-100 {
+  width: 100%;
+}
+
+
+/* Tarjetas principales */
+.estudiante-card {
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+}
+.estudiante-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Botones */
+.boton {
+    display: inline-block;
+    background-color: #0d6efd;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.boton:hover {
+    background-color: #0b5ed7;
+    color: #fff;
+}
+
+/* Acordeón */
+.accordion-button {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+}
+.accordion-button:not(.collapsed) {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Tablas */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.table th {
+    background-color: #0d6efd;
+    color: #fff;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f7ff;
+}
+
+/* Botón flotante */
+.btn-flotante {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #198754;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: background 0.3s, transform 0.2s;
+}
+.btn-flotante:hover {
+    background-color: #157347;
+    transform: translateY(-3px);
+}

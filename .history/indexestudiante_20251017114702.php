@@ -47,16 +47,6 @@ if ($id_grupo) {
     }
     $stmt->close();
 }
-
-// Organizar horarios por día
-$dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
-$horarios_por_dia = [];
-foreach ($dias as $dia) {
-    $horarios_por_dia[$dia] = [];
-}
-foreach ($horarios as $h) {
-    $horarios_por_dia[strtolower($h['dia'])][] = $h;
-}
 ?>
 
 <!DOCTYPE html>
@@ -70,75 +60,6 @@ foreach ($horarios as $h) {
 <link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link rel="stylesheet" href="styleestudiante.css">
-<style>
-/* Estilo moderno para los horarios y tarjetas */
-.docentes-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-.estudiante-card {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 250px;
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.estudiante-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-.boton {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 15px;
-    background: #0d6efd;
-    color: #fff;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background 0.3s;
-}
-.boton:hover {
-    background: #0b5ed7;
-}
-#horarioGrupo {
-    display: none; /* oculto hasta hacer clic */
-}
-.accordion-button {
-    background: #0d6efd;
-    color: #fff;
-}
-.accordion-button:not(.collapsed) {
-    background: #0b5ed7;
-}
-.table {
-    margin-bottom: 0;
-}
-.btn-flotante {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #ffc107;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
-}
-.btn-flotante:hover {
-    transform: scale(1.1);
-}
-</style>
 </head>
 <body>
 <?php require("header.php"); ?>
@@ -164,7 +85,7 @@ foreach ($horarios as $h) {
       </div>
       <div class="docente-name">Horario del Grupo</div>
       <div class="docente-subject">Visualiza tus clases y aulas</div>
-      <a href="#horarioGrupo" id="verHorarioBtn" class="boton w-100 text-center">Ver Horario</a>
+      <a href="#horarioGrupo" class="boton w-100 text-center">Ver Horario</a>
     </div>
 
     <!-- Tarjeta Mi Clase -->
@@ -178,50 +99,37 @@ foreach ($horarios as $h) {
   </div>
 </section>
 
-<!-- SECCIÓN HORARIO DEL ESTUDIANTE POR DÍAS (ACORDEÓN) -->
+<!-- ========================= -->
+<!-- SECCIÓN HORARIO DEL ESTUDIANTE -->
+<!-- ========================= -->
 <section class="container my-5" id="horarioGrupo">
     <h2 class="text-center mb-4">Horario de tu Grupo</h2>
     <?php if(count($horarios) > 0): ?>
-        <div class="accordion" id="accordionHorarios">
-            <?php foreach($dias as $index => $dia): ?>
-                <?php if(count($horarios_por_dia[$dia]) > 0): ?>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading<?= $index ?>">
-                            <button class="accordion-button <?= $index > 0 ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="collapse<?= $index ?>">
-                                <?= ucfirst($dia) ?>
-                            </button>
-                        </h2>
-                        <div id="collapse<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="heading<?= $index ?>" data-bs-parent="#accordionHorarios">
-                            <div class="accordion-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped text-center">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Hora Inicio</th>
-                                                <th>Hora Fin</th>
-                                                <th>Clase</th>
-                                                <th>Aula</th>
-                                                <th>Asignatura</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach($horarios_por_dia[$dia] as $h): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
-                                                    <td><?= htmlspecialchars($h['hora_fin']) ?></td>
-                                                    <td><?= htmlspecialchars($h['clase']) ?></td>
-                                                    <td><?= htmlspecialchars($h['aula']) ?></td>
-                                                    <td><?= htmlspecialchars($h['asignatura']) ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Día</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Clase</th>
+                        <th>Aula</th>
+                        <th>Asignatura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($horarios as $h): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($h['dia']) ?></td>
+                        <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
+                        <td><?= htmlspecialchars($h['hora_fin']) ?></td>
+                        <td><?= htmlspecialchars($h['clase']) ?></td>
+                        <td><?= htmlspecialchars($h['aula']) ?></td>
+                        <td><?= htmlspecialchars($h['asignatura']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     <?php else: ?>
         <p class="text-center text-muted">No hay horarios asignados para tu grupo aún.</p>
@@ -229,9 +137,9 @@ foreach ($horarios as $h) {
 </section>
 
 <!-- Botón flotante Reporte -->
-<button id="btnAbrirReporte" class="btn-flotante">📝</button>
+<button id="btnAbrirReporte" class="btn-flotante">📝 Reportar Objeto Dañado</button>
 
-<!-- Overlay y Formulario Reporte -->
+<!-- Overlay y Formulario Reporte (igual que tu anterior código) -->
 <div id="overlayReporte" class="formulario-overlay"></div>
 <section id="form-reporte" class="formulario">
   <button type="button" class="cerrar" id="btnCerrarReporte">✖</button>
@@ -271,14 +179,5 @@ foreach ($horarios as $h) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="estudiantes.js"></script>
-<script>
-// Mostrar horario solo al hacer clic
-document.getElementById('verHorarioBtn').addEventListener('click', function(e){
-    e.preventDefault();
-    const horario = document.getElementById('horarioGrupo');
-    horario.style.display = horario.style.display === 'none' ? 'block' : 'none';
-    horario.scrollIntoView({behavior: "smooth"});
-});
-</script>
 </body>
 </html>
