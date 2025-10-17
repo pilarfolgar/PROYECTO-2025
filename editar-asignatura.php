@@ -2,37 +2,45 @@
 require("conexion.php");
 $con = conectar_bd();
 
-$id = intval($_GET['id']);
-$sql = "SELECT * FROM asignatura WHERE id_asignatura = $id";
-$result = $con->query($sql);
-$asignatura = $result->fetch_assoc();
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $sql = "SELECT * FROM asignaturas WHERE id_asignatura = $id";
+    $result = $con->query($sql);
+    $asignatura = $result->fetch_assoc();
+}
 
-// Obtener docentes asignados
-$sql_docentes = "SELECT cedula_docente FROM docente_asignatura WHERE id_asignatura = $id";
-$result_docentes = $con->query($sql_docentes);
-$docentes_asignados = [];
-while($row = $result_docentes->fetch_assoc()) {
-    $docentes_asignados[] = $row['cedula_docente'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = intval($_POST['id']);
+    $nombre = $_POST['nombre'];
+    $profesor = $_POST['profesor'];
+
+    $sql = "UPDATE asignaturas SET nombre='$nombre', profesor='$profesor' WHERE id_asignatura=$id";
+    if ($con->query($sql)) {
+        header("Location: indexadministrativo_datos.php?msg=Asignatura actualizada correctamente");
+    } else {
+        echo "Error al actualizar: " . $con->error;
+    }
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Asignatura</title>
+</head>
+<body>
 <h2>Editar Asignatura</h2>
-<form action="actualizar-asignatura.php" method="POST">
-  <input type="hidden" name="id_asignatura" value="<?= $asignatura['id_asignatura'] ?>">
-  <label>Nombre:</label>
-  <input type="text" name="nombre" value="<?= htmlspecialchars($asignatura['nombre']) ?>" required>
-  <label>Código:</label>
-  <input type="text" name="codigo" value="<?= htmlspecialchars($asignatura['codigo']) ?>" required>
-  <label>Docentes:</label>
-  <select name="docentes[]" multiple required>
-    <?php
-    $sql = "SELECT cedula, nombrecompleto, apellido FROM usuario WHERE rol='docente'";
-    $result = $con->query($sql);
-    while($docente = $result->fetch_assoc()){
-        $selected = in_array($docente['cedula'], $docentes_asignados) ? "selected" : "";
-        echo "<option value='{$docente['cedula']}' $selected>Prof. {$docente['nombrecompleto']} {$docente['apellido']}</option>";
-    }
-    ?>
-  </select>
-  <button type="submit">Actualizar</button>
+<form method="POST">
+    <input type="hidden" name="id" value="<?= htmlspecialchars($asignatura['id_asignatura']) ?>">
+
+    <label>Nombre:</label>
+    <input type="text" name="nombre" value="<?= htmlspecialchars($asignatura['nombre']) ?>" required><br>
+
+    <label>Profesor:</label>
+    <input type="text" name="profesor" value="<?= htmlspecialchars($asignatura['profesor']) ?>" required><br>
+
+    <button type="submit">Guardar Cambios</button>
 </form>
+</body>
+</html>
