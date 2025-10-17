@@ -7,25 +7,22 @@ if (!isset($_SESSION['cedula'])) {
     exit();
 }
 
-// Verifica que haya "acceso autorizado" desde login
-if (!isset($_SESSION['acceso_panel']) || $_SESSION['acceso_panel'] !== true) {
-    // Si no hay acceso autorizado y no es una recarga de la misma sesión
-    if (!isset($_SESSION['pagina_actual']) || $_SESSION['pagina_actual'] !== $_SERVER['REQUEST_URI']) {
+// Si no existe el token de sesión para esta pestaña, pedimos login
+if (!isset($_SESSION['token_pestana'])) {
+    // Generamos un token único por pestaña
+    $_SESSION['token_pestana'] = bin2hex(random_bytes(16));
+    
+    // Solo si no viene desde login, pedimos login
+    if (!isset($_SESSION['acceso_panel']) || $_SESSION['acceso_panel'] !== true) {
         session_unset();
         session_destroy();
         header("Location: iniciosesion.php");
         exit();
     }
-}
-
-// Si no está seteada la página actual, la guardamos (primer acceso)
-if (!isset($_SESSION['pagina_actual'])) {
-    $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
-}
-
-// Consumir acceso_panel solo en el primer acceso
-if (isset($_SESSION['acceso_panel'])) {
+    
+    // Consumimos el flag de acceso solo la primera vez
     unset($_SESSION['acceso_panel']);
 }
 ?>
+
 
