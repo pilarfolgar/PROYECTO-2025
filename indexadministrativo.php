@@ -182,47 +182,6 @@ $result_reservas = $con->query($sql_reservas);
   </div>
 </div>
 
-<?php
-$sql_asignaturas = "SELECT a.id_asignatura, a.nombre, a.codigo, 
-        GROUP_CONCAT(u.nombrecompleto, ' ', u.apellido SEPARATOR ', ') AS docentes
-        FROM asignatura a
-        LEFT JOIN docente_asignatura da ON a.id_asignatura = da.id_asignatura
-        LEFT JOIN usuario u ON da.cedula_docente = u.cedula
-        GROUP BY a.id_asignatura
-        ORDER BY a.nombre";
-$result = $con->query($sql_asignaturas);
-?>
-
-
-<h2>Asignaturas Registradas</h2>
-<table class="table table-bordered table-striped">
-  <thead class="table-dark">
-    <tr>
-      <th>Nombre</th>
-      <th>Código</th>
-      <th>Docentes</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php while($asignatura = $result->fetch_assoc()): ?>
-      <tr>
-        <td><?= htmlspecialchars($asignatura['nombre']) ?></td>
-        <td><?= htmlspecialchars($asignatura['codigo']) ?></td>
-        <td><?= htmlspecialchars($asignatura['docentes'] ?? '—') ?></td>
-        <td>
-          <a href="editar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-primary">✏️ Editar</a>
-          <a href="eliminar-asignatura.php?id=<?= $asignatura['id_asignatura'] ?>" class="btn btn-sm btn-danger"
-             onclick="return confirm('¿Seguro que desea eliminar esta asignatura?');">🗑️ Eliminar</a>
-        </td>
-      </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
-
-
-
-
 
 <!-- =====================
    FORMULARIOS
