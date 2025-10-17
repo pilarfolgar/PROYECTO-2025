@@ -124,9 +124,7 @@ require("seguridad.php");
   </form>
 </section>
 
-<footer class="footer mt-5">
-  &copy; <?php echo date("Y"); ?> Instituto Tecnológico Superior de Paysandú
-</footer>
+<?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="estudiantes.js"></script>
