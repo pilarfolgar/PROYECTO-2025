@@ -24,7 +24,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 
     header('Content-Type: application/json');
     echo json_encode($miembros);
-    exit; // 🔸 Detiene el resto del HTML
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -35,9 +35,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 <title>Panel Docentes - InfraLex</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style>
@@ -60,6 +57,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     background-color: #dee2e6;
     border-radius: 50%;
     margin: 0 auto 0.5rem auto;
+    background-size: cover;
+    background-position: center;
 }
 .boton { margin-top: 0.5rem; }
 .lista-miembros { 
@@ -78,7 +77,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 @media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
 @media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
 </style>
-
 </head>
 <body>
 
@@ -93,7 +91,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     <?php
     $docente_cedula = $_SESSION['cedula'];
 
-    $sql = "SELECT DISTINCT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion, a.nombre AS asignatura_nombre
+    $sql = "SELECT DISTINCT g.id_grupo, g.nombre AS grupo_nombre, g.orientacion, g.foto, a.nombre AS asignatura_nombre
             FROM docente_asignatura da
             JOIN asignatura a ON da.id_asignatura = a.id_asignatura
             JOIN grupo_asignatura ga ON a.id_asignatura = ga.id_asignatura
@@ -107,8 +105,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
+        $foto = $row['foto'] ? 'imagenes/grupos/'.$row['foto'] : '';
         echo '<div class="docente-card">';
-        echo '<div class="docente-photo"></div>';
+        echo '<div class="docente-photo" style="background-image: url(\''.$foto.'\')"></div>';
         echo '<div class="docente-name fw-bold">'.htmlspecialchars($row['grupo_nombre'].' - '.$row['asignatura_nombre']).'</div>';
         echo '<div class="docente-subject text-muted">'.htmlspecialchars($row['orientacion']).'</div>';
         echo '<button class="btn btn-outline-primary boton ver-miembros" data-grupo="'.$row['id_grupo'].'">Ver miembros</button>';
@@ -158,35 +157,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         echo '<div class="text-center text-muted">No hay reservas por el momento.</div>';
     }
     ?>
-  </div>
-</section>
-
-<!-- ========================= -->
-<!-- SECCIÓN VISTA PREVIA DE AULAS -->
-<!-- ========================= -->
-<section class="container mt-5 mb-5 pt-4 pb-4 bg-light rounded-4 shadow-sm">
-  <h2 class="text-center mb-4">Vista previa de Aulas</h2>
-  <div class="row g-4 justify-content-center">
-    <?php
-    $sql_aulas_preview = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
-    $result_aulas_preview = $con->query($sql_aulas_preview);
-    while ($row = $result_aulas_preview->fetch_assoc()) {
-        $img = $row['imagen'] ?: 'default-aula.jpg';
-        echo '<div class="col-md-4">
-          <div class="card h-100 shadow-sm border-0">
-            <img src="imagenes/'.$img.'" class="card-img-top" alt="'.$row["codigo"].'">
-            <div class="card-body text-center">
-              <h5 class="card-title">'.$row["codigo"].'</h5>
-              <p class="card-text">Capacidad: '.$row["capacidad"].' personas</p>
-              <a href="aulas.php" class="btn btn-primary">Reservar</a>
-            </div>
-          </div>
-        </div>';
-    }
-    ?>
-  </div>
-  <div class="text-center mt-4">
-    <a href="aulas.php" class="btn btn-outline-primary btn-lg">Ver todas las aulas</a>
   </div>
 </section>
 
@@ -266,10 +236,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         ?>
       </tbody>
     </table>
-    <div class="mt-3 text-start">
-      <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Disponible</span>
-      <span class="badge bg-danger ms-2"><i class="bi bi-x-circle-fill"></i> Ocupado</span>
-    </div>
   </div>
 </main>
 
@@ -315,9 +281,6 @@ document.querySelectorAll('.ver-miembros').forEach(btn => {
   });
 });
 
-// ==============================
-// 🔹 Reservar bloque (demo)
-// ==============================
 function abrirReservaBloque(td) {
   const aula = td.dataset.aula;
   const hora = td.dataset.hora;
