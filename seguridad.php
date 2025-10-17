@@ -9,20 +9,13 @@ if (!isset($_SESSION['cedula'])) {
 
 // Verifica que haya "acceso autorizado" desde login
 if (!isset($_SESSION['acceso_panel']) || $_SESSION['acceso_panel'] !== true) {
-    // Si no hay acceso autorizado y tampoco hay una sesión iniciada, redirige
-    if (!isset($_SESSION['sesion_iniciada']) || $_SESSION['sesion_iniciada'] !== true) {
-        session_unset();
-        session_destroy();
-        header("Location: iniciosesion.php");
-        exit();
-    }
+    // Opcional: destruir sesión para forzar re-login
+    session_unset();
+    session_destroy();
+    header("Location: iniciosesion.php");
+    exit();
 }
 
-// Si no existe esta variable, significa que es la primera carga tras login
-if (!isset($_SESSION['sesion_iniciada'])) {
-    $_SESSION['sesion_iniciada'] = true;
-    // Consumimos acceso_panel solo la primera vez
-    unset($_SESSION['acceso_panel']);
-}
+// Consumir flag para que no se pueda usar el link directo otra vez
+unset($_SESSION['acceso_panel']);
 ?>
-
