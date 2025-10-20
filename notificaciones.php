@@ -76,7 +76,6 @@ $stmt->close();
 $con->close();
 ?>
 
-
 <script>
     // Animación simple: revelar notificaciones al cargar
     document.addEventListener('DOMContentLoaded', () => {
@@ -86,16 +85,6 @@ $con->close();
         });
     });
 </script>
-<h2>Notificaciones</h2>
-<ul class="list-group">
-<?php foreach($notificaciones as $n): ?>
-    <li class="list-group-item <?= $n['visto_estudiante'] ? '' : 'fw-bold' ?>">
-        <strong><?= htmlspecialchars($n['titulo']) ?></strong> <br>
-        <?= nl2br(htmlspecialchars($n['mensaje'])) ?> <br>
-        <small class="text-muted"><?= $n['fecha'] ?></small>
-    </li>
-<?php endforeach; ?>
-</ul>
 
 </body>
 </html>
