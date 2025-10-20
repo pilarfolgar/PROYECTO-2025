@@ -22,8 +22,25 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
 
 $mensaje = '';
 
-// Procesar formulario al enviar
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// ---------------------------
+// ELIMINAR CUENTA
+// ---------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_cuenta'])) {
+    $del_stmt = $con->prepare("DELETE FROM usuario WHERE cedula=?");
+    $del_stmt->bind_param("s", $cedula);
+    $del_stmt->execute();
+    $del_stmt->close();
+
+    // Cerrar sesión y redirigir
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+// ---------------------------
+// PROCESAR EDICIÓN DE PERFIL
+// ---------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) {
     $nombre = $_POST['nombrecompleto'] ?? '';
     $apellido = $_POST['apellido'] ?? '';
     $telefono = $_POST['telefono'] ?? '';
@@ -32,66 +49,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass_actual = $_POST['pass_actual'] ?? '';
     $pass_nueva = $_POST['pass_nueva'] ?? '';
 
-    // -------------------
     // Manejar subida de foto
-    // -------------------
-    $foto_ruta = $user['foto']; // ruta actual por defecto
+    $foto_ruta = $user['foto'];
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
         $archivo_tmp = $_FILES['foto']['tmp_name'];
         $nombre_archivo = basename($_FILES['foto']['name']);
         $ext = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
-        $ext_permitidas = ['jpg', 'jpeg', 'png', 'gif'];
+        $ext_permitidas = ['jpg','jpeg','png','gif'];
 
         if (!in_array($ext, $ext_permitidas)) {
             $mensaje = "Formato de imagen no permitido. Solo jpg, png y gif.";
         } else {
             $nuevo_nombre = 'uploads/' . $cedula . '_' . time() . '.' . $ext;
-            if (!is_dir('uploads')) {
-                mkdir('uploads', 0755, true); // crear carpeta uploads si no existe
-            }
+            if (!is_dir('uploads')) mkdir('uploads', 0755, true);
             if (move_uploaded_file($archivo_tmp, $nuevo_nombre)) {
                 $foto_ruta = $nuevo_nombre;
-
-                // Actualizar la ruta en la base de datos
-                $update_foto = $con->prepare("UPDATE usuario SET foto=? WHERE cedula=?");
-                $update_foto->bind_param("ss", $foto_ruta, $cedula);
-                $update_foto->execute();
-                $update_foto->close();
-            } else {
-                $mensaje = "Error al subir la foto.";
-            }
+                $upd_foto = $con->prepare("UPDATE usuario SET foto=? WHERE cedula=?");
+                $upd_foto->bind_param("ss", $foto_ruta, $cedula);
+                $upd_foto->execute();
+                $upd_foto->close();
+            } else $mensaje = "Error al subir la foto.";
         }
     }
 
-    // -------------------
     // Cambiar contraseña
-    // -------------------
     if (!empty($pass_actual) || !empty($pass_nueva)) {
-        if (empty($pass_actual) || empty($pass_nueva)) {
-            $mensaje = "Para cambiar la contraseña, completa ambos campos.";
-        } elseif (!password_verify($pass_actual, $user['pass'])) {
-            $mensaje = "La contraseña actual es incorrecta.";
-        } else {
+        if (empty($pass_actual) || empty($pass_nueva)) $mensaje = "Completa ambos campos para cambiar la contraseña.";
+        elseif (!password_verify($pass_actual, $user['pass'])) $mensaje = "Contraseña actual incorrecta.";
+        else {
             $pass_hashed = password_hash($pass_nueva, PASSWORD_DEFAULT);
-            $update_pass = $con->prepare("UPDATE usuario SET pass=? WHERE cedula=?");
-            $update_pass->bind_param("ss", $pass_hashed, $cedula);
-            $update_pass->execute();
-            $update_pass->close();
+            $upd_pass = $con->prepare("UPDATE usuario SET pass=? WHERE cedula=?");
+            $upd_pass->bind_param("ss", $pass_hashed, $cedula);
+            $upd_pass->execute();
+            $upd_pass->close();
             $mensaje = "Contraseña actualizada con éxito.";
         }
     }
 
-    // -------------------
     // Actualizar datos del perfil
-    // -------------------
-    $update = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
-    $update->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
-    $update->execute();
-    $update->close();
+    $upd = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
+    $upd->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
+    $upd->execute();
+    $upd->close();
 
     if (empty($mensaje)) $mensaje = "Perfil actualizado con éxito.";
-
-    // Refrescar para mostrar la foto actualizada
     header("Refresh: 2; URL=perfil.php");
 }
 ?>
@@ -127,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label class="form-label">Foto de Perfil</label>
                 <input type="file" name="foto" class="form-control" accept="image/*">
             </div>
-
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" name="nombrecompleto" class="form-control" value="<?= htmlspecialchars($user['nombrecompleto']) ?>" required>
@@ -175,10 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="logout.php" class="btn btn-danger w-100">Cerrar Sesión</a>
 
         <!-- Botón para eliminar cuenta -->
-<form method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
-    <input type="hidden" name="eliminar_cuenta" value="1">
-    <button type="submit" class="btn btn-danger w-100 mt-2">Eliminar Cuenta</button>
-</form>
+        <form method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+            <input type="hidden" name="eliminar_cuenta" value="1">
+            <button type="submit" class="btn btn-danger w-100 mt-2">Eliminar Cuenta</button>
+        </form>
 
     </div>
 </div>
