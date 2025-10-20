@@ -223,16 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // SweetAlert según sesión PHP
   <?php if(!empty($_SESSION['registro_exitoso'])): ?>
-    Swal.fire({
-      icon: 'success',
-      title: 'Registro exitoso',
-      text: '¡Te registraste correctamente!',
-      confirmButtonText: 'OK'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = 'iniciosesion.php';
-      }
-    });
+    Swal.fire({icon:'success', title:'Registro exitoso', text:'¡Te registraste correctamente!'});
     <?php unset($_SESSION['registro_exitoso']); ?>
   <?php endif; ?>
 

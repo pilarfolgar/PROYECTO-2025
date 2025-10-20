@@ -20,25 +20,12 @@ $con = conectar_bd();
       border-radius: 5px;
       background-color: #ddd;
       margin-top: 5px;
-      overflow: hidden;
     }
     #password-strength-fill {
       height: 100%;
       width: 0%;
       border-radius: 5px;
       transition: width 0.3s;
-    }
-
-    /* Requisitos de contraseña */
-    #password-requirements li {
-      margin-bottom: 3px;
-      transition: color 0.2s;
-    }
-    #password-requirements li.ok {
-      color: green;
-    }
-    #password-requirements li.bad {
-      color: red;
     }
   </style>
 </head>
@@ -69,22 +56,11 @@ $con = conectar_bd();
       <label for="pass" class="form-label">Contraseña *</label>
       <input type="password" name="pass" id="pass" class="form-control" required minlength="12" maxlength="16">
       <div class="form-text">
-        Debe tener entre 12 y 16 caracteres, con mayúsculas, minúsculas, números y símbolos (@!$%&*?).
+        12-16 caracteres, incluir mayúsculas, minúsculas, números y símbolos (@!$%&*?).
       </div>
-
-      <!-- Barra de fuerza -->
-      <div id="password-strength" class="mt-2">
+      <div id="password-strength">
         <div id="password-strength-fill"></div>
       </div>
-
-      <!-- Lista de requisitos -->
-      <ul id="password-requirements" class="list-unstyled mt-2 small">
-        <li id="req-length" class="bad">❌ Mínimo 12 y máximo 16 caracteres</li>
-        <li id="req-upper" class="bad">❌ Al menos una letra mayúscula</li>
-        <li id="req-lower" class="bad">❌ Al menos una letra minúscula</li>
-        <li id="req-number" class="bad">❌ Al menos un número</li>
-        <li id="req-symbol" class="bad">❌ Al menos un símbolo (@!$%&*?)</li>
-      </ul>
     </div>
 
     <div class="mb-3">
@@ -160,79 +136,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Función de fuerza y requisitos de contraseña
+  // Función de fuerza de contraseña
   passInput.addEventListener('input', function() {
     const val = passInput.value;
     let strength = 0;
 
-    const hasUpper = /[A-Z]/.test(val);
-    const hasLower = /[a-z]/.test(val);
-    const hasNumber = /\d/.test(val);
-    const hasSymbol = /[@!$%&*?]/.test(val);
-    const validLength = val.length >= 12 && val.length <= 16;
+    if (val.length >= 12) strength += 25;
+    if (/[A-Z]/.test(val)) strength += 20;
+    if (/[a-z]/.test(val)) strength += 20;
+    if (/\d/.test(val)) strength += 20;
+    if (/[@!$%&*?]/.test(val)) strength += 15;
 
-    // Actualizar lista de requisitos
-    const setStatus = (id, ok) => {
-      const li = document.getElementById(id);
-      li.textContent = (ok ? '✅ ' : '❌ ') + li.textContent.slice(2);
-      li.className = ok ? 'ok' : 'bad';
-    };
-
-    setStatus('req-length', validLength);
-    setStatus('req-upper', hasUpper);
-    setStatus('req-lower', hasLower);
-    setStatus('req-number', hasNumber);
-    setStatus('req-symbol', hasSymbol);
-
-    // Calcular fuerza
-    if (validLength) strength += 25;
-    if (hasUpper) strength += 20;
-    if (hasLower) strength += 20;
-    if (hasNumber) strength += 20;
-    if (hasSymbol) strength += 15;
     strength = Math.min(strength, 100);
 
     strengthFill.style.width = strength + "%";
-    if (strength < 50) strengthFill.style.backgroundColor = "red";
-    else if (strength < 80) strengthFill.style.backgroundColor = "orange";
+
+    if(strength < 50) strengthFill.style.backgroundColor = "red";
+    else if(strength < 80) strengthFill.style.backgroundColor = "orange";
     else strengthFill.style.backgroundColor = "green";
   });
 
   // Validaciones al enviar
   form.addEventListener('submit', function(e) {
+    // Grupo requerido para estudiantes
     if (rolSelect.value === 'estudiante' && !grupoSelect.value) {
       e.preventDefault();
       Swal.fire({icon:'warning', title:'Grupo requerido', text:'Debes seleccionar un grupo si sos estudiante.'});
       return;
     }
 
+    // Cédula válida
     if (!/^\d{8}$/.test(cedulaInput.value)) {
       e.preventDefault();
       Swal.fire({icon:'error', title:'Cédula inválida', text:'La cédula debe tener exactamente 8 dígitos.'});
       return;
     }
 
+    // Contraseña segura
     const pass = passInput.value;
-    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!$%&*?])[A-Za-z\d@!$%&*?]{12,16}$/;
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!$%&*?])[A-Za-z\d@!$%&*?]{10,12}$/;
     if (!passRegex.test(pass)) {
       e.preventDefault();
-      Swal.fire({icon:'error', title:'Contraseña insegura', text:'La contraseña debe tener entre 12 y 16 caracteres, con mayúsculas, minúsculas, números y símbolos.'});
+      Swal.fire({icon:'error', title:'Contraseña insegura', text:'La contraseña debe tener 12-16 caracteres, mayúsculas, minúsculas, números y símbolos.'});
       return;
     }
   });
 
   // SweetAlert según sesión PHP
   <?php if(!empty($_SESSION['registro_exitoso'])): ?>
-    Swal.fire({
-      icon: 'success',
-      title: 'Registro exitoso',
-      text: '¡Te registraste correctamente!',
-      confirmButtonText: 'OK'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = 'iniciosesion.php';
-      }
-    });
+    Swal.fire({icon:'success', title:'Registro exitoso', text:'¡Te registraste correctamente!'});
     <?php unset($_SESSION['registro_exitoso']); ?>
   <?php endif; ?>
 

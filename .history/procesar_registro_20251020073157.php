@@ -73,11 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // 4️⃣ Validar contraseña segura
     function validar_contraseña($pass) {
+        // Requisitos: 12-16 caracteres, mayúscula, minúscula, número, símbolo
         if (strlen($pass) < 12 || strlen($pass) > 16) return false;
         if (!preg_match('/[A-Z]/', $pass)) return false;
         if (!preg_match('/[a-z]/', $pass)) return false;
         if (!preg_match('/\d/', $pass)) return false;
         if (!preg_match('/[@!$%&*?]/', $pass)) return false;
+
         return true;
     }
 
@@ -141,9 +143,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     );
 
     if ($stmt->execute()) {
-        // ❌ No redirigir a login todavía
+        $_SESSION['msg_usuario'] = 'guardado';
         $_SESSION['registro_exitoso'] = true;
-        header("Location: registro.php");
+        header("Location: iniciosesion.php");
         exit;
     } else {
         error_log("Error INSERT usuario: " . $stmt->error);
