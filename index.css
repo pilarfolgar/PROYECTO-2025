@@ -1,0 +1,251 @@
+/* ================= VARIABLES ================= */
+:root {
+  --primario: #1B3A4B;
+  --secundario: #588BAE;
+  --acento: #A2D5F2;
+  --fondo: #F0F4F8;
+  --texto: #1B3A4B;
+  --hover: #417899;
+}
+
+/* ================= GLOBAL ================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main, .container {
+  flex: 1;
+}
+
+/* ================= HEADER ================= */
+header {
+  background-color: var(--primario);
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.logo:hover { transform: scale(1.1); }
+
+.btn-ingresar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--acento);
+  color: var(--primario);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-ingresar:hover {
+  background-color: var(--hover);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ================= NAV ================= */
+nav {
+  background-color: var(--secundario);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+nav a:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
+}
+
+/* ================= DOCENTES ================= */
+.docentes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.docente-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  max-width: 250px;
+}
+
+.docente-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.docente-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid var(--secundario);
+  background-color: var(--acento);
+  display: block;
+}
+
+.docente-name {
+  font-size: 1.25rem;
+  color: var(--primario);
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.docente-subject {
+  font-size: 1rem;
+  color: var(--hover);
+  font-weight: 600;
+}
+
+/* ================= TARJETAS INFO ================= */
+/* Eliminamos grid y las alineamos verticalmente */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.tarjeta {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: block; /* SIEMPRE VISIBLE */
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.tarjeta h3 {
+  color: var(--primario);
+  margin-bottom: 0.5rem;
+}
+
+/* ================= BOTONES ================= */
+.boton, .perfil, .btn-flotante {
+  background-color: var(--acento);
+  color: var(--texto);
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-block;
+}
+
+.boton:hover, .perfil:hover, .btn-flotante:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
+}
+
+.btn-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  background-color: var(--primario);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: white;
+  box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.footer a {
+  color: white;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: var(--acento);
+  text-decoration: none;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  header { flex-direction: column; text-align: center; gap: 0.5rem; }
+  .logo { width: 60px; height: 60px; }
+  nav { flex-direction: column; gap: 0.5rem; }
+  .docente-photo { width: 100px; height: 100px; }
+}
+
+@media (max-width: 480px) {
+  .docente-photo { width: 80px; height: 80px; }
+  .docente-card { max-width: 90%; }
+  .info-grid { padding: 0.5rem; }
+}
