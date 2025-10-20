@@ -1,3 +1,23 @@
+<?php
+session_start();
+
+// Detectar rol y definir el enlace de inicio
+$inicio_link = 'index.php'; // por defecto
+if (isset($_SESSION['cedula']) && isset($_SESSION['rol'])) {
+    switch($_SESSION['rol']) {
+        case 'estudiante':
+            $inicio_link = 'indexestudiante.php';
+            break;
+        case 'docente':
+            $inicio_link = 'indexdocente.php';
+            break;
+        case 'administrativo':
+            $inicio_link = 'indexadministrativo.php';
+            break;
+    }
+}
+?>
+
 <!-- HEADER -->
 <header style="display:flex;justify-content:space-between;align-items:center;background:#1B3A4B;color:white;padding:20px 30px;position:relative; height:90px;">
   <div style="display:flex;align-items:center;gap:20px;">
@@ -17,8 +37,8 @@
 
 <!-- NAV ABAJO -->
 <nav style="display:flex;justify-content:center;gap:20px;background:#588BAE;padding:12px;border-top:2px solid #417899;">
-  <a href="index.php" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
-  <a href="" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
+  <a href="<?= $inicio_link ?>" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
+  <a href="#" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
 </nav>
 
 <!-- MENÚ DESPLEGABLE -->
