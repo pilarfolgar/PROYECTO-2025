@@ -71,3 +71,24 @@ body {
     justify-content: center; 
     gap: 20px; 
 }
+
+.btn-perfil {
+    display: inline-block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none; /* sin subrayado */
+    cursor: pointer;
+    margin-bottom: 5px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-edit { background-color: #588BAE; color: #fff; }
+.btn-edit:hover { background-color: #417899; transform: translateY(-2px); }
+
+.btn-logout { background-color: #6c757d; color: #fff; }
+.btn-logout:hover { background-color: #5a6268; transform: translateY(-2px); }
+
+.btn-delete { background-color: #dc3545; color: #fff; border: none; }
+.btn-delete:hover { background-color: #b02a37; transform: translateY(-2px); }

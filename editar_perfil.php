@@ -173,6 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <hr class="my-4">
 
         <a href="logout.php" class="btn btn-danger w-100">Cerrar Sesión</a>
+
+        <!-- Botón para eliminar cuenta -->
+<form method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+    <input type="hidden" name="eliminar_cuenta" value="1">
+    <button type="submit" class="btn btn-danger w-100 mt-2">Eliminar Cuenta</button>
+</form>
+
     </div>
 </div>
 

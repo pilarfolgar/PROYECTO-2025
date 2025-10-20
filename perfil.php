@@ -28,6 +28,7 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
 <title>Mi Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="perfil.css">
+
 </head>
 <body>
 
@@ -50,6 +51,11 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
         <div class="perfil-actions">
             <a href="editar_perfil.php" class="btn-perfil btn-edit">Editar Perfil</a>
             <a href="logout.php" class="btn-perfil btn-logout">Cerrar Sesión</a>
+
+            <!-- Botón para eliminar cuenta -->
+            <form method="post" action="procesar_eliminado.php" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+                <button type="submit" class="btn-perfil btn-delete mt-2">Eliminar Cuenta</button>
+            </form>
         </div>
     </div>
 </div>
