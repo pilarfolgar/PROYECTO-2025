@@ -66,8 +66,8 @@ function abrirReserva(idAula, nombreAula) {
     const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
     modal.show();
 }
-function abrirModalNotificacion(idGrupo){
-    document.getElementById('notiGrupo').value = idGrupo;
+function abrirModalNotificacion(id_grupo){
+    document.getElementById('notiGrupo').value = id_grupo;
     new bootstrap.Modal(document.getElementById('modalNotificacion')).show();
 }
 
