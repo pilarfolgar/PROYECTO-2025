@@ -3,8 +3,8 @@
   --secundario: #588BAE;   /* Azul medio */
   --acento: #A2D5F2;       /* Azul claro */
   --fondo: #F0F4F8;        /* Gris muy claro */
-  --texto: #1B3A4B;        /* Texto */
-  --hover: #417899;        /* Hover botones */
+  --texto: #1B3A4B;
+  --hover: #417899;
 }
 
 /* ---------------- ESTILO GENERAL ---------------- */
@@ -24,7 +24,7 @@ a {
 /* ---------------- CONTENEDOR Y TARJETAS ---------------- */
 .contenedor {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columnas */
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   padding: 2rem;
 }
@@ -156,21 +156,13 @@ a {
 }
 
 /* ---------------- MEDIA QUERIES ---------------- */
-/* Desktop: 4 columnas */
-@media (min-width: 1025) {
-  .contenedor {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-
-/* Tablet: siempre 2 columnas */
-@media (min-width: 768px) {
+@media (max-width: 1200px) {
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 767px) {
+
+@media (max-width: 768px) {
   .contenedor {
     grid-template-columns: 1fr;
     padding: 1rem;
@@ -182,6 +174,9 @@ a {
     width: 100%;
     text-align: center;
   }
+}
+
+@media (max-width: 480px) {
   .formulario {
     width: 95%;
     padding: 1.5rem;

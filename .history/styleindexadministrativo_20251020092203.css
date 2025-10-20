@@ -156,20 +156,15 @@ a {
 }
 
 /* ---------------- MEDIA QUERIES ---------------- */
-/* Desktop: 4 columnas */
-@media (min-width: 1025) {
-  .contenedor {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 
 /* Tablet: siempre 2 columnas */
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Móviles: 1 columna */
 @media (max-width: 767px) {
   .contenedor {
     grid-template-columns: 1fr;
@@ -185,5 +180,13 @@ a {
   .formulario {
     width: 95%;
     padding: 1.5rem;
+  }
+}
+
+/* Formularios muy pequeños */
+@media (max-width: 480px) {
+  .formulario {
+    width: 95%;
+    padding: 1rem;
   }
 }

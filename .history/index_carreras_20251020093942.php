@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carreras técnicas | Evolution IT</title>
-<link rel="stylesheet" href="stylecarreras.css">
+<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -21,7 +21,7 @@
   <div class="text-center mb-4 p-3 bg-light border rounded shadow-sm">
     <h3 class="text-primary fw-bold">Inscripciones 2026</h3>
     <p class="text-muted" style="font-size: 0.95rem;">
-      A partir del <strong>15/12/2025</strong> dirígete con tu <strong>cédula</strong>, 
+      A partir del <strong>15/12</strong> dirígete con tu <strong>cédula</strong>, 
       <strong>carnet de adolescente al día</strong>, <strong>carnet de vacunas</strong> y 
       <strong>$200</strong> para SIET.
     </p>

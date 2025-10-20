@@ -156,13 +156,6 @@ a {
 }
 
 /* ---------------- MEDIA QUERIES ---------------- */
-/* Desktop: 4 columnas */
-@media (min-width: 1025) {
-  .contenedor {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 
 /* Tablet: siempre 2 columnas */
 @media (min-width: 768px) {
@@ -170,6 +163,8 @@ a {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Móviles: 1 columna */
 @media (max-width: 767px) {
   .contenedor {
     grid-template-columns: 1fr;
