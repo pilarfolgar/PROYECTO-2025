@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reservas - InfraLex</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -171,29 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function filtrar(categoria) {
-    document.querySelectorAll('.boton-filtro').forEach(btn => btn.classList.remove('active'));
-    const boton = document.getElementById(`filtro-${categoria}`);
-    if (boton) boton.classList.add('active');
+<script src="docente.js"></script>
 
-    document.querySelectorAll('.espacio').forEach(el => {
-        el.style.display = (categoria === 'todo' || el.classList.contains(categoria)) ? 'block' : 'none';
-    });
-}
-
-function mostrarImagen(img) {
-    alert('Imagen: ' + img.alt);
-}
-
-function abrirReserva(idAula, nombreAula) {
-    document.getElementById('tituloReserva').innerText = `Reservar - ${nombreAula}`;
-    document.getElementById('idAulaSeleccionada').value = idAula;
-    document.getElementById('aulaSeleccionada').value = nombreAula;
-    const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
-    modal.show();
-}
-</script>
 
 </body>
 </html>

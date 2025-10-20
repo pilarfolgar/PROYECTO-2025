@@ -169,8 +169,10 @@ main, .container {
   background-color: rgba(255,255,255,0.1);
 }
 
-/* ================= GRID DOCENTES ================= */
-.docentes-grid {
+/* ================= GRID DOCENTES / AULAS ================= */
+.docentes-grid,
+.aulas-grid,
+.estudiantes-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -178,7 +180,9 @@ main, .container {
   padding: 2rem 1rem;
 }
 
-.docente-card, .estudiante-card {
+.docente-card,
+.estudiante-card,
+.aula-card {
   flex: 1 1 calc(25% - 1rem);
   background-color: white;
   border-radius: 0.5rem;
@@ -188,12 +192,15 @@ main, .container {
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.docente-card:hover, .estudiante-card:hover {
+.docente-card:hover,
+.estudiante-card:hover,
+.aula-card:hover {
   transform: translateY(-6px) scale(1.03);
   box-shadow: 0 12px 24px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.docente-photo {
+.docente-photo,
+.estudiante-photo {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -203,14 +210,17 @@ main, .container {
   object-fit: cover;
 }
 
-.docente-name {
+.docente-name,
+.estudiante-name,
+.aula-name {
   font-size: 1.25rem;
   color: var(--primario);
   margin-bottom: 0.3rem;
   font-weight: 700;
 }
 
-.docente-subject {
+.docente-subject,
+.estudiante-subject {
   font-size: 1rem;
   color: var(--hover);
   font-weight: 600;
@@ -233,7 +243,9 @@ main, .container {
 }
 
 /* ================= BOTONES ================= */
-.boton, .btn {
+.boton,
+.btn,
+button {
   margin-top: 0.5rem;
   background-color: var(--acento);
   color: var(--texto);
@@ -245,10 +257,58 @@ main, .container {
   transition: background 0.3s, transform 0.2s;
 }
 
-.boton:hover, .btn:hover {
+.boton:hover,
+.btn:hover,
+button:hover {
   background-color: var(--hover);
   color: white;
   transform: translateY(-2px);
+}
+
+/* ================= MODALES / FORMULARIOS ================= */
+#modalReserva .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+#modalReserva .modal-header {
+  background-color: var(--primario);
+  color: white;
+  border-radius: 12px 12px 0 0;
+  border-bottom: none;
+  padding: 1.5rem;
+}
+
+#modalReserva .modal-title {
+  font-weight: bold;
+  color: white;
+}
+
+#modalReserva .btn-close {
+  filter: invert(1);
+}
+
+#modalReserva .modal-body {
+  padding: 2rem;
+  background-color: white;
+}
+
+#modalReserva .form-control,
+#modalReserva .form-select {
+  border: 1px solid var(--secundario);
+  border-radius: 6px;
+  padding: 0.75rem;
+  background-color: white;
+  color: var(--texto);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#modalReserva .form-control:focus,
+#modalReserva .form-select:focus {
+  border-color: var(--hover);
+  box-shadow: 0 0 0 0.2rem rgba(89, 139, 174, 0.25);
+  outline: none;
 }
 
 /* ================= FOOTER ================= */
@@ -303,15 +363,22 @@ main, .container {
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {
-  .docente-card, .estudiante-card { flex: 1 1 calc(50% - 1rem); }
+  .docente-card,
+  .estudiante-card,
+  .aula-card { flex: 1 1 calc(50% - 1rem); }
 }
 
 @media (max-width: 768px) {
   .header { flex-direction: column; text-align: center; gap: 0.8rem; }
-  .header-left, .header-right { justify-content: center; }
+  .header-left,
+  .header-right { justify-content: center; }
   .logo { width: 60px; height: 60px; }
   .nav { flex-direction: column; align-items: center; gap: 0.6rem; padding: 1rem 0; }
-  .docentes-grid { padding: 1rem; }
-  .docente-card, .estudiante-card { padding: 1.5rem; flex: 1 1 100%; }
+  .docentes-grid,
+  .aulas-grid,
+  .estudiantes-grid { padding: 1rem; }
+  .docente-card,
+  .estudiante-card,
+  .aula-card { padding: 1.5rem; flex: 1 1 100%; }
   .footer { font-size: 0.85rem; padding: 1rem; }
 }

@@ -44,3 +44,25 @@ function abrirReservaBloque(td) {
   const hora = td.dataset.hora;
   alert('Abrir modal para reservar aula ' + aula + ' a las ' + hora);
 }
+
+function filtrar(categoria) {
+    document.querySelectorAll('.boton-filtro').forEach(btn => btn.classList.remove('active'));
+    const boton = document.getElementById(`filtro-${categoria}`);
+    if (boton) boton.classList.add('active');
+
+    document.querySelectorAll('.espacio').forEach(el => {
+        el.style.display = (categoria === 'todo' || el.classList.contains(categoria)) ? 'block' : 'none';
+    });
+}
+
+function mostrarImagen(img) {
+    alert('Imagen: ' + img.alt);
+}
+
+function abrirReserva(idAula, nombreAula) {
+    document.getElementById('tituloReserva').innerText = `Reservar - ${nombreAula}`;
+    document.getElementById('idAulaSeleccionada').value = idAula;
+    document.getElementById('aulaSeleccionada').value = nombreAula;
+    const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
+    modal.show();
+}
