@@ -66,3 +66,25 @@ function abrirReserva(idAula, nombreAula) {
     const modal = new bootstrap.Modal(document.getElementById('modalReserva'));
     modal.show();
 }
+function abrirModalNotificacion(idGrupo){
+    document.getElementById('notiGrupo').value = idGrupo;
+    new bootstrap.Modal(document.getElementById('modalNotificacion')).show();
+}
+
+// Enviar formulario vía AJAX
+document.getElementById('formNotificacion').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
+    const res = await fetch('enviar-notificacion.php', {
+        method: 'POST',
+        body: formData
+    });
+    const data = await res.json();
+    if(data.ok){
+        alert('Notificación enviada correctamente');
+        this.reset();
+        bootstrap.Modal.getInstance(document.getElementById('modalNotificacion')).hide();
+    } else {
+        alert('Error: ' + data.error);
+    }
+});

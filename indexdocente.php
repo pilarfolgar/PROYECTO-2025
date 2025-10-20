@@ -80,6 +80,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $stmt->close();
     ?>
   </div>
+  
 </section>
 
 
@@ -232,6 +233,37 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     </div>
   </div>
 </main>
+<!-- Botón Enviar Notificación -->
+<button class="btn btn-warning mt-2" onclick="abrirModalNotificacion(<?= $row['id_grupo'] ?>)">Enviar Notificación</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalNotificacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formNotificacion">
+        <div class="modal-header">
+          <h5 class="modal-title">Enviar Notificación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id_grupo" id="notiGrupo">
+          <div class="mb-3">
+            <label>Título</label>
+            <input type="text" name="titulo" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Mensaje</label>
+            <textarea name="mensaje" class="form-control" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <?php require("footer.php"); ?>
 

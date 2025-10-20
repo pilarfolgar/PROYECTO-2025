@@ -156,6 +156,16 @@ foreach ($horarios as $h) {
       <div class="docente-subject">Ver tus avisos importantes</div>
       <a href="notificaciones.php" class="boton w-100 text-center">Ir a Notificaciones</a>
     </div>
+    <?php
+// Traer notificaciones del grupo del estudiante
+$stmt = $con->prepare("SELECT id, titulo, mensaje, fecha, visto_estudiante FROM notificaciones WHERE id_grupo=? ORDER BY fecha DESC");
+$stmt->bind_param("i", $id_grupo);
+$stmt->execute();
+$result = $stmt->get_result();
+$notificaciones = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+?>
+
 
     <!-- Tarjeta Horario -->
     <div class="estudiante-card">
