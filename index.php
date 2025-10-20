@@ -122,7 +122,10 @@
         <div class="docente-subject">Informática</div>
       </div>
     </div>
-    <a href="funcionarios.php" class="ver-todo-btn mt-3 d-inline-block">Ver todo nuestro equipo</a>
+   <div class="ver-todo-container">
+  <a href="funcionarios.php" class="ver-todo-btn">Ver todo nuestro equipo</a>
+</div>
+
   </div>
 
   <!-- HISTORIA / MISIÓN / VISIÓN / VALORES -->
