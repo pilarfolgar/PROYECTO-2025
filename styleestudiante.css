@@ -1,11 +1,12 @@
-/* ================= CONTENEDOR PRINCIPAL DE TARJETAS ================= */
 .estudiante-container,
 .docentes-grid {
   display: flex;
-  flex-wrap: wrap;          /* Adaptable a pantallas pequeñas */
-  justify-content: center;  /* Centrado horizontal */
-  gap: 1.5rem;              /* Espacio entre tarjetas */
-  padding: 1rem;
+  flex-wrap: wrap;         
+  justify-content: center;  
+  gap: 1.5rem;             
+  padding: 1rem 1.5rem;    /* Padding horizontal para separar del borde */
+  margin: 0 auto;           /* Centrado horizontal si hay max-width */
+  max-width: 1200px;        /* Opcional: limita el ancho en pantallas grandes */
 }
 
 /* ================= TARJETAS ================= */
