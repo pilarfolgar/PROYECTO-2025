@@ -1,65 +1,213 @@
-/* Contenedor de todas las tarjetas */
-.estudiante-container {
+.estudiante-container,
+.docentes-grid {
   display: flex;
-  flex-wrap: wrap;             /* Para que se adapten a pantallas chicas */
-  justify-content: center;     /* Centra horizontalmente */
-  gap: 1.5rem;                 /* Espacio entre tarjetas */
+  flex-wrap: wrap;         
+  justify-content: center;  
+  gap: 1.5rem;             
+  padding: 1rem 1.5rem;    /* Padding horizontal para separar del borde */
+  margin: 0 auto;           /* Centrado horizontal si hay max-width */
+  max-width: 1200px;        /* Opcional: limita el ancho en pantallas grandes */
 }
 
-/* Tarjeta individual */
+/* ================= TARJETAS ================= */
 .estudiante-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;  /* Esto empuja el botón al fondo */
+  justify-content: space-between; /* Empuja botón al fondo */
   align-items: center;
-  width: 250px;                     /* Fijá un ancho uniforme */
-  min-height: 320px;                /* Altura mínima igual para todas */
+  width: 250px;
+  min-height: 320px;
   padding: 1rem;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Zona del ícono */
+.estudiante-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ================= ICONO DE LA TARJETA ================= */
 .docente-photo {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 1rem;
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff; /* Color por defecto, se puede cambiar por clase */
+  color: white;
 }
 
-/* Título y texto */
+/* ================= TÍTULO Y TEXTO ================= */
 .docente-name {
   font-weight: bold;
-  margin-bottom: 0.5rem;
   font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .docente-subject {
-  flex-grow: 1;           /* Hace que esta sección ocupe el espacio variable */
+  flex-grow: 1;
   margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #555;
 }
 
-/* Botón */
+/* ================= BOTONES ================= */
 .boton {
-  background-color: #007bff; /* Cambiá al color de tu diseño */
+  background-color: #007bff;
   color: white;
   padding: 0.75rem 1rem;
   border: none;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
-  transition: background 0.3s;
+  text-align: center;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .boton:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 .boton.w-100 {
   width: 100%;
 }
 
+/* ================= ACORDEÓN HORARIOS ================= */
+#horarioGrupo {
+  display: none; /* Oculto hasta clic */
+}
 
+.accordion-button {
+  background: #007bff;
+  color: #fff;
+}
+
+.accordion-button:not(.collapsed) {
+  background: #0056b3;
+}
+
+/* ================= TABLA HORARIOS ================= */
+.table {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ================= BOTÓN FLOTANTE ================= */
+.btn-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffc107;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.3s;
+  z-index: 1000;
+}
+
+.btn-flotante:hover {
+  transform: scale(1.1);
+  background-color: #e0a800;
+}
+
+/* ================= MODAL / FORMULARIO REPORTES ================= */
+.formulario-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+}
+
+.formulario {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  z-index: 1000;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.formulario .cerrar {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.formulario .form-title {
+  font-weight: bold;
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+.formulario .form-control,
+.formulario .form-select {
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ced4da;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+  .estudiante-card {
+    width: 220px;
+    min-height: 300px;
+  }
+  .docente-photo {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .estudiante-card {
+    width: 45%;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .estudiante-card {
+    width: 90%;
+    min-height: 260px;
+  }
+
+  .docente-photo {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .boton {
+    padding: 0.6rem 1rem;
+  }
+}
