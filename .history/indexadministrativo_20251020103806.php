@@ -74,20 +74,29 @@ $con = conectar_bd();
     Ir a Datos Administrativos
   </a>
 </div>
-
 <?php
-// Traer solo notificaciones enviadas por docentes
 $result_admin_notis = $con->query("
     SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
     FROM notificaciones n
     JOIN usuario u ON u.cedula = n.docente_cedula
     JOIN grupo g ON g.id_grupo = n.id_grupo
-    WHERE n.docente_cedula != 0
+    WHERE n.rol_emisor = 'docente'
     ORDER BY n.fecha DESC
 ");
 
 ?>
 
+<?php
+// Solo notificaciones enviadas por docentes
+$result_admin_notis = $con->query("
+    SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
+    FROM notificaciones n
+    JOIN usuario u ON u.cedula = n.docente_cedula
+    JOIN grupo g ON g.id_grupo = n.id_grupo
+    WHERE n.rol_emisor = 'docente'
+    ORDER BY n.fecha DESC
+");
+?>
 
 <div class="card mb-4">
   <div class="card-header bg-primary text-white">

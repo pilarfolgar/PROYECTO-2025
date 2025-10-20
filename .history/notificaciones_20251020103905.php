@@ -3,7 +3,6 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Obtener cédula del estudiante
 $cedula_estudiante = $_SESSION['cedula'] ?? 0;
 if(!$cedula_estudiante){
     die("No se ha iniciado sesión.");
@@ -18,7 +17,7 @@ $stmtG->bind_result($id_grupo);
 $stmtG->fetch();
 $stmtG->close();
 
-// Marcar como visto
+// Marcar notificación como vista
 if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
     $sqlVisto = "UPDATE notificaciones SET visto_estudiante = 1 WHERE id = ? AND id_grupo = ?";
@@ -28,7 +27,7 @@ if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $stmtV->close();
 }
 
-// Traer notificaciones del grupo
+// Traer notificaciones del grupo del estudiante (independiente de rol_emisor)
 $sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante
         FROM notificaciones
         WHERE id_grupo = ?
@@ -40,6 +39,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,17 +48,19 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 <link rel="stylesheet" href="notificaciones.css">
 </head>
 <body>
+
 <?php include('header.php'); ?>
+
 <main>
     <h2>Mis Notificaciones</h2>
     <div class="notificaciones-container">
         <?php while($stmt->fetch()): ?>
             <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
-                <h3><?= htmlspecialchars($titulo) ?></h3>
-                <p><?= nl2br(htmlspecialchars($mensaje)) ?></p>
-                <p class="fecha"><?= $fecha ?></p>
+                <h3><?php echo htmlspecialchars($titulo); ?></h3>
+                <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
+                <p class="fecha"><?php echo $fecha; ?></p>
                 <?php if(!$visto): ?>
-                    <a href="?marcar_visto=<?= $id_notificacion ?>" class="btn-marcar">Marcar como leído</a>
+                    <a href="?marcar_visto=<?php echo $id_notificacion; ?>" class="btn-marcar">Marcar como leído</a>
                 <?php else: ?>
                     <span class="leido">Leído</span>
                 <?php endif; ?>
@@ -66,10 +68,21 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
         <?php endwhile; ?>
     </div>
 </main>
+
 <?php
 $stmt->close();
 $con->close();
-include('footer.php');
 ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const notis = document.querySelectorAll('.notificacion');
+    notis.forEach((n,i) => {
+        setTimeout(()=> n.classList.add('visible'), i*100);
+    });
+});
+</script>
+
+<?php include('footer.php'); ?>
 </body>
 </html>

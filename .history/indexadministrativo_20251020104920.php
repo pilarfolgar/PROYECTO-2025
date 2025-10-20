@@ -74,7 +74,7 @@ $con = conectar_bd();
     Ir a Datos Administrativos
   </a>
 </div>
-
+<?php
 <?php
 // Traer solo notificaciones enviadas por docentes
 $result_admin_notis = $con->query("
