@@ -1,10 +1,8 @@
 <?php  
+session_start();
 require("conexion.php");
-
 require("header.php"); 
 $con = conectar_bd();
-
-session_start();
 $cedula_docente = $_SESSION['cedula']; // Usamos la cédula como identificador
 
 // Función para generar bloques horarios
