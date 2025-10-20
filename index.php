@@ -1,3 +1,16 @@
+<?php
+session_start();
+require("conexion.php");
+$con = conectar_bd();
+
+// Traer solo 3 docentes ordenados por nombre
+$sql = "SELECT nombrecompleto, apellido, email, telefono, foto, asignatura 
+        FROM usuario 
+        WHERE rol = 'docente' 
+        ORDER BY nombrecompleto 
+        LIMIT 3";
+$result = $con->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,7 +18,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evolution IT</title>
 <link rel="stylesheet" href="style.css">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -105,24 +117,26 @@
   <div class="mb-5">
     <h2 class="text-center mb-4">Conoce a nuestros docentes</h2>
     <input id="buscar-docente" type="text" placeholder="Buscar docente..." class="form-control mb-4">
+
     <div class="docentes-grid">
-      <div class="docente-card">
-        <img src="imagenes/logopoyecto.png" class="docente-photo" alt="Ana María López">
-        <div class="docente-name">Ana María López</div>
-        <div class="docente-subject">Matemáticas</div>
-      </div>
-      <div class="docente-card">
-        <img src="imagenes/logopoyecto.png" class="docente-photo" alt="Carlos Fernández">
-        <div class="docente-name">Carlos Fernández</div>
-        <div class="docente-subject">Física</div>
-      </div>
-      <div class="docente-card">
-        <img src="imagenes/logopoyecto.png" class="docente-photo" alt="Laura Gómez">
-        <div class="docente-name">Laura Gómez</div>
-        <div class="docente-subject">Informática</div>
-      </div>
+      <?php if ($result->num_rows > 0): ?>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <div class="docente-card">
+            <img class="docente-photo"
+                 src="<?= !empty($row['foto']) ? htmlspecialchars($row['foto']) : 'imagenes/LOGO.jpeg' ?>"
+                 alt="Foto de <?= htmlspecialchars($row['nombrecompleto'] . ' ' . $row['apellido']) ?>" />
+            <div class="docente-name"><?= htmlspecialchars($row['nombrecompleto'] . ' ' . $row['apellido']) ?></div>
+            <div class="docente-subject"><?= htmlspecialchars($row['asignatura'] ?? 'Sin asignatura') ?></div>
+          </div>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p class="text-center">No hay docentes registrados aún.</p>
+      <?php endif; ?>
     </div>
-    <a href="funcionarios.php" class="ver-todo-btn mt-3 d-inline-block">Ver todo nuestro equipo</a>
+
+    <div class="ver-todo-container text-center mt-3">
+      <a href="funcionarios.php" class="ver-todo-btn">Ver todo nuestro equipo</a>
+    </div>
   </div>
 
   <!-- HISTORIA / MISIÓN / VISIÓN / VALORES -->

@@ -249,3 +249,26 @@ nav a:hover {
   .docente-card { max-width: 90%; }
   .info-grid { padding: 0.5rem; }
 }
+/* ================= BOTÓN VER TODO DOCENTES ================= */
+.ver-todo-container {
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  margin-top: 1.5rem;
+}
+
+.ver-todo-btn {
+  background-color: var(--acento);
+  color: var(--texto);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.ver-todo-btn:hover {
+  background-color: var(--hover);
+  color: white;
+  transform: translateY(-2px);
+}
+

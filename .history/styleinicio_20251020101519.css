@@ -1,0 +1,143 @@
+:root {
+  --primario: #1B3A4B;     /* Azul oscuro */
+  --secundario: #588BAE;   /* Azul medio */
+  --acento: #A2D5F2;       /* Azul claro */
+  --fondo: #F0F4F8;        /* Gris muy claro */
+  --texto: #1B3A4B;        /* Texto oscuro */
+  --hover: #417899;        /* Azul intermedio */
+}
+
+/* ---------------- GLOBAL ---------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* ---------------- BODY LOGIN ---------------- */
+body.login-page {
+  background: var(--fondo);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--texto);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------------- CURVAS SUTILES ---------------- */
+body.login-page::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background: var(--primario);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+body.login-page::after {
+  content: '';
+  position: absolute;
+  bottom: -200px;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  background: var(--secundario);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+/* ---------------- FORMULARIO ---------------- */
+#login_form {
+  position: relative;
+  z-index: 1;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  transition: transform 0.3s;
+}
+
+#login_form:hover {
+  transform: translateY(-5px);
+}
+
+#login_form h3 {
+  color: var(--primario);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+#login_form .form-label {
+  font-weight: 600;
+}
+
+/* ---------------- BOTONES ---------------- */
+.btn-primary {
+  background-color: var(--acento);
+  border-color: var(--acento);
+  color: var(--primario);
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--hover);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--secundario);
+  border-color: var(--secundario);
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--hover);
+}
+
+/* ---------------- ENLACES ---------------- */
+p.text-center a {
+  color: var(--primario);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+p.text-center a:hover {
+  color: var(--acento);
+}
+
+/* ---------------- ALERTAS ---------------- */
+.alert {
+  font-size: 0.95rem;
+}
+
+/* ---------------- VALIDACIONES INPUT ---------------- */
+input:invalid {
+  border-color: #dc3545;
+}
+
+input:valid {
+  border-color: #198754;
+}
+
+/* ---------------- RESPONSIVO ---------------- */
+@media (max-width: 480px) {
+  body.login-page {
+    padding: 1rem;
+  }
+
+  #login_form {
+    padding: 1.5rem;
+  }
+}
