@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const formData = new FormData(formNotificacion);
 
-        fetch("enviar_notificacion.php", { // archivo que procesará la notificación
+        fetch("enviar-notificacion.php", { // archivo que procesará la notificación
             method: "POST",
             body: formData
         })
