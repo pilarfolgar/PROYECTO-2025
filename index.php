@@ -13,9 +13,7 @@
 
 <?php require("HeaderIndex.php"); ?>
 
-
-
-<!-- ---------------- CARRUSEL ---------------- -->
+<!-- CARRUSEL -->
 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active" data-bs-interval="10000">
@@ -46,9 +44,10 @@
   </button>
 </div>
 
-<main class="container my-5" id="mas-info">
-<div class="container mt-4 fade-in">
-  <div class="text-center p-4 bg-light border rounded shadow-sm">
+<main class="container my-5">
+
+  <!-- INSCRIPCIONES -->
+  <div class="text-center p-4 bg-light border rounded shadow-sm mb-5">
     <h3 class="text-primary fw-bold mb-2">Inscripciones 2026</h3>
     <p class="text-muted mb-0" style="font-size: 0.95rem;">
       A partir del <strong>15/12</strong>, dirígete con tu 
@@ -56,11 +55,11 @@
       <strong>carnet de vacunas</strong> y <strong>$200</strong> para SIET.
     </p>
   </div>
-</div>
+
   <!-- LO QUE OFRECEMOS + CARRERAS -->
-  <div class="row mb-5 reveal">
-    <div class="col-md-6">
-      <div class="p-3 mb-4 border rounded shadow-sm bg-light">
+  <div class="row mb-5">
+    <div class="col-md-6 mb-4">
+      <div class="p-3 border rounded shadow-sm bg-light">
         <h4 class="text-center mb-3">¿Qué ofrecemos?</h4>
         <ul class="list-unstyled">
           <li>🎓 Carreras técnicas con alta salida laboral.</li>
@@ -72,7 +71,7 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="p-3 border rounded shadow-sm bg-white">
+      <div class="p-3 border rounded shadow-sm bg-white table-responsive">
         <h4 class="text-center mb-3">Carreras Técnicas</h4>
         <table class="table table-bordered">
           <thead>
@@ -90,24 +89,23 @@
         </table>
       </div>
     </div>
-    <div class="col-md-6 offset-md-3 mt-4 reveal">
-  <div class="p-3 mb-4 border rounded shadow-sm bg-light">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3371.724859342374!2d-58.086378025346406!3d-32.31924484047528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95afcbfdd7fbb8eb%3A0xa8125d5f102fc8e4!2sITS%20Paysandu%20UTU!5e0!3m2!1ses!2suy!4v1753101421536!5m2!1ses!2suy"
-      width="100%"
-      height="300"
-      style="border:0;"
-      loading="lazy">
-    </iframe>
   </div>
-</div>
+
+  <!-- MAPA -->
+  <div class="mb-5">
+    <div class="p-3 border rounded shadow-sm bg-light">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3371.724859342374!2d-58.086378025346406!3d-32.31924484047528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95afcbfdd7fbb8eb%3A0xa8125d5f102fc8e4!2sITS%20Paysandu%20UTU!5e0!3m2!1ses!2suy!4v1753101421536!5m2!1ses!2suy"
+        width="100%" height="300" style="border:0;" loading="lazy">
+      </iframe>
+    </div>
   </div>
 
   <!-- DOCENTES -->
-  <section id="docentes" class="mb-5">
-    <h2 class="text-center mb-4 reveal">Conoce a nuestros docentes</h2>
-    <input id="buscar-docente" type="text" placeholder="Buscar docente..." class="form-control mb-4 reveal">
-    <div class="docentes-grid reveal">
+  <div class="mb-5">
+    <h2 class="text-center mb-4">Conoce a nuestros docentes</h2>
+    <input id="buscar-docente" type="text" placeholder="Buscar docente..." class="form-control mb-4">
+    <div class="docentes-grid">
       <div class="docente-card">
         <img src="imagenes/logopoyecto.png" class="docente-photo" alt="Ana María López">
         <div class="docente-name">Ana María López</div>
@@ -124,15 +122,25 @@
         <div class="docente-subject">Informática</div>
       </div>
     </div>
-    <a href="funcionarios.php" class="ver-todo-btn reveal">Ver todo nuestro equipo</a>
-  </section>
+    <a href="funcionarios.php" class="ver-todo-btn mt-3 d-inline-block">Ver todo nuestro equipo</a>
+  </div>
 
   <!-- HISTORIA / MISIÓN / VISIÓN / VALORES -->
-<section class="info-grid mb-5">
-    <div class="tarjeta reveal"><h3>Historia</h3><p>Fundado en 1975 para ofrecer educación técnica de calidad.</p></div>
-    <div class="tarjeta reveal"><h3>Misión</h3><p>Formar profesionales competentes y éticos fomentando innovación e investigación.</p></div>
-    <div class="tarjeta reveal"><h3>Visión</h3><p>Ser un instituto líder en educación tecnológica en Uruguay.</p></div>
-    <div class="tarjeta reveal"><h3>Valores</h3>
+  <div class="info-grid mb-5">
+    <div class="tarjeta">
+      <h3>Historia</h3>
+      <p>Fundado en 1975 para ofrecer educación técnica de calidad.</p>
+    </div>
+    <div class="tarjeta">
+      <h3>Misión</h3>
+      <p>Formar profesionales competentes y éticos fomentando innovación e investigación.</p>
+    </div>
+    <div class="tarjeta">
+      <h3>Visión</h3>
+      <p>Ser un instituto líder en educación tecnológica en Uruguay.</p>
+    </div>
+    <div class="tarjeta">
+      <h3>Valores</h3>
       <ul>
         <li>Excelencia académica</li>
         <li>Compromiso social</li>
@@ -141,48 +149,22 @@
         <li>Trabajo colaborativo</li>
       </ul>
     </div>
-  </section>
+  </div>
 
   <!-- CONTACTO -->
-  <section id="contacto" class="mb-5">
-    <h2 class="text-center mb-4 reveal">Contacto</h2>
-    <p class="text-center reveal"><strong>Dirección:</strong> Sarandí entre Herrera y 19 de abril, Paysandú, Uruguay</p>
-    <p class="text-center reveal"><strong>Teléfono:</strong> +598 99676284</p>
-    <p class="text-center reveal"><strong>Email:</strong> evolutionit2008@gmail.com</p>
-  </section>
+  <div class="text-center mb-5">
+    <h2 class="mb-4">Contacto</h2>
+    <p><strong>Dirección:</strong> Sarandí entre Herrera y 19 de abril, Paysandú, Uruguay</p>
+    <p><strong>Teléfono:</strong> +598 99676284</p>
+    <p><strong>Email:</strong> evolutionit2008@gmail.com</p>
+  </div>
 
 </main>
 
 <?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script src="header.js"></script>
-<script>
-// Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting) entry.target.classList.add('active');
-  });
-},{ threshold: 0.2 });
-reveals.forEach(el => revealObserver.observe(el));
-
-// Filtro docentes
-const buscarInput = document.getElementById('buscar-docente');
-buscarInput.addEventListener('input', () => {
-  const value = buscarInput.value.toLowerCase();
-  document.querySelectorAll('.docente-card').forEach(card => {
-    const name = card.querySelector('.docente-name').textContent.toLowerCase();
-    card.style.display = name.includes(value) ? 'flex' : 'none';
-  });
-});
-
-// Carrusel pausable al hover
-const carouselEl = document.getElementById('carouselExampleInterval');
-const carouselInstance = bootstrap.Carousel.getOrCreateInstance(carouselEl);
-carouselEl.addEventListener('mouseenter', () => carouselInstance.pause());
-carouselEl.addEventListener('mouseleave', () => carouselInstance.cycle());
-</script>
+<script src="index.js"></script>
 
 </body>
 </html>
