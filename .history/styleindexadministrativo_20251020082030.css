@@ -134,3 +134,23 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(89, 143, 176, 0.25);
   outline: none;
 }
+
+/* ---------------- FOOTER ---------------- */
+footer {
+  background-color: var(--primario);
+  color: var(--texto);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--secundario);
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+footer a:hover {
+  color: var(--hover);
+}

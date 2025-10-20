@@ -82,8 +82,8 @@ a {
 }
 
 .modal-footer .btn-secondary:hover {
-  background-color: var(--hover);
-  border-color: var(--hover);
+  background-color: var(--secundario);
+  border-color: var(--secundario);
 }
 
 /* ---------------- FORMULARIOS ADMINISTRATIVOS ---------------- */

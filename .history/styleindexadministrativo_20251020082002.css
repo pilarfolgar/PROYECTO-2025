@@ -1,11 +1,13 @@
+/* ---------------- VARIABLES DE COLORES ---------------- */
 :root {
-  --primario: #1B3A4B;     /* Azul oscuro: profesionalismo y confianza */
-  --secundario: #588BAE;   /* Azul medio: serenidad y organización */
-  --acento: #A2D5F2;       /* Azul claro: originalidad y frescura */
-  --fondo: #F0F4F8;        /* Gris muy claro: limpieza y tranquilidad */
-  --texto: #1B3A4B;        /* Texto oscuro para legibilidad */
-  --hover: #417899;        /* Azul intermedio para interacciones */
+  --primario: #1f4e79;
+  --secundario: #f0ad4e;
+  --acento: #5a8fb0;
+  --hover: #3b7d9a;
+  --texto: #ffffff;
+  --fondo: #f8f9fa;
 }
+
 /* ---------------- ESTILO GENERAL ---------------- */
 body {
   font-family: 'Arial', sans-serif;
@@ -133,4 +135,24 @@ a {
   border-color: var(--hover);
   box-shadow: 0 0 0 0.2rem rgba(89, 143, 176, 0.25);
   outline: none;
+}
+
+/* ---------------- FOOTER ---------------- */
+footer {
+  background-color: var(--primario);
+  color: var(--texto);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--secundario);
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+footer a:hover {
+  color: var(--hover);
 }

@@ -1,26 +1,4 @@
-:root {
-  --primario: #1B3A4B;     /* Azul oscuro: profesionalismo y confianza */
-  --secundario: #588BAE;   /* Azul medio: serenidad y organización */
-  --acento: #A2D5F2;       /* Azul claro: originalidad y frescura */
-  --fondo: #F0F4F8;        /* Gris muy claro: limpieza y tranquilidad */
-  --texto: #1B3A4B;        /* Texto oscuro para legibilidad */
-  --hover: #417899;        /* Azul intermedio para interacciones */
-}
-/* ---------------- ESTILO GENERAL ---------------- */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--fondo);
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
-
-a {
-  text-decoration: none;
-  color: var(--primario);
-}
-
-/* ---------------- CONTENEDOR Y TARJETAS ---------------- */
+/* ---------------- CONTENEDOR Y TARJETAS GENERALES ---------------- */
 .contenedor {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -54,6 +32,7 @@ a {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
+  text-decoration: none;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
@@ -71,14 +50,14 @@ a {
 }
 
 .modal-header {
-  background: var(--primario);
-  color: var(--texto);
+  background: #343a40;
+  color: white;
 }
 
 .modal-footer .btn-secondary {
   background-color: var(--secundario);
   border-color: var(--secundario);
-  color: var(--texto);
+  color: white;
 }
 
 .modal-footer .btn-secondary:hover {
@@ -124,13 +103,13 @@ a {
   border-radius: 6px;
   padding: 0.75rem;
   background-color: white;
-  color: #000;
+  color: var(--texto);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .formulario form .form-control:focus,
 .formulario form .form-select:focus {
   border-color: var(--hover);
-  box-shadow: 0 0 0 0.2rem rgba(89, 143, 176, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(89, 139, 174, 0.25);
   outline: none;
 }
