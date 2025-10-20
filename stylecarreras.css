@@ -1,0 +1,181 @@
+/* ================= VARIABLES GLOBALES ================= */
+:root {
+  --primario: #1B3A4B;
+  --secundario: #588BAE;
+  --acento: #A2D5F2;
+  --fondo: #F0F4F8;
+  --texto: #1B3A4B;
+  --hover: #417899;
+}
+
+/* ================= RESET ================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main, .container {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* ================= HEADER ================= */
+header {
+  background-color: var(--primario);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-text h2 { font-size: 2rem; font-weight: bold; }
+.header-text h4 { font-size: 0.95rem; color: var(--acento); }
+
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid var(--secundario);
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.logo:hover { transform: rotate(10deg) scale(1.05); }
+
+.nav {
+  background-color: var(--secundario);
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 0.8rem;
+}
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+.nav a:hover { background-color: var(--hover); transform: translateY(-2px); }
+
+/* ================= TARJETAS DE CARRERAS ================= */
+.contenedor {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Desktop default */
+  gap: 2rem;
+  padding: 2rem;
+}
+.tarjeta {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.tarjeta:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+.tarjeta h3, .carrera-card h4 { color: var(--primario); margin-bottom: 0.5rem; }
+
+/* Materias chip */
+.materia-chip {
+  display: inline-block;
+  background: var(--primario);
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin: 0.2rem 0.2rem 0.2rem 0;
+}
+
+/* Logo circular de sección */
+.logo-circular {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primario);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Reveal animation */
+.reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* ================= BOTONES ================= */
+.boton, .btn, button {
+  margin-top: 0.5rem;
+  background-color: var(--acento);
+  color: var(--texto);
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.boton:hover, .btn:hover, button:hover { background-color: var(--hover); color: white; transform: translateY(-2px); }
+
+/* ================= FOOTER ================= */
+.footer {
+  background-color: var(--primario);
+  text-align: center;
+  padding: 1rem 0;
+  color: white;
+  font-size: 0.95rem;
+  margin-top: auto;
+  box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+}
+.footer a { color: white; text-decoration: underline; transition: color 0.3s; }
+.footer a:hover { color: var(--acento); text-decoration: none; }
+
+/* ================= MODALES / FORMULARIOS ================= */
+.formulario {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  z-index: 1050;
+}
+.formulario .cerrar {
+  position: absolute; top: 10px; right: 10px;
+  background: none; border: none; font-size: 1.3rem; cursor: pointer;
+}
+.formulario form .form-control, .formulario form .form-select { border: 1px solid var(--secundario); border-radius: 6px; padding: 0.7rem; }
+
+/* ================= RESPONSIVE ================= */
+/* Tablet 2 columnas */
+@media (max-width: 1024px) { .contenedor { grid-template-columns: repeat(2, 1fr); } }
+/* Celular 1 columna */
+@media (max-width: 767px) {
+  .contenedor { grid-template-columns: 1fr; padding: 1rem; }
+  .tarjeta { padding: 1rem; }
+  .boton { width: 100%; text-align: center; }
+  .logo-circular { width: 100px; height: 100px; }
+  header { flex-direction: column; text-align: center; }
+  .nav { flex-direction: column; gap: 0.5rem; }
+  .footer { font-size: 0.85rem; }
+}

@@ -46,7 +46,7 @@ if (isset($_SESSION['rol'])) {
 
 <nav class="nav">
   <a href="<?php echo $inicio_link; ?>">Inicio</a>
-  <a href="index_carreras.php">Carreras</a>
+  <a href="indec_carreras">Carreras</a>
 </nav>
 
 

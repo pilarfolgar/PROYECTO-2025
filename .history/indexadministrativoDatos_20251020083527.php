@@ -11,7 +11,8 @@ $con = conectar_bd();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Administrativo - Gestión de Datos</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="styleindexadministrativoDatos.css">
+  <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="styleindexadministrativoDatos.css">
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -45,12 +46,12 @@ $con = conectar_bd();
         <tbody>
         <?php while($row = $result->fetch_assoc()): ?>
           <tr>
-            <td data-label="Cédula"><?= $row['cedula'] ?></td>
-            <td data-label="Nombre"><?= htmlspecialchars($row['nombrecompleto']) ?></td>
-            <td data-label="Apellido"><?= htmlspecialchars($row['apellido']) ?></td>
-            <td data-label="Email"><?= htmlspecialchars($row['email']) ?></td>
-            <td data-label="Teléfono"><?= htmlspecialchars($row['telefono']) ?></td>
-            <td data-label="Acciones">
+            <td><?= $row['cedula'] ?></td>
+            <td><?= htmlspecialchars($row['nombrecompleto']) ?></td>
+            <td><?= htmlspecialchars($row['apellido']) ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= htmlspecialchars($row['telefono']) ?></td>
+            <td>
               <a href="editar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-primary">Editar</a>
               <a href="eliminar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este docente?');">Eliminar</a>
             </td>
@@ -91,11 +92,11 @@ $con = conectar_bd();
         <tbody>
         <?php while($row = $result->fetch_assoc()): ?>
           <tr>
-            <td data-label="ID"><?= $row['id_asignatura'] ?></td>
-            <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
-            <td data-label="Código"><?= htmlspecialchars($row['codigo']) ?></td>
-            <td data-label="Docentes"><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
-            <td data-label="Acciones">
+            <td><?= $row['id_asignatura'] ?></td>
+            <td><?= htmlspecialchars($row['nombre']) ?></td>
+            <td><?= htmlspecialchars($row['codigo']) ?></td>
+            <td><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
+            <td>
               <a href="editar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-primary">Editar</a>
               <a href="eliminar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asignatura?');">Eliminar</a>
             </td>
@@ -139,15 +140,15 @@ $con = conectar_bd();
         <tbody>
         <?php while($row = $result->fetch_assoc()): ?>
           <tr>
-            <td data-label="ID"><?= $row['id_horario'] ?></td>
-            <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
-            <td data-label="Día"><?= $row['dia'] ?></td>
-            <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
-            <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
-            <td data-label="Grupo"><?= htmlspecialchars($row['grupo'] ?? '—') ?></td>
-            <td data-label="Clase"><?= htmlspecialchars($row['clase']) ?></td>
-            <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
-            <td data-label="Acciones">
+            <td><?= $row['id_horario'] ?></td>
+            <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
+            <td><?= $row['dia'] ?></td>
+            <td><?= $row['hora_inicio'] ?></td>
+            <td><?= $row['hora_fin'] ?></td>
+            <td><?= htmlspecialchars($row['grupo'] ?? '—') ?></td>
+            <td><?= htmlspecialchars($row['clase']) ?></td>
+            <td><?= htmlspecialchars($row['aula']) ?></td>
+            <td>
               <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
               <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
             </td>
@@ -161,29 +162,139 @@ $con = conectar_bd();
     <?php endif; ?>
   </section>
 
-  <!-- Repite el mismo patrón para AULAS y GRUPOS, agregando data-label en cada td -->
-</main>
+  <!-- AULAS -->
+<section class="mb-5">
+  <h3>Aulas</h3>
+  <?php
+  $sql = "SELECT a.*, 
+                 GROUP_CONCAT(r.nombre SEPARATOR ', ') AS recursos
+          FROM aula a
+          LEFT JOIN aula_recurso ar ON a.id_aula = ar.id_aula
+          LEFT JOIN recurso r ON ar.id_recurso = r.id_recurso
+          GROUP BY a.id_aula
+          ORDER BY a.codigo";
+  $result = $con->query($sql);
+  if($result && $result->num_rows > 0):
+  ?>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Código</th>
+          <th>Capacidad</th>
+          <th>Ubicación</th>
+          <th>Tipo</th>
+          <th>Recursos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+          <td><?= htmlspecialchars($row['codigo']) ?></td>
+          <td><?= htmlspecialchars($row['capacidad']) ?></td>
+          <td><?= htmlspecialchars($row['ubicacion']) ?></td>
+          <td><?= htmlspecialchars($row['tipo']) ?></td>
+          <td><?= htmlspecialchars($row['recursos'] ?? '—') ?></td>
+          <td>
+            <a href="editar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-primary">Editar</a>
+            <a href="eliminar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta aula?');">Eliminar</a>
+          </td>
+        </tr>
+      <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
+  <?php else: ?>
+    <p>No hay aulas registradas.</p>
+  <?php endif; ?>
+</section>
 
+
+  <!-- GRUPOS -->
+  <section class="mb-5">
+    <h3>Grupos</h3>
+    <?php
+    $sql = "SELECT g.*, GROUP_CONCAT(a.nombre SEPARATOR ', ') AS asignaturas
+            FROM grupo g
+            LEFT JOIN grupo_asignatura ga ON g.id_grupo = ga.id_grupo
+            LEFT JOIN asignatura a ON ga.id_asignatura = a.id_asignatura
+            GROUP BY g.id_grupo
+            ORDER BY g.nombre";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Orientación</th>
+            <th>Cant. Estudiantes</th>
+            <th>Asignaturas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= $row['id_grupo'] ?></td>
+            <td><?= htmlspecialchars($row['nombre']) ?></td>
+            <td><?= htmlspecialchars($row['orientacion']) ?></td>
+            <td><?= $row['cantidad_estudiantes'] ?></td>
+            <td><?= htmlspecialchars($row['asignaturas'] ?? '—') ?></td>
+            <td>
+              <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay grupos registrados.</p>
+    <?php endif; ?>
+  </section>
+
+</main>
 <?php
-// SweetAlert mensajes
+// Mostrar SweetAlert si hay mensaje de éxito o error
 $tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura'];
+
 foreach ($tipos as $tipo) {
     if (isset($_SESSION["msg_$tipo"])) {
         $mensaje = $_SESSION["msg_$tipo"];
         echo "<script>
-            Swal.fire({icon:'success', title:'Éxito', text:'$mensaje', confirmButtonColor:'#3085d6'});
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '$mensaje',
+                confirmButtonColor: '#3085d6'
+            });
         </script>";
         unset($_SESSION["msg_$tipo"]);
     }
+
     if (isset($_SESSION["error_$tipo"])) {
         $mensaje = $_SESSION["error_$tipo"];
         echo "<script>
-            Swal.fire({icon:'error', title:'Error', text:'$mensaje', confirmButtonColor:'#d33'});
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '$mensaje',
+                confirmButtonColor: '#d33'
+            });
         </script>";
         unset($_SESSION["error_$tipo"]);
     }
 }
 ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
 <?php require("footer.php"); ?>
 </body>

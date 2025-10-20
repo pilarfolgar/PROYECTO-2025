@@ -1,10 +1,10 @@
 :root {
-  --primario: #1B3A4B;     /* Azul oscuro */
-  --secundario: #588BAE;   /* Azul medio */
-  --acento: #A2D5F2;       /* Azul claro */
-  --fondo: #F0F4F8;        /* Gris muy claro */
-  --texto: #1B3A4B;        /* Texto */
-  --hover: #417899;        /* Hover botones */
+  --primario: #1B3A4B;     
+  --secundario: #588BAE;   
+  --acento: #A2D5F2;       
+  --fondo: #F0F4F8;        
+  --texto: #1B3A4B;        
+  --hover: #417899;        
 }
 
 /* ---------------- ESTILO GENERAL ---------------- */
@@ -16,36 +16,30 @@ body {
   color: #333;
 }
 
-a {
-  text-decoration: none;
-  color: var(--primario);
-}
+a { text-decoration: none; color: var(--primario); }
 
 /* ---------------- CONTENEDOR Y TARJETAS ---------------- */
 .contenedor {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columnas */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   padding: 2rem;
 }
 
 .tarjeta {
-  background-color: #fff;
+  background-color: white;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .tarjeta:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.tarjeta h3 {
-  color: var(--primario);
-  margin-bottom: 0.5rem;
-}
+.tarjeta h3 { color: var(--primario); margin-bottom: 0.5rem; }
 
 /* ---------------- BOTONES ---------------- */
 .boton {
@@ -57,8 +51,8 @@ a {
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  display: inline-block;
   transition: background 0.3s, transform 0.2s;
+  display: inline-block;
 }
 
 .boton:hover {
@@ -67,21 +61,13 @@ a {
 }
 
 /* ---------------- MODALES ---------------- */
-.modal-content {
-  border-radius: 15px;
-}
-
-.modal-header {
-  background: var(--primario);
-  color: #fff;
-}
-
+.modal-content { border-radius: 15px; }
+.modal-header { background: var(--primario); color: var(--texto); }
 .modal-footer .btn-secondary {
   background-color: var(--secundario);
   border-color: var(--secundario);
-  color: #fff;
+  color: var(--texto);
 }
-
 .modal-footer .btn-secondary:hover {
   background-color: var(--hover);
   border-color: var(--hover);
@@ -95,84 +81,59 @@ a {
   transform: translate(-50%, -50%);
   background: #fff;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 10px;
   width: 90%;
-  max-width: 500px;
+  max-width: 400px;
   display: none;
-  z-index: 1050;
+  z-index: 1000;
 }
-
 .formulario .form-title {
   color: var(--primario);
   font-weight: bold;
   margin-bottom: 1.5rem;
   text-align: center;
 }
-
 .formulario .cerrar {
   position: absolute;
   top: 10px;
   right: 10px;
   background: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   cursor: pointer;
 }
-
 .formulario form .form-control,
-.formulario form .form-select,
-.formulario form textarea {
+.formulario form .form-select {
   border: 1px solid var(--secundario);
   border-radius: 6px;
-  padding: 0.7rem;
-  margin-bottom: 1rem;
-  background-color: #fff;
+  padding: 0.75rem;
+  background-color: white;
+  color: #000;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-
 .formulario form .form-control:focus,
-.formulario form .form-select:focus,
-.formulario form textarea:focus {
+.formulario form .form-select:focus {
   border-color: var(--hover);
-  box-shadow: 0 0 0 0.2rem rgba(89,143,176,0.25);
+  box-shadow: 0 0 0 0.2rem rgba(89, 143, 176, 0.25);
   outline: none;
 }
 
-/* ---------------- TABLAS ---------------- */
-.table-responsive {
-  overflow-x: auto;
-}
+/* ---------------- RESPONSIVE ---------------- */
 
-.table {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.table th, .table td {
-  vertical-align: middle;
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) {
-  background-color: #f8f9fa;
-}
-
-/* ---------------- MEDIA QUERIES ---------------- */
-/* Desktop: 4 columnas */
-@media (min-width: 1025) {
-  .contenedor {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-
-/* Tablet: siempre 2 columnas */
-@media (min-width: 768px) {
+/* Tablets: 2 columnas fijas */
+@media (min-width: 768px) and (max-width: 1024px) {
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
   }
 }
+
+/* Móviles: 1 columna */
 @media (max-width: 767px) {
   .contenedor {
     grid-template-columns: 1fr;
+    gap: 1rem;
     padding: 1rem;
   }
   .tarjeta {
@@ -181,9 +142,5 @@ a {
   .boton {
     width: 100%;
     text-align: center;
-  }
-  .formulario {
-    width: 95%;
-    padding: 1.5rem;
   }
 }
