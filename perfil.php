@@ -5,7 +5,7 @@ $con = conectar_bd();
 
 // Verificar sesión usando la cédula
 if (!isset($_SESSION['cedula'])) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -28,7 +28,8 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
 <title>Mi Perfil - InfraLex</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="perfil.css">
-
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -53,13 +54,35 @@ if (!$user) { echo "Usuario no encontrado."; exit; }
             <a href="logout.php" class="btn-perfil btn-logout">Cerrar Sesión</a>
 
             <!-- Botón para eliminar cuenta -->
-            <form method="post" action="procesar_eliminado.php" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
-                <button type="submit" class="btn-perfil btn-delete mt-2">Eliminar Cuenta</button>
+            <form id="eliminarCuentaForm" method="post" action="procesar_eliminado.php">
+                <button type="button" class="btn-perfil btn-delete mt-2" id="btnEliminar">Eliminar Cuenta</button>
             </form>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// SweetAlert2 para confirmar eliminación de cuenta
+document.getElementById('btnEliminar').addEventListener('click', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('eliminarCuentaForm').submit();
+        }
+    });
+});
+</script>
+
 </body>
 </html>

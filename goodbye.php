@@ -9,7 +9,7 @@
 <div class="text-center p-4 bg-white rounded shadow">
     <h2>Tu cuenta ha sido eliminada</h2>
     <p>Esperamos que vuelvas pronto.</p>
-    <a href="login.php" class="btn btn-primary mt-3">Volver al Inicio</a>
+    <a href="index.php" class="btn btn-primary mt-3">Volver al inicio</a>
 </div>
 </body>
 </html>

@@ -49,7 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
     $pass_actual = $_POST['pass_actual'] ?? '';
     $pass_nueva = $_POST['pass_nueva'] ?? '';
 
+    // -------------------
     // Manejar subida de foto
+    // -------------------
     $foto_ruta = $user['foto'];
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
         $archivo_tmp = $_FILES['foto']['tmp_name'];
@@ -72,7 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
         }
     }
 
+    // -------------------
     // Cambiar contraseña
+    // -------------------
     if (!empty($pass_actual) || !empty($pass_nueva)) {
         if (empty($pass_actual) || empty($pass_nueva)) $mensaje = "Completa ambos campos para cambiar la contraseña.";
         elseif (!password_verify($pass_actual, $user['pass'])) $mensaje = "Contraseña actual incorrecta.";
@@ -86,13 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
         }
     }
 
+    // -------------------
     // Actualizar datos del perfil
+    // -------------------
     $upd = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
     $upd->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
     $upd->execute();
     $upd->close();
 
     if (empty($mensaje)) $mensaje = "Perfil actualizado con éxito.";
+
     header("Refresh: 2; URL=perfil.php");
 }
 ?>
@@ -108,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 .edit-card { max-width: 600px; margin: 40px auto; padding: 2rem; border-radius: 12px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
 .edit-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #588BAE; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -172,17 +180,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 
         <hr class="my-4">
 
-        <a href="logout.php" class="btn btn-danger w-100">Cerrar Sesión</a>
+        <a href="logout.php" class="btn btn-danger w-100 mb-2">Cerrar Sesión</a>
 
         <!-- Botón para eliminar cuenta -->
-        <form method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+        <form id="eliminarCuentaForm" method="post">
             <input type="hidden" name="eliminar_cuenta" value="1">
-            <button type="submit" class="btn btn-danger w-100 mt-2">Eliminar Cuenta</button>
+            <button type="button" class="btn btn-danger w-100 mt-2" id="btnEliminar">Eliminar Cuenta</button>
         </form>
-
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// SweetAlert2 para confirmar eliminación
+document.getElementById('btnEliminar').addEventListener('click', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('eliminarCuentaForm').submit();
+        }
+    });
+});
+</script>
+
 </body>
 </html>
