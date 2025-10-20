@@ -75,6 +75,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         echo '<div class="docente-subject text-muted">'.htmlspecialchars($row['orientacion']).'</div>';
         echo '<button class="btn btn-outline-primary boton ver-miembros" data-grupo="'.$row['id_grupo'].'">Ver miembros</button>';
         echo '<ul class="lista-miembros" id="miembros-'.$row['id_grupo'].'"></ul>';
+        echo '<button class="btn btn-warning mt-2" onclick="abrirModalNotificacion('.$row['id_grupo'].')">Enviar Notificación</button>';
+
+    
         echo '</div>';
     }
     $stmt->close();
@@ -234,9 +237,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
   </div>
 </main>
 <!-- Botón Enviar Notificación -->
-<button class="btn btn-warning mt-2" onclick="abrirModalNotificacion(<?= $row['id_grupo'] ?>)">Enviar Notificación</button>
 
-<!-- Modal -->
 <div class="modal fade" id="modalNotificacion" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
