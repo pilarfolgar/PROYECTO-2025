@@ -67,23 +67,37 @@ function abrirReserva(idAula, nombreAula) {
     modal.show();
 }
 function abrirModalNotificacion(){
-    new bootstrap.Modal(document.getElementById('modalNotificacion')).show();
+    const modal = new bootstrap.Modal(document.getElementById('modalNotificacion'));
+    modal.show();
 }
 
-// Enviar formulario vía AJAX
-document.getElementById('formNotificacion').addEventListener('submit', async function(e){
-    e.preventDefault();
-    const formData = new FormData(this);
-    const res = await fetch('enviar-notificacion.php', {
-        method: 'POST',
-        body: formData
+document.addEventListener("DOMContentLoaded", () => {
+    const formNotificacion = document.getElementById("formNotificacion");
+
+    formNotificacion.addEventListener("submit", function(e) {
+        e.preventDefault(); // Evita que la página recargue
+
+        const formData = new FormData(formNotificacion);
+
+        fetch("enviar_notificacion.php", { // archivo que procesará la notificación
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success){
+                alert("Notificación enviada correctamente");
+                formNotificacion.reset();
+                // Cierra el modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalNotificacion'));
+                modal.hide();
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Ocurrió un error al enviar la notificación.");
+        });
     });
-    const data = await res.json();
-    if(data.ok){
-        alert('Notificación enviada correctamente');
-        this.reset();
-        bootstrap.Modal.getInstance(document.getElementById('modalNotificacion')).hide();
-    } else {
-        alert('Error: ' + data.error);
-    }
 });
