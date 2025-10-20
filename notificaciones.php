@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require("conexion.php");
 $con = conectar_bd();
@@ -18,20 +18,18 @@ $stmtG->bind_result($id_grupo);
 $stmtG->fetch();
 $stmtG->close();
 
-// Marcar como visto (solo para notificaciones enviadas por docente)
+// Marcar como visto
 if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
-    $sqlVisto = "UPDATE notificaciones 
-                 SET visto_estudiante = 1 
-                 WHERE id = ? AND id_grupo = ? AND rol_emisor = 'docente'";
+    $sqlVisto = "UPDATE notificaciones SET visto_estudiante = 1 WHERE id = ? AND id_grupo = ?";
     $stmtV = $con->prepare($sqlVisto);
     $stmtV->bind_param("ii", $id_notificacion, $id_grupo);
     $stmtV->execute();
     $stmtV->close();
 }
 
-// Traer todas las notificaciones del grupo (docente o adscripto)
-$sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante, rol_emisor
+// Traer notificaciones del grupo
+$sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante
         FROM notificaciones
         WHERE id_grupo = ?
         ORDER BY fecha DESC";
@@ -40,7 +38,7 @@ $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $id_grupo);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto, $rol_emisor);
+$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -58,11 +56,10 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto, $rol_emi
             <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
                 <h3><?= htmlspecialchars($titulo) ?></h3>
                 <p><?= nl2br(htmlspecialchars($mensaje)) ?></p>
-                <p class="fecha"><?= $fecha ?> - <em><?= ucfirst($rol_emisor) ?></em></p>
-                
-                <?php if(!$visto && $rol_emisor == 'docente'): ?>
+                <p class="fecha"><?= $fecha ?></p>
+                <?php if(!$visto): ?>
                     <a href="?marcar_visto=<?= $id_notificacion ?>" class="btn-marcar">Marcar como leído</a>
-                <?php elseif($visto || $rol_emisor == 'adscriptor'): ?>
+                <?php else: ?>
                     <span class="leido">Leído</span>
                 <?php endif; ?>
             </div>
