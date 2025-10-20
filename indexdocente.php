@@ -4,7 +4,7 @@ require("conexion.php");
 $con = conectar_bd();
 
 // ================================
-// 🔹 PETICIÓN AJAX: OBTENER MIEMBROS
+//  obtenemos miembros mediante ajax
 // ================================
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $id_grupo = intval($_GET['id_grupo'] ?? 0);
@@ -24,7 +24,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 
     header('Content-Type: application/json');
     echo json_encode($miembros);
-    exit; // 🔸 Detiene el resto del HTML
+    exit; //  Detiene el resto del HTML
 }
 ?>
 <!DOCTYPE html>
@@ -36,48 +36,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="styleindexdocente.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<style>
-.docentes-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-.docente-card {
-    flex: 1 1 calc(25% - 1rem);
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-}
-.docente-photo {
-    width: 80px;
-    height: 80px;
-    background-color: #dee2e6;
-    border-radius: 50%;
-    margin: 0 auto 0.5rem auto;
-}
-.boton { margin-top: 0.5rem; }
-.lista-miembros { 
-    list-style: none; 
-    padding-left: 0; 
-    display: none;
-    margin-top: 0.5rem;
-    text-align: left;
-}
-.lista-miembros li {
-    background: #f1f3f5;
-    margin-bottom: 4px;
-    padding: 6px 10px;
-    border-radius: 5px;
-}
-@media (max-width: 768px) { .docente-card { flex: 1 1 calc(50% - 1rem); } }
-@media (max-width: 576px) { .docente-card { flex: 1 1 100%; } }
-</style>
+
 
 </head>
 <body>
@@ -120,9 +82,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
   </div>
 </section>
 
-<!-- ========================= -->
-<!-- SECCIÓN MIS RESERVAS -->
-<!-- ========================= -->
+
 <section class="container mt-5">
   <h2 class="mb-3">Mis reservas</h2>
   <div id="reservas-container">
@@ -276,54 +236,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 <?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-// ==============================
-// 🔹 Ver miembros (AJAX dinámico)
-// ==============================
-document.querySelectorAll('.ver-miembros').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    const grupoId = btn.dataset.grupo;
-    const ul = document.getElementById('miembros-' + grupoId);
-
-    if (ul.style.display === 'block') {
-      ul.style.display = 'none';
-      btn.textContent = 'Ver miembros';
-      return;
-    }
-
-    btn.textContent = 'Cargando...';
-    try {
-      const res = await fetch(`indexdocente.php?ajax=miembros&id_grupo=${grupoId}`);
-      const data = await res.json();
-      ul.innerHTML = '';
-
-      if (data.length > 0) {
-        data.forEach(m => {
-          const li = document.createElement('li');
-          li.textContent = `${m.nombrecompleto} ${m.apellido}`;
-          ul.appendChild(li);
-        });
-      } else {
-        ul.innerHTML = '<li class="text-muted">Sin estudiantes registrados</li>';
-      }
-      ul.style.display = 'block';
-      btn.textContent = 'Ocultar miembros';
-    } catch (error) {
-      console.error(error);
-      btn.textContent = 'Error';
-    }
-  });
-});
-
-// ==============================
-// 🔹 Reservar bloque (demo)
-// ==============================
-function abrirReservaBloque(td) {
-  const aula = td.dataset.aula;
-  const hora = td.dataset.hora;
-  alert('Abrir modal para reservar aula ' + aula + ' a las ' + hora);
-}
-</script>
-
+<script src="docente.js"></script>
 </body>
 </html>
