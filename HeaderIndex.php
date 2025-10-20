@@ -1,41 +1,33 @@
-<!-- HEADER -->
-<header style="display:flex;justify-content:space-between;align-items:center;background:#1B3A4B;color:white;padding:20px 30px;position:relative; height:90px;">
-  <div style="display:flex;align-items:center;gap:20px;">
-    <!-- Logo redondo -->
-    <img src="imagenes/logopoyecto.png" alt="Logo" style="height:60px;width:60px;border-radius:50%;">
-    <!-- Título -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InfraLex</title>
+  <link rel="stylesheet" href="header.css">
+  <script defer src="header.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <img src="imagenes/logopoyecto.png" alt="Logo" class="logo">
     <div>
-      <h1 style="margin:0;font-size:32px;font-family:'Segoe UI',sans-serif;font-weight:bold;">InfraLex</h1>
-      <h6 style="margin:0;font-size:16px;font-family:'Segoe UI',sans-serif;font-weight:normal;">Instituto Tecnológico Superior de Paysandú</h6>
+      <h1>InfraLex</h1>
+      <h6>Instituto Tecnológico Superior de Paysandú</h6>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:15px;position:relative;">
-    <!-- Notificaciones neutras -->
- 
-    <!-- Botón menú desplegable -->
-    <button id="menuBtn" style="font-size:28px;background:none;border:none;color:white;cursor:pointer;">☰</button>
+  <div class="header-right">
+    <button id="menuBtn">☰</button>
   </div>
 </header>
-
-<!-- NAV ABAJO -->
-<nav style="display:flex;justify-content:center;gap:20px;background:#588BAE;padding:12px;border-top:2px solid #417899;">
-  <a href="index.php" style="color:white;text-decoration:none;padding:6px 12px;">Inicio</a>
-  <a href="index_carreras.php" style="color:white;text-decoration:none;padding:6px 12px;">Carreras</a>
+<nav class="nav">
+  <a href="index.php">Inicio</a>
+  <a href="index_carreras.php">Carreras</a>
 </nav>
-
-<!-- MENÚ DESPLEGABLE -->
-<div id="menu" style="display:none;position:absolute;top:90px;right:30px;background:#417899;padding:12px;border-radius:8px;flex-direction:column;">
-  <a href="iniciosesion.php" style="color:white;text-decoration:none;padding:8px;display:block;">Iniciar Sesión</a>
-  <a href="registro.php" style="color:white;text-decoration:none;padding:8px;display:block;">Registrarse</a>
+<div id="menu" class="menu">
+  <a href="iniciosesion.php">Iniciar Sesión</a>
+  <a href="registro.php">Registrarse</a>
 </div>
 
-
-
-<script>
-  // Desplegar o cerrar menú
-  const btnMenu = document.getElementById('menuBtn');
-  const menu = document.getElementById('menu');
-  btnMenu.onclick = () => menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-
-
-</script>
+</body>
+</html>

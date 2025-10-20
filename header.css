@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1B3A4B;
+  color: white;
+  padding: 20px 30px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+.header-left h1 {
+  font-size: 28px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header-left h6 {
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: normal;
+}
+
+.header-right button {
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* NAV ABAJO */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background: #588BAE;
+  padding: 12px;
+  border-top: 2px solid #417899;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+}
+
+/* MENÚ DESPLEGABLE */
+.menu {
+  display: none;
+  position: absolute;
+  top: 90px;
+  right: 30px;
+  background: #417899;
+  padding: 12px;
+  border-radius: 8px;
+  flex-direction: column;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  padding: 8px;
+  display: block;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header-left h1 {
+    font-size: 22px;
+  }
+  .header-left h6 {
+    font-size: 12px;
+  }
+  .logo {
+    height: 50px;
+    width: 50px;
+  }
+  .nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .menu {
+    top: 80px;
+    right: 20px;
+  }
+}
