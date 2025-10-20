@@ -74,64 +74,9 @@ $con = conectar_bd();
     Ir a Datos Administrativos
   </a>
 </div>
-<?php
-// Suponiendo que ya tienes la conexión $con
-$result_admin_notis = $con->query("
-    SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
-    FROM notificaciones n
-    JOIN usuario u ON u.cedula = n.docente_cedula
-    JOIN grupo g ON g.id_grupo = n.id_grupo
-    ORDER BY fecha DESC
-");
-?>
 
-<?php
-// Solo notificaciones enviadas por docentes
-$result_admin_notis = $con->query("
-    SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
-    FROM notificaciones n
-    JOIN usuario u ON u.cedula = n.docente_cedula
-    JOIN grupo g ON g.id_grupo = n.id_grupo
-    WHERE n.rol_emisor = 'docente'
-    ORDER BY n.fecha DESC
-");
-?>
 
-<div class="card mb-4">
-  <div class="card-header bg-primary text-white">
-    <h5 class="mb-0">Ver Notificaciones de Docentes</h5>
-  </div>
-  <div class="card-body">
-    <?php if($result_admin_notis->num_rows > 0): ?>
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>Docente</th>
-              <th>Grupo</th>
-              <th>Título</th>
-              <th>Mensaje</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while($n = $result_admin_notis->fetch_assoc()): ?>
-              <tr class="<?= $n['visto_adscripto'] ? '' : 'fw-bold' ?>">
-                <td><?= htmlspecialchars($n['docente']) ?></td>
-                <td><?= htmlspecialchars($n['grupo']) ?></td>
-                <td><?= htmlspecialchars($n['titulo']) ?></td>
-                <td><?= htmlspecialchars($n['mensaje']) ?></td>
-                <td><?= $n['fecha'] ?></td>
-              </tr>
-            <?php endwhile; ?>
-          </tbody>
-        </table>
-      </div>
-    <?php else: ?>
-      <p class="text-muted mb-0">No hay notificaciones de docentes.</p>
-    <?php endif; ?>
-  </div>
-</div>
+
 
 
 <!-- MODAL REPORTES -->

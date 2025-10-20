@@ -102,7 +102,7 @@ $result = $stmt->get_result();
 ?>
 
 <div class="notificaciones-estudiante">
-    <h4>Notificaciones</h4>
+    
     <ul class="list-group">
     <?php while ($row = $result->fetch_assoc()): ?>
         <li class="list-group-item <?php echo $row['visto_estudiante'] ? '' : 'fw-bold'; ?>">

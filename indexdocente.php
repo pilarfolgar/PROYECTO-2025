@@ -239,59 +239,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     </button>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalNotificacion" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="formNotificacion">
-        <div class="modal-header">
-          <h5 class="modal-title">Enviar Notificación</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label>Grupo</label>
-            <select name="id_grupo" id="notiGrupo" class="form-control" required>
-              <option value="">-- Seleccione un grupo --</option>
-              <?php
-              // Traemos los grupos del docente para llenar el select
-              $docente_cedula = $_SESSION['cedula'];
-              $sql = "SELECT DISTINCT g.id_grupo, g.nombre AS grupo_nombre, a.nombre AS asignatura_nombre
-                      FROM docente_asignatura da
-                      JOIN asignatura a ON da.id_asignatura = a.id_asignatura
-                      JOIN grupo_asignatura ga ON a.id_asignatura = ga.id_asignatura
-                      JOIN grupo g ON ga.id_grupo = g.id_grupo
-                      WHERE da.cedula_docente = ?
-                      ORDER BY g.nombre, a.nombre";
-              $stmt = $con->prepare($sql);
-              $stmt->bind_param("s", $docente_cedula);
-              $stmt->execute();
-              $result = $stmt->get_result();
-              while($row = $result->fetch_assoc()){
-                  echo '<option value="'.$row['id_grupo'].'">'.htmlspecialchars($row['grupo_nombre'].' - '.$row['asignatura_nombre']).'</option>';
-              }
-              $stmt->close();
-              ?>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label>Título</label>
-            <input type="text" name="titulo" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label>Mensaje</label>
-            <textarea name="mensaje" class="form-control" rows="4" required></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Enviar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
 <?php require("footer.php"); ?>
