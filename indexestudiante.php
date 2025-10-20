@@ -88,14 +88,31 @@ foreach ($horarios as $h) {
       <a href="notificaciones.php" class="boton w-100 text-center">Ir a Notificaciones</a>
     </div>
     <?php
-// Traer notificaciones del grupo del estudiante
-$stmt = $con->prepare("SELECT id, titulo, mensaje, fecha, visto_estudiante FROM notificaciones WHERE id_grupo=? ORDER BY fecha DESC");
-$stmt->bind_param("i", $id_grupo);
+$sql = "SELECT n.id, n.titulo, n.mensaje, n.fecha, n.visto_estudiante, u.nombrecompleto AS docente_nombre
+        FROM notificaciones n
+        JOIN usuario u ON n.docente_cedula = u.cedula
+        WHERE n.id_grupo = (SELECT id_grupo FROM usuario WHERE cedula = ?)
+        AND n.rol_emisor = 'docente'
+        ORDER BY n.fecha DESC";
+
+$stmt = $con->prepare($sql);
+$stmt->bind_param("i", $cedula_estudiante);
 $stmt->execute();
 $result = $stmt->get_result();
-$notificaciones = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
 ?>
+
+<div class="notificaciones-estudiante">
+    <h4>Notificaciones</h4>
+    <ul class="list-group">
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <li class="list-group-item <?php echo $row['visto_estudiante'] ? '' : 'fw-bold'; ?>">
+            <strong><?php echo htmlspecialchars($row['titulo']); ?></strong>
+            <p><?php echo htmlspecialchars($row['mensaje']); ?></p>
+            <small>De: <?php echo htmlspecialchars($row['docente_nombre']); ?> | <?php echo $row['fecha']; ?></small>
+        </li>
+    <?php endwhile; ?>
+    </ul>
+</div>
 
 
     <!-- Tarjeta Horario -->

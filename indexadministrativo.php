@@ -75,27 +75,29 @@ $con = conectar_bd();
   </a>
 </div>
 <?php
-// Suponiendo que ya tienes la conexión $con
-$result_admin_notis = $con->query("
-    SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
-    FROM notificaciones n
-    JOIN usuario u ON u.cedula = n.docente_cedula
-    JOIN grupo g ON g.id_grupo = n.id_grupo
-    ORDER BY fecha DESC
-");
+$sql = "SELECT n.id, n.titulo, n.mensaje, n.fecha, n.visto_adscripto, u.nombrecompleto AS docente_nombre
+        FROM notificaciones n
+        JOIN usuario u ON n.docente_cedula = u.cedula
+        WHERE n.rol_emisor = 'docente'
+        ORDER BY n.fecha DESC";
+
+$result = $con->query($sql);
 ?>
 
-<?php
-// Solo notificaciones enviadas por docentes
-$result_admin_notis = $con->query("
-    SELECT n.id, u.nombrecompleto AS docente, g.nombre AS grupo, n.titulo, n.mensaje, n.fecha, n.visto_adscripto
-    FROM notificaciones n
-    JOIN usuario u ON u.cedula = n.docente_cedula
-    JOIN grupo g ON g.id_grupo = n.id_grupo
-    WHERE n.rol_emisor = 'docente'
-    ORDER BY n.fecha DESC
-");
-?>
+<div class="notificaciones-adscripto">
+    <h4>Notificaciones de Docentes</h4>
+    <ul class="list-group">
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <li class="list-group-item <?php echo $row['visto_adscripto'] ? '' : 'fw-bold'; ?>">
+            <strong><?php echo htmlspecialchars($row['titulo']); ?></strong>
+            <p><?php echo htmlspecialchars($row['mensaje']); ?></p>
+            <small>De: <?php echo htmlspecialchars($row['docente_nombre']); ?> | <?php echo $row['fecha']; ?></small>
+        </li>
+    <?php endwhile; ?>
+    </ul>
+</div>
+
+
 
 <div class="card mb-4">
   <div class="card-header bg-primary text-white">
