@@ -17,7 +17,6 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
         exit;
     }
 
-    // Verificación formato cédula
     if (!preg_match('/^\d{8}$/', $cedula_input)) {
         $_SESSION['mensaje'] = 'La cédula debe tener exactamente 8 dígitos.';
         header("Location: iniciosesion.php");
@@ -41,20 +40,21 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
 
     if ($fila = mysqli_fetch_assoc($resultado)) {
 
-        $hash_bd = trim($fila['pass']); // trim por si hay espacios
-
-        // Debug temporal
-        error_log("DEBUG LOGIN - pass ingresada: '$pass'");
-        error_log("DEBUG LOGIN - hash BD: '$hash_bd' | longitud: " . strlen($hash_bd));
+        $hash_bd = trim($fila['pass']); 
 
         if (password_verify($pass, $hash_bd)) {
             // Login exitoso
             $_SESSION['cedula'] = $fila['cedula'];
             $_SESSION['usuario'] = $fila['nombrecompleto'];
             $_SESSION['rol'] = $fila['rol'];
-            
-    $_SESSION['acceso_panel'] = true;
-    
+            $_SESSION['acceso_panel'] = true;
+
+            // -----------------------------
+            // Token seguro para persistencia
+            $token = bin2hex(random_bytes(32));
+            $_SESSION['token'] = $token;
+            setcookie("token_usuario", $token, time() + (30*24*60*60), "/", "", true, true); 
+            // -----------------------------
 
             // Redirección según rol
             switch ($fila['rol']) {
@@ -80,4 +80,3 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
         exit;
     }
 }
-?>

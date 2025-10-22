@@ -136,7 +136,6 @@ $result = $stmt->get_result();
   </div>
 </section>
 
-<!-- SECCIÓN HORARIO DEL ESTUDIANTE POR DÍAS (ACORDEÓN) -->
 <section class="container my-5" id="horarioGrupo">
     <h2 class="text-center mb-4">Horario de tu Grupo</h2>
     <?php if(count($horarios) > 0): ?>
