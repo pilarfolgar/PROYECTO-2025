@@ -161,13 +161,13 @@ $con = conectar_bd();
     <?php endif; ?>
   </section>
 
-  <!-- RESERVAS -->
+  <!-- RESERVA -->
   <section class="mb-5">
     <h3>Reservas</h3>
     <?php
     $sql = "SELECT r.id_reserva, r.nombre, r.fecha, r.hora_inicio, r.hora_fin,
                    a.nombre AS aula_nombre, g.nombre AS grupo_nombre
-            FROM reservas r
+            FROM reserva r
             LEFT JOIN aula a ON r.id_aula = a.id_aula
             LEFT JOIN grupo g ON r.grupo = g.id_grupo
             ORDER BY r.fecha, r.hora_inicio";

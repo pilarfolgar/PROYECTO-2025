@@ -3,21 +3,22 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-if (!isset($_GET['id'])) {
-    $_SESSION['error_reserva'] = "ID de reserva no especificado";
-    header("Location: index-administrativo-datos.php");
-    exit;
+$id = $_GET['id'] ?? null;
+if (!$id) {
+    header("Location: indexadministrativoDatos.php");
+    exit();
 }
 
-$id_reserva = intval($_GET['id']);
+// Eliminar reserva
+$stmt = $con->prepare("DELETE FROM reserva WHERE id_reserva = ?");
+$stmt->bind_param("i", $id);
 
-$sql = "DELETE FROM reservas WHERE id_reserva = $id_reserva";
-if ($con->query($sql)) {
-    $_SESSION['msg_reserva'] = "Reserva eliminada correctamente";
+if ($stmt->execute()) {
+    $_SESSION['msg_reserva'] = "Reserva eliminada con éxito ✅";
 } else {
-    $_SESSION['error_reserva'] = "Error al eliminar la reserva: " . $con->error;
+    $_SESSION['error_reserva'] = "Error al eliminar la reserva: " . $stmt->error;
 }
 
-header("Location: index-administrativo-datos.php");
-exit;
+header("Location: indexadministrativoDatos.php");
+exit();
 ?>
