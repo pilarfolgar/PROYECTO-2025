@@ -1,31 +1,45 @@
 <?php
+// seguridad.php
 session_start();
 
-// Duración máxima de la sesión en segundos
-$tiempo_sesion = 1800; // 30 minutos
+// Tiempo de vida de la sesión en segundos (opcional)
+$tiempo_sesion = 10;
 
-// Función para redirigir al login
-function redirigir_login() {
-    header("Location: iniciosesion.php");
-    exit();
+// Inicializar variable de control de navegación
+if (!isset($_SESSION['navegando'])) {
+    $_SESSION['navegando'] = true;
 }
 
-// Validar sesión
+// Comprobar si el usuario está logueado
 if (!isset($_SESSION['cedula'])) {
-    // No hay sesión activa
-    redirigir_login();
+    // Si la sesión no tiene 'cedula', redirigir al login
+    header("Location: iniciosesion.php");
+    exit;
 }
 
-// Expiración automática
+// Control para evitar que alguien copie la URL en otra pestaña
+if (!isset($_SESSION['ultima_pagina'])) {
+    $_SESSION['ultima_pagina'] = $_SERVER['REQUEST_URI'];
+} else {
+    $ultima = $_SESSION['ultima_pagina'];
+    $actual = $_SERVER['REQUEST_URI'];
+
+    // Si la URL actual es diferente a la anterior y no es un F5, reinicia sesión
+    if ($actual !== $ultima && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        // Esto evita que F5 sobre la misma página pida login
+        $_SESSION['ultima_pagina'] = $actual;
+    }
+}
+
+// Actualizar tiempo de sesión para expiración automática
 if (isset($_SESSION['tiempo_inicio'])) {
     $duracion = time() - $_SESSION['tiempo_inicio'];
     if ($duracion > $tiempo_sesion) {
         session_unset();
         session_destroy();
-        setcookie("token_usuario", "", time() - 3600, "/"); // borrar cookie si la hay
-        redirigir_login();
+        header("Location: iniciosesion.php");
+        exit;
     }
 }
-
-// Actualizar tiempo de inicio
 $_SESSION['tiempo_inicio'] = time();
+?>
