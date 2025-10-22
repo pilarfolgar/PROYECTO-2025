@@ -161,18 +161,18 @@ $con = conectar_bd();
     <?php endif; ?>
   </section>
   
-<!-- RESERVA -->
-<section class="mb-5">
+  <!-- RESERVA -->
+  <section class="mb-5">
     <h3>Reserva</h3>
     <?php
-    $sql = "SELECT r.id_reserva, r.nombre, r.fecha, r.hora_inicio, r.hora_fin,
-                   a.nombre AS aula_nombre, g.nombre AS grupo_nombre
-            FROM reserva r
-            LEFT JOIN aula a ON r.id_aula = a.id_aula
-            LEFT JOIN grupo g ON r.id_grupo = g.id_grupo
-            ORDER BY r.fecha, r.hora_inicio";
+    $sql = "SELECT id_reserva, nombre, fecha, hora_inicio, hora_fin, aula, grupo
+            FROM reserva
+            ORDER BY fecha, hora_inicio";
     $result = $con->query($sql);
-    if($result && $result->num_rows > 0):
+    if(!$result){
+        die("Error en la consulta de reserva: " . $con->error);
+    }
+    if($result->num_rows > 0):
     ?>
     <div class="table-responsive">
       <table class="table table-bordered table-striped">
@@ -193,8 +193,8 @@ $con = conectar_bd();
           <tr>
             <td data-label="ID"><?= $row['id_reserva'] ?></td>
             <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
-            <td data-label="Aula"><?= htmlspecialchars($row['aula_nombre'] ?? '—') ?></td>
-            <td data-label="Grupo"><?= htmlspecialchars($row['grupo_nombre'] ?? '—') ?></td>
+            <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
+            <td data-label="Grupo"><?= htmlspecialchars($row['grupo']) ?></td>
             <td data-label="Fecha"><?= $row['fecha'] ?></td>
             <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
             <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
@@ -210,8 +210,7 @@ $con = conectar_bd();
     <?php else: ?>
       <p>No hay reservas registradas.</p>
     <?php endif; ?>
-</section>
-
+  </section>
 
 </main>
 
