@@ -53,7 +53,9 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
             // Token seguro para persistencia
             $token = bin2hex(random_bytes(32));
             $_SESSION['token'] = $token;
-            setcookie("token_usuario", $token, time() + (30*24*60*60), "/", "", true, true); 
+
+            // Cookie persistente (30 días) segura y HTTP-only
+            setcookie("token_usuario", $token, time() + (30*24*60*60), "/", "", isset($_SERVER['HTTPS']), true);
             // -----------------------------
 
             // Redirección según rol
@@ -79,4 +81,9 @@ if (isset($_POST['cedula'], $_POST['pass'])) {
         header("Location: iniciosesion.php");
         exit;
     }
+} else {
+    // Si no se envió formulario correctamente
+    $_SESSION['mensaje'] = 'Debe enviar cédula y contraseña.';
+    header("Location: iniciosesion.php");
+    exit;
 }

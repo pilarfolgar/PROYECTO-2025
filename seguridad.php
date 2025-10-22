@@ -1,20 +1,23 @@
 <?php
 session_start();
 
+// Duración máxima de la sesión (en segundos)
 $tiempo_sesion = 1800; // 30 minutos
 
+// Función para redirigir al login
 function redirigir_login() {
     header("Location: iniciosesion.php");
     exit;
 }
 
-// Verificar sesión activa
+// Verificar si hay sesión activa
 if (!isset($_SESSION['cedula'])) {
-    if (isset($_COOKIE['token_usuario'])) {
+    // Revisar si existe token en cookie
+    if (isset($_COOKIE['token_usuario']) && isset($_SESSION['token'])) {
         $token_cookie = $_COOKIE['token_usuario'];
-        if (isset($_SESSION['token']) && hash_equals($_SESSION['token'], $token_cookie)) {
-            // Restaurar sesión
-            $_SESSION['cedula'] = $_SESSION['cedula'];
+        if (hash_equals($_SESSION['token'], $token_cookie)) {
+            // Restaurar sesión (opcional: recargar datos de BD si querés)
+            $_SESSION['cedula'] = $_SESSION['cedula'] ?? '';
             $_SESSION['usuario'] = $_SESSION['usuario'] ?? '';
             $_SESSION['rol'] = $_SESSION['rol'] ?? '';
             $_SESSION['acceso_panel'] = $_SESSION['acceso_panel'] ?? true;
@@ -22,11 +25,12 @@ if (!isset($_SESSION['cedula'])) {
             redirigir_login();
         }
     } else {
+        // No hay sesión ni token
         redirigir_login();
     }
 }
 
-// Expiración automática
+// Control de expiración automática
 if (isset($_SESSION['tiempo_inicio'])) {
     $duracion = time() - $_SESSION['tiempo_inicio'];
     if ($duracion > $tiempo_sesion) {
@@ -36,4 +40,6 @@ if (isset($_SESSION['tiempo_inicio'])) {
         redirigir_login();
     }
 }
+
+// Actualizar timestamp de inicio de sesión
 $_SESSION['tiempo_inicio'] = time();
