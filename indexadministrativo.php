@@ -520,10 +520,7 @@ function mostrarReservas() {
   modal.show();
 }
 
-function mostrarSugerencias() {
-  const modal = new bootstrap.Modal(document.getElementById('modalSugerencias'));
-  modal.show();
-}
+
 
 
 </script>

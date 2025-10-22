@@ -1,172 +1,159 @@
-/* === ESTILO GENERAL === */
-body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(135deg, #007bff, #00bcd4);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* =========================== VARIABLES DE COLOR =========================== */
+:root {
+  --primario: #1B3A4B;     /* Azul oscuro: profesionalismo y confianza */
+  --secundario: #588BAE;   /* Azul medio: serenidad y organización */
+  --acento: #A2D5F2;       /* Azul claro: originalidad y frescura */
+  --fondo: #F0F4F8;        /* Gris muy claro: limpieza y tranquilidad */
+  --texto: #1B3A4B;        /* Texto oscuro para legibilidad */
+  --hover: #417899;        /* Azul intermedio para interacciones */
 }
 
-/* Contenedor principal centrado */
-main.container {
-  flex: 1;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--fondo);
+  color: var(--texto);
+}
+
+/* =========================== CONTENEDOR PRINCIPAL =========================== */
+body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
 }
 
-/* === FORMULARIOS === */
-form {
-  background: #ffffff;
+.auth-form {
+  background-color: white;
+  padding: 3rem 2rem;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 400px;
+  max-width: 90%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =========================== ENCABEZADO DEL FORMULARIO =========================== */
+.auth-form h1 {
+  color: var(--primario);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* =========================== LABELS E INPUTS =========================== */
+.auth-form .form-label {
+  font-weight: bold;
+  color: var(--primario);
+  margin-bottom: 0.3rem;
   width: 100%;
-  max-width: 450px;
-  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Títulos */
-h1, h3 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
-
-/* Inputs y selects */
-.form-control, .form-select {
+.auth-form .form-control,
+.auth-form .form-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
   border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #ccc;
-  transition: all 0.2s;
+  border: 1px solid var(--secundario);
+  color: var(--texto);
+  font-size: 0.95rem;
+  transition: border 0.3s, box-shadow 0.3s;
 }
 
-.form-control:focus, .form-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+.auth-form .form-control:focus,
+.auth-form .form-select:focus {
+  border-color: var(--hover);
+  box-shadow: 0 0 0 0.2rem rgba(89,139,174,0.25);
+  outline: none;
 }
 
-/* Etiquetas */
-.form-label {
-  font-weight: 500;
-  color: #333;
-}
-
-/* Botones */
-button.btn {
-  border-radius: 8px;
-  padding: 0.6rem;
-  font-weight: 500;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border: none;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  border: none;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-/* Enlaces */
-a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* Mensajes y alertas */
-.alert {
-  border-radius: 8px;
-  padding: 0.8rem;
-  font-size: 0.9rem;
-}
-
-/* SweetAlert sobresale más sobre fondo */
-.swal2-popup {
-  border-radius: 12px !important;
-}
-
-/* Pie de página */
-footer {
-  background-color: #f8f9fa;
-  text-align: center;
-  padding: 0.8rem;
-  font-size: 0.9rem;
-  color: #555;
-  border-top: 1px solid #e0e0e0;
-}
-
-/* === BARRA DE FUERZA (registro.php) === */
+/* =========================== PASSWORD STRENGTH =========================== */
 #password-strength {
   height: 8px;
-  border-radius: 5px;
-  background-color: #e9ecef;
-  margin-top: 5px;
-  overflow: hidden;
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
 }
 
 #password-strength-fill {
   height: 100%;
   width: 0%;
-  border-radius: 5px;
+  background-color: var(--secundario);
+  border-radius: 4px;
   transition: width 0.3s;
 }
 
-/* Requisitos de contraseña */
-#password-requirements {
-  margin-top: 0.5rem;
-  list-style: none;
-  padding-left: 0;
+/* =========================== BOTONES =========================== */
+.auth-form .btn-primary {
+  background-color: var(--secundario);
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
 }
 
-#password-requirements li {
-  margin-bottom: 3px;
-  transition: color 0.2s;
-  font-size: 0.85rem;
+.auth-form .btn-primary:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
 }
 
-#password-requirements li.ok {
-  color: green;
+.auth-form .btn-secondary {
+  background-color: white;
+  color: var(--primario);
+  border: 1px solid var(--primario);
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-#password-requirements li.bad {
-  color: red;
+.auth-form .btn-secondary:hover {
+  background-color: var(--acento);
+  color: var(--primario);
 }
 
-/* === ANIMACIÓN === */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+/* =========================== TEXTO ADICIONAL =========================== */
+.auth-form p {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
 }
 
-/* === RESPONSIVE === */
-@media (max-height: 750px) {
-  main.container {
-    align-items: flex-start;
-    margin-top: 2rem;
+.auth-form p a {
+  color: var(--secundario);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-form p a:hover {
+  color: var(--hover);
+  text-decoration: underline;
+}
+
+/* =========================== RESPONSIVE =========================== */
+@media (max-width: 500px) {
+  .auth-form {
+    padding: 2rem 1rem;
+    width: 95%;
   }
-}
-
-@media (max-width: 480px) {
-  form {
-    padding: 1.5rem;
+  .auth-form h1 {
+    font-size: 1.5rem;
   }
 }

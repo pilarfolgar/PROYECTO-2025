@@ -161,12 +161,62 @@ $con = conectar_bd();
     <?php endif; ?>
   </section>
 
-  <!-- Repite el mismo patrón para AULAS y GRUPOS, agregando data-label en cada td -->
+  <!-- RESERVAS -->
+  <section class="mb-5">
+    <h3>Reservas</h3>
+    <?php
+    $sql = "SELECT r.id_reserva, r.nombre, r.fecha, r.hora_inicio, r.hora_fin,
+                   a.nombre AS aula_nombre, g.nombre AS grupo_nombre
+            FROM reservas r
+            LEFT JOIN aula a ON r.id_aula = a.id_aula
+            LEFT JOIN grupo g ON r.grupo = g.id_grupo
+            ORDER BY r.fecha, r.hora_inicio";
+    $result = $con->query($sql);
+    if($result && $result->num_rows > 0):
+    ?>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Aula</th>
+            <th>Grupo</th>
+            <th>Fecha</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td data-label="ID"><?= $row['id_reserva'] ?></td>
+            <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
+            <td data-label="Aula"><?= htmlspecialchars($row['aula_nombre'] ?? '—') ?></td>
+            <td data-label="Grupo"><?= htmlspecialchars($row['grupo_nombre'] ?? '—') ?></td>
+            <td data-label="Fecha"><?= $row['fecha'] ?></td>
+            <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
+            <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
+            <td data-label="Acciones">
+              <a href="editar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-primary">Editar</a>
+              <a href="eliminar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta reserva?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php else: ?>
+      <p>No hay reservas registradas.</p>
+    <?php endif; ?>
+  </section>
+
 </main>
 
 <?php
 // SweetAlert mensajes
-$tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura'];
+$tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura', 'reserva'];
 foreach ($tipos as $tipo) {
     if (isset($_SESSION["msg_$tipo"])) {
         $mensaje = $_SESSION["msg_$tipo"];

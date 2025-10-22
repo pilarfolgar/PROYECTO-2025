@@ -1,7 +1,6 @@
 <?php
 session_start();
-require("conexion.php");
-$con = conectar_bd(); 
+
 ?>
 
 <!DOCTYPE html>
@@ -9,11 +8,37 @@ $con = conectar_bd();
 <head>
   <meta charset="UTF-8">
   <title>Registro</title>
-  <link rel="stylesheet" href="inicios.css">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+  <style>
+    /* Barra de fuerza de contraseña */
+    #password-strength {
+      height: 8px;
+      border-radius: 5px;
+      background-color: #ddd;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    #password-strength-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
 
+    /* Requisitos de contraseña */
+    #password-requirements li {
+      margin-bottom: 3px;
+      transition: color 0.2s;
+    }
+    #password-requirements li.ok {
+      color: green;
+    }
+    #password-requirements li.bad {
+      color: red;
+    }
+  </style>
 </head>
 <body>
 <?php require("HeaderIndex.php"); ?>
@@ -88,11 +113,6 @@ $con = conectar_bd();
       </select>
     </div>
 
-    <!-- RECAPTCHA -->
-    <div class="mb-3 text-center">
-      <div class="g-recaptcha" data-sitekey="6LfHIusrAAAAAClke9PL9JJcbDnGAijza1w_IARk"></div>
-    </div>
-
     <button type="submit" class="btn btn-primary">Registrarse</button>
     <button type="reset" class="btn btn-secondary">Cancelar</button>
 
@@ -144,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const hasSymbol = /[@!$%&*?]/.test(val);
     const validLength = val.length >= 12 && val.length <= 16;
 
-    // Actualizar lista de requisitos
     const setStatus = (id, ok) => {
       const li = document.getElementById(id);
       li.textContent = (ok ? '✅ ' : '❌ ') + li.textContent.slice(2);
@@ -157,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setStatus('req-number', hasNumber);
     setStatus('req-symbol', hasSymbol);
 
-    // Calcular fuerza
     if (validLength) strength += 25;
     if (hasUpper) strength += 20;
     if (hasLower) strength += 20;
