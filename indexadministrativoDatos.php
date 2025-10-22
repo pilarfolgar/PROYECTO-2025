@@ -21,27 +21,19 @@ $con = conectar_bd();
 <main class="contenedor">
   <h1 class="mb-4">📊 Gestión de Datos</h1>
 
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs mb-4" id="gestionTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="docentes-tab" data-bs-toggle="tab" data-bs-target="#docentes" type="button" role="tab">Docentes</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="asignaturas-tab" data-bs-toggle="tab" data-bs-target="#asignaturas" type="button" role="tab">Asignaturas</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="horarios-tab" data-bs-toggle="tab" data-bs-target="#horarios" type="button" role="tab">Horarios</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="reservas-tab" data-bs-toggle="tab" data-bs-target="#reservas" type="button" role="tab">Reservas</button>
-    </li>
-  </ul>
+  <!-- BOTONES COLAPSABLES -->
+  <div class="mb-4 d-flex flex-wrap gap-2">
+    <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#docentesCollapse">Docentes</button>
+    <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#asignaturasCollapse">Asignaturas</button>
+    <button class="btn btn-warning" data-bs-toggle="collapse" data-bs-target="#horariosCollapse">Horarios</button>
+    <button class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#reservasCollapse">Reservas</button>
+    <button class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#gruposCollapse">Grupos</button>
+  </div>
 
-  <!-- Tab content -->
-  <div class="tab-content" id="gestionTabsContent">
-
-    <!-- DOCENTES -->
-    <div class="tab-pane fade show active" id="docentes" role="tabpanel">
+  <!-- DOCENTES -->
+  <div class="collapse show mb-5" id="docentesCollapse">
+    <section>
+      <h3>Docentes</h3>
       <?php
       $sql = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
       $result = $con->query($sql);
@@ -62,12 +54,12 @@ $con = conectar_bd();
           <tbody>
           <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-              <td><?= $row['cedula'] ?></td>
-              <td><?= htmlspecialchars($row['nombrecompleto']) ?></td>
-              <td><?= htmlspecialchars($row['apellido']) ?></td>
-              <td><?= htmlspecialchars($row['email']) ?></td>
-              <td><?= htmlspecialchars($row['telefono']) ?></td>
-              <td>
+              <td data-label="Cédula"><?= $row['cedula'] ?></td>
+              <td data-label="Nombre"><?= htmlspecialchars($row['nombrecompleto']) ?></td>
+              <td data-label="Apellido"><?= htmlspecialchars($row['apellido']) ?></td>
+              <td data-label="Email"><?= htmlspecialchars($row['email']) ?></td>
+              <td data-label="Teléfono"><?= htmlspecialchars($row['telefono']) ?></td>
+              <td data-label="Acciones">
                 <a href="editar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-primary">Editar</a>
                 <a href="eliminar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este docente?');">Eliminar</a>
               </td>
@@ -79,10 +71,13 @@ $con = conectar_bd();
       <?php else: ?>
         <p>No hay docentes registrados.</p>
       <?php endif; ?>
-    </div>
+    </section>
+  </div>
 
-    <!-- ASIGNATURAS -->
-    <div class="tab-pane fade" id="asignaturas" role="tabpanel">
+  <!-- ASIGNATURAS -->
+  <div class="collapse mb-5" id="asignaturasCollapse">
+    <section>
+      <h3>Asignaturas</h3>
       <?php
       $sql = "SELECT a.*, GROUP_CONCAT(u.nombrecompleto,' ',u.apellido SEPARATOR ', ') AS docentes_asignados
               FROM asignatura a
@@ -123,29 +118,31 @@ $con = conectar_bd();
       <?php else: ?>
         <p>No hay asignaturas registradas.</p>
       <?php endif; ?>
-    </div>
+    </section>
+  </div>
 
-    <!-- HORARIOS -->
-    <div class="tab-pane fade" id="horarios" role="tabpanel">
+  <!-- HORARIOS -->
+  <div class="collapse mb-5" id="horariosCollapse">
+    <section>
+      <h3>Horarios</h3>
       <?php
-      // Obtener todos los grupos
-      $grupos = $con->query("SELECT DISTINCT id_grupo, nombre FROM grupo ORDER BY nombre");
+      // Mostrar horarios separados por grupo
+      $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre
+              FROM grupo g
+              ORDER BY g.nombre";
+      $grupos = $con->query($sql);
       if($grupos && $grupos->num_rows > 0):
-        while($g = $grupos->fetch_assoc()):
-          $id_grupo = $g['id_grupo'];
-          $nombre_grupo = $g['nombre'];
-
-          // Obtener horarios por grupo
-          $sql = "SELECT h.*, a.nombre AS asignatura
-                  FROM horarios h
-                  LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
-                  WHERE h.id_grupo = $id_grupo
-                  ORDER BY h.dia, h.hora_inicio";
-          $horarios = $con->query($sql);
-          if($horarios && $horarios->num_rows > 0):
+        while($grupo = $grupos->fetch_assoc()):
+          echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
+          $sql_hor = "SELECT h.*, a.nombre AS asignatura
+                      FROM horarios h
+                      LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+                      WHERE h.id_grupo = " . $grupo['id_grupo'] . "
+                      ORDER BY h.dia, h.hora_inicio";
+          $result = $con->query($sql_hor);
+          if($result && $result->num_rows > 0):
       ?>
-      <h5 class="mt-4">Grupo: <?= htmlspecialchars($nombre_grupo) ?></h5>
-      <div class="table-responsive">
+      <div class="table-responsive mb-3">
         <table class="table table-bordered table-striped">
           <thead class="table-dark">
             <tr>
@@ -160,7 +157,7 @@ $con = conectar_bd();
             </tr>
           </thead>
           <tbody>
-          <?php while($row = $horarios->fetch_assoc()): ?>
+          <?php while($row = $result->fetch_assoc()): ?>
             <tr>
               <td><?= $row['id_horario'] ?></td>
               <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
@@ -179,18 +176,25 @@ $con = conectar_bd();
         </table>
       </div>
       <?php
+          else:
+            echo "<p>No hay horarios registrados para este grupo.</p>";
           endif;
         endwhile;
       else:
-        echo "<p>No hay horarios registrados.</p>";
+        echo "<p>No hay grupos registrados.</p>";
       endif;
       ?>
-    </div>
+    </section>
+  </div>
 
-    <!-- RESERVAS -->
-    <div class="tab-pane fade" id="reservas" role="tabpanel">
+  <!-- RESERVAS -->
+  <div class="collapse mb-5" id="reservasCollapse">
+    <section>
+      <h3>Reservas</h3>
       <?php
-      $sql = "SELECT id_reserva, nombre, fecha, hora_inicio, hora_fin, aula, grupo FROM reserva ORDER BY fecha, hora_inicio";
+      $sql = "SELECT id_reserva, nombre, fecha, hora_inicio, hora_fin, aula, grupo
+              FROM reserva
+              ORDER BY fecha, hora_inicio";
       $result = $con->query($sql);
       if($result && $result->num_rows > 0):
       ?>
@@ -230,9 +234,51 @@ $con = conectar_bd();
       <?php else: ?>
         <p>No hay reservas registradas.</p>
       <?php endif; ?>
-    </div>
-
+    </section>
   </div>
+
+  <!-- GRUPOS -->
+  <div class="collapse mb-5" id="gruposCollapse">
+    <section>
+      <h3>Grupos</h3>
+      <?php
+      $sql = "SELECT * FROM grupo ORDER BY nombre";
+      $result = $con->query($sql);
+      if ($result && $result->num_rows > 0):
+      ?>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Orientación</th>
+              <th>Cantidad de Estudiantes</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+              <td><?= $row['id_grupo'] ?></td>
+              <td><?= htmlspecialchars($row['nombre']) ?></td>
+              <td><?= htmlspecialchars($row['orientacion']) ?></td>
+              <td><?= htmlspecialchars($row['cantidad_estudiantes']) ?></td>
+              <td>
+                <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
+                <a href="eliminar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">Eliminar</a>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+      <?php else: ?>
+        <p>No hay grupos registrados.</p>
+      <?php endif; ?>
+    </section>
+  </div>
+
 </main>
 
 <?php
@@ -241,12 +287,16 @@ $tipos = ['aula', 'grupo', 'docente', 'horario', 'asignatura', 'reserva'];
 foreach ($tipos as $tipo) {
     if (isset($_SESSION["msg_$tipo"])) {
         $mensaje = $_SESSION["msg_$tipo"];
-        echo "<script>Swal.fire({icon:'success', title:'Éxito', text:'$mensaje', confirmButtonColor:'#3085d6'});</script>";
+        echo "<script>
+            Swal.fire({icon:'success', title:'Éxito', text:'$mensaje', confirmButtonColor:'#3085d6'});
+        </script>";
         unset($_SESSION["msg_$tipo"]);
     }
     if (isset($_SESSION["error_$tipo"])) {
         $mensaje = $_SESSION["error_$tipo"];
-        echo "<script>Swal.fire({icon:'error', title:'Error', text:'$mensaje', confirmButtonColor:'#d33'});</script>";
+        echo "<script>
+            Swal.fire({icon:'error', title:'Error', text:'$mensaje', confirmButtonColor:'#d33'});
+        </script>";
         unset($_SESSION["error_$tipo"]);
     }
 }
