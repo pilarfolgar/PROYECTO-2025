@@ -160,16 +160,16 @@ $con = conectar_bd();
       <p>No hay horarios registrados.</p>
     <?php endif; ?>
   </section>
-
-  <!-- RESERVA -->
-  <section class="mb-5">
-    <h3>Reservas</h3>
+  
+<!-- RESERVA -->
+<section class="mb-5">
+    <h3>Reserva</h3>
     <?php
     $sql = "SELECT r.id_reserva, r.nombre, r.fecha, r.hora_inicio, r.hora_fin,
                    a.nombre AS aula_nombre, g.nombre AS grupo_nombre
             FROM reserva r
             LEFT JOIN aula a ON r.id_aula = a.id_aula
-            LEFT JOIN grupo g ON r.grupo = g.id_grupo
+            LEFT JOIN grupo g ON r.id_grupo = g.id_grupo
             ORDER BY r.fecha, r.hora_inicio";
     $result = $con->query($sql);
     if($result && $result->num_rows > 0):
@@ -210,7 +210,8 @@ $con = conectar_bd();
     <?php else: ?>
       <p>No hay reservas registradas.</p>
     <?php endif; ?>
-  </section>
+</section>
+
 
 </main>
 
