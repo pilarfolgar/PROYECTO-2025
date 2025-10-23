@@ -67,7 +67,7 @@ $con = conectar_bd();
     <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
   </div>
   <div class="tarjeta">
-  <h3>📢 Notificaciones Docentes</h3>
+  <h3> Notificaciones Docentes</h3>
   <p>Mensajes enviados por docentes a los grupos.</p>
   <button class="boton" onclick="mostrarNotificaciones()">Ver Notificaciones</button>
 </div>
@@ -196,43 +196,61 @@ $result_reservas = $con->query($sql_reservas);
     </div>
   </div>
 </div>
+<!-- BOTÓN PARA ABRIR MODAL -->
+<div class="tarjeta">
+  <h3>Notificaciones Docentes</h3>
+  <p>Mensajes enviados por docentes a los grupos.</p>
+  <button class="boton" onclick="abrirModalNotificaciones()">Ver Notificaciones</button>
+</div>
+
 <!-- MODAL NOTIFICACIONES DOCENTES -->
 <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel">📢 Notificaciones de Docentes</h5>
+        <h5 class="modal-title" id="modalNotificacionesLabel"> Notificaciones de Docentes</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <?php
-        // Consulta solo notificaciones de docentes, evitando duplicados
-        $res_notis = $con->query("
-          SELECT DISTINCT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
+        $sql_notificaciones = "
+          SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
           FROM notificaciones n
           INNER JOIN usuario u ON n.docente_cedula = u.cedula
           LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-          WHERE n.rol_emisor = 'docente'
           ORDER BY n.fecha DESC
-        ");
+        ";
+        $res_notis = $con->query($sql_notificaciones);
 
-        if ($res_notis && $res_notis->num_rows > 0) {
-            echo '<div class="table-responsive"><table class="table table-striped">';
-            echo '<thead class="table-dark"><tr><th>Docente</th><th>Grupo</th><th>Título</th><th>Mensaje</th><th>Fecha</th></tr></thead><tbody>';
-            while ($n = $res_notis->fetch_assoc()) {
-                echo '<tr>
-                        <td>'.htmlspecialchars($n['docente']).'</td>
-                        <td>'.htmlspecialchars($n['grupo'] ?? '—').'</td>
-                        <td>'.htmlspecialchars($n['titulo']).'</td>
-                        <td>'.nl2br(htmlspecialchars($n['mensaje'])).'</td>
-                        <td>'.htmlspecialchars($n['fecha']).'</td>
-                      </tr>';
-            }
-            echo '</tbody></table></div>';
-        } else {
-            echo '<p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>';
-        }
+        if ($res_notis && $res_notis->num_rows > 0):
         ?>
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Docente</th>
+                  <th>Grupo</th>
+                  <th>Título</th>
+                  <th>Mensaje</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php while($n = $res_notis->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($n['docente']) ?></td>
+                    <td><?= htmlspecialchars($n['grupo'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($n['titulo']) ?></td>
+                    <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
+                    <td><?= htmlspecialchars($n['fecha']) ?></td>
+                  </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+          </div>
+        <?php else: ?>
+          <p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>
+        <?php endif; ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -241,12 +259,14 @@ $result_reservas = $con->query($sql_reservas);
   </div>
 </div>
 
+<!-- SCRIPT PARA ABRIR MODAL -->
 <script>
-function mostrarNotificaciones() {
+function abrirModalNotificaciones() {
   const modal = new bootstrap.Modal(document.getElementById('modalNotificaciones'));
   modal.show();
 }
 </script>
+
 
 
 
