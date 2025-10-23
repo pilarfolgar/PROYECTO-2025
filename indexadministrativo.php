@@ -196,11 +196,13 @@ $result_reservas = $con->query($sql_reservas);
     </div>
   </div>
 </div>
+
+
 <!-- BOTÓN PARA ABRIR MODAL -->
-<div class="tarjeta">
+<div class="tarjeta mt-4">
   <h3>Notificaciones Docentes</h3>
   <p>Mensajes enviados por docentes a los grupos.</p>
-  <button class="boton" onclick="abrirModalNotificaciones()">Ver Notificaciones</button>
+  <button class="btn btn-primary" onclick="abrirModalNotificaciones()">Ver Notificaciones</button>
 </div>
 
 <!-- MODAL NOTIFICACIONES DOCENTES -->
@@ -208,16 +210,18 @@ $result_reservas = $con->query($sql_reservas);
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel"> Notificaciones de Docentes</h5>
+        <h5 class="modal-title" id="modalNotificacionesLabel">📢 Notificaciones de Docentes</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <?php
+        // Consulta solo notificaciones enviadas por docentes
         $sql_notificaciones = "
-          SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
+          SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
           FROM notificaciones n
           INNER JOIN usuario u ON n.docente_cedula = u.cedula
           LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          WHERE n.rol_emisor = 'docente'
           ORDER BY n.fecha DESC
         ";
         $res_notis = $con->query($sql_notificaciones);
@@ -239,7 +243,7 @@ $result_reservas = $con->query($sql_reservas);
                 <?php while($n = $res_notis->fetch_assoc()): ?>
                   <tr>
                     <td><?= htmlspecialchars($n['docente']) ?></td>
-                    <td><?= htmlspecialchars($n['grupo'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($n['grupo']) ?></td>
                     <td><?= htmlspecialchars($n['titulo']) ?></td>
                     <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
@@ -266,6 +270,8 @@ function abrirModalNotificaciones() {
   modal.show();
 }
 </script>
+
+
 
 
 
