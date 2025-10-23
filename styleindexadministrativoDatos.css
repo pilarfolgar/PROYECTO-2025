@@ -89,3 +89,78 @@ button[data-bs-toggle="collapse"][aria-expanded="true"] {
   .table tbody tr td:last-child { display: flex; justify-content: flex-start; gap: 10px; }
   .table .btn { width: 48%; margin: 0; }
 }
+/* Contenedor principal */
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+/* BOTONES COLAPSABLES */
+.d-flex.flex-wrap.gap-2 {
+  flex-wrap: wrap;
+  justify-content: center; /* centra los botones en pantalla pequeña */
+  gap: 10px;
+}
+
+/* SECCIONES */
+section {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* TABLAS */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 600px; /* evita que se rompa en móvil */
+}
+
+th, td {
+  white-space: nowrap; /* evita que el texto se corte */
+}
+
+/* TITULOS */
+h1, h3, h5 {
+  text-align: center;
+}
+
+/* MEDIA QUERIES */
+
+/* Celulares */
+@media (max-width: 767px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+  }
+  .btn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+  section {
+    padding: 10px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+  }
+}
+
+/* PC */
+@media (min-width: 992px) {
+  .btn {
+    font-size: 1rem;
+  }
+}
