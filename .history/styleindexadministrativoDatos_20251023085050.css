@@ -1,0 +1,95 @@
+/* ================= VARIABLES ================= */    
+:root {
+  --primario: #1B3A4B;
+  --secundario: #588BAE;
+  --acento: #A2D5F2;
+  --fondo: #F0F4F8;
+  --texto: #1B3A4B;
+  --hover: #417899;
+  --tabla-bg: #ffffff;
+  --tabla-border: #cce0f2;
+  --tabla-header-bg: #e1f0fb;
+  --tabla-header-color: var(--primario);
+  --tabla-row-bg: #f9fcff;
+  --tabla-row-hover: #d9ecf9;
+}
+
+/* ================= TABLAS MINIMALISTAS ================= */
+.table-responsive {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--tabla-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--tabla-border);
+}
+
+.table thead {
+  background-color: var(--tabla-header-bg);
+  color: var(--tabla-header-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.table th, .table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--tabla-border);
+  color: var(--primario);
+}
+
+.table tbody tr {
+  background-color: var(--tabla-row-bg);
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f0f8ff; /* ligero contraste de fila alterna */
+}
+
+.table tbody tr:hover {
+  background-color: var(--tabla-row-hover);
+}
+
+.table .btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-right: 6px;
+}
+
+.table .btn:last-child { margin-right: 0; }
+
+.table .btn-primary { background-color: var(--secundario); color: #fff; }
+.table .btn-primary:hover { background-color: var(--hover); }
+
+.table .btn-danger { background-color: #dc3545; color: #fff; }
+.table .btn-danger:hover { background-color: #b02a37; }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+  .table th, .table td { padding: 10px; }
+  .table .btn { margin-right: 8px; margin-bottom: 4px; }
+}
+
+@media (max-width: 768px) {
+  .table thead { display: none; }
+  .table { display: block; border: none; }
+  .table tbody tr { display: block; margin-bottom: 1rem; padding: 12px; border-radius: 8px; background-color: var(--tabla-bg); }
+  .table tbody tr td { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; text-align: left; font-size: 0.85rem; }
+  .table tbody tr td::before { content: attr(data-label); font-weight: 600; color: var(--primario); flex-basis: 40%; }
+  .table tbody tr td:last-child { display: flex; justify-content: flex-start; gap: 10px; }
+  .table .btn { width: 48%; margin: 0; }
+}

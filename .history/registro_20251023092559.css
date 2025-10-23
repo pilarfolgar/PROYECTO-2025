@@ -1,0 +1,160 @@
+/* ================= REGISTRO.CSS ================= */
+
+/* Variables de color */
+:root {
+  --primario: #1B3A4B;   /* Azul oscuro */
+  --secundario: #588BAE; /* Azul medio */
+  --acento: #A2D5F2;     /* Azul claro */
+  --fondo: #F0F4F8;      /* Gris claro */
+  --texto: #1B3A4B;      /* Texto oscuro */
+  --hover: #417899;      /* Azul intermedio */
+}
+
+/* Reset y fuente general */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+/* Contenedor del formulario */
+#registro_form {
+  width: 100%;
+  max-width: 500px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#registro_form:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+/* Labels e inputs */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.form-control,
+.form-select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--secundario);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--hover);
+  box-shadow: 0 0 0 0.2rem rgba(89, 139, 174, 0.25);
+  outline: none;
+}
+
+/* Botones */
+.btn-primary,
+.btn-secondary {
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--acento);
+  color: var(--texto);
+}
+
+.btn-primary:hover {
+  background-color: var(--hover);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--secundario);
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: var(--hover);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Barra de fuerza de contraseña */
+#password-strength {
+  height: 8px;
+  border-radius: 5px;
+  background-color: #ddd;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+#password-strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 5px;
+  transition: width 0.3s, background-color 0.3s;
+}
+
+/* Lista de requisitos */
+#password-requirements li {
+  margin-bottom: 3px;
+  transition: color 0.2s;
+}
+
+#password-requirements li.ok {
+  color: green;
+}
+
+#password-requirements li.bad {
+  color: red;
+}
+
+/* Títulos y párrafos dentro del formulario */
+h1.text-center {
+  margin-bottom: 1.5rem;
+  color: var(--primario);
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: var(--secundario);
+}
+
+a:hover {
+  color: var(--hover);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  body {
+    padding: 1rem;
+  }
+
+  #registro_form {
+    padding: 1.5rem;
+  }
+}

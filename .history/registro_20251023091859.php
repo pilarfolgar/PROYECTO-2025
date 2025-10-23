@@ -9,38 +9,11 @@ $con = conectar_bd();
 <head>
   <meta charset="UTF-8">
   <title>Registro</title>
-  <link rel="stylesheet" href="registro.css">
+  <link rel="stylesheet" href="inicios.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-  <style>
-    /* Barra de fuerza de contraseña */
-    #password-strength {
-      height: 8px;
-      border-radius: 5px;
-      background-color: #ddd;
-      margin-top: 5px;
-      overflow: hidden;
-    }
-    #password-strength-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 5px;
-      transition: width 0.3s;
-    }
 
-    /* Requisitos de contraseña */
-    #password-requirements li {
-      margin-bottom: 3px;
-      transition: color 0.2s;
-    }
-    #password-requirements li.ok {
-      color: green;
-    }
-    #password-requirements li.bad {
-      color: red;
-    }
-  </style>
 </head>
 <body>
 <?php require("HeaderIndex.php"); ?>
