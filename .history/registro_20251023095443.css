@@ -31,14 +31,14 @@ main {
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:1.5rem 1rem;
+  padding:1rem;
 }
 
 /* ---------------- HEADER ---------------- */
 header {
   background-color: var(--primario);
   color:white;
-  padding:0.8rem 1.5rem;
+  padding:0.8rem 1.2rem;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -46,9 +46,9 @@ header {
   box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
-.header-left { display:flex; align-items:center; gap:0.8rem; }
+.header-left { display:flex; align-items:center; gap:0.5rem; }
 .logo {
-  width:60px; height:60px;
+  width:50px; height:50px;
   border-radius:50%;
   background-color:white;
   box-shadow:0 4px 8px rgba(0,0,0,0.2);
@@ -61,31 +61,31 @@ header {
   background-color: var(--primario);
   color:white;
   text-align:center;
-  padding:0.8rem;
-  margin-top:1.5rem;
-  font-size:0.9rem;
+  padding:0.6rem;
+  margin-top:1rem;
+  font-size:0.85rem;
 }
 
 /* ---------------- FORMULARIO ---------------- */
 form {
-  max-width:450px; /* más compacto */
+  max-width:380px; /* más compacto horizontalmente */
   width:100%;
   background-color:white;
-  padding:1rem; /* menos padding */
-  border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  font-size:0.9rem; /* letra más chica */
+  padding:0.8rem;
+  border-radius:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  font-size:0.85rem;
 }
 
-/* Dos columnas compactas */
+/* Dos columnas */
 form .row {
-  display: flex;
-  gap:0.5rem;
-  flex-wrap: wrap;
+  display:flex;
+  gap:0.4rem;
+  flex-wrap:wrap;
 }
 
 form .col-half {
-  flex: 1 1 48%;
+  flex:1 1 48%;
 }
 
 form .col-half input,
@@ -93,32 +93,39 @@ form .col-half select {
   width:100%;
 }
 
-form .form-label { font-weight:bold; margin-bottom:0.3rem; display:block; }
+/* Labels inline y compactos */
+form .form-label {
+  font-weight:bold;
+  margin-bottom:0.2rem;
+  display:inline-block;
+  width:100%; /* para alinear arriba del input */
+  font-size:0.85rem;
+}
 
 form .form-control,
 form .form-select {
   width:100%;
-  padding:0.4rem;
+  padding:0.35rem;
   border:1px solid var(--secundario);
-  border-radius:5px;
-  margin-bottom:0.6rem;
+  border-radius:4px;
+  margin-bottom:0.5rem;
   transition:border-color 0.3s, box-shadow 0.3s;
 }
 
 form .form-control:focus,
 form .form-select:focus {
   border-color: var(--hover);
-  box-shadow:0 0 0 0.15rem rgba(89,139,174,0.25);
+  box-shadow:0 0 0 0.15rem rgba(89,139,174,0.2);
   outline:none;
 }
 
 /* Botones */
 .btn {
-  padding:0.4rem 1rem;
+  padding:0.35rem 0.9rem;
   border:none;
   border-radius:5px;
   font-weight:bold;
-  font-size:0.9rem;
+  font-size:0.85rem;
   cursor:pointer;
   transition:background 0.3s, transform 0.2s;
 }
@@ -130,26 +137,26 @@ form .form-select:focus {
 .btn-secondary:hover { background-color: var(--hover); transform:translateY(-1px); }
 
 /* ---------------- BARRA DE FUERZA DE CONTRASEÑA ---------------- */
-#password-strength { height:6px; border-radius:4px; background-color:#ddd; margin-top:4px; overflow:hidden; }
-#password-strength-fill { height:100%; width:0%; border-radius:4px; transition: width 0.3s; }
+#password-strength { height:5px; border-radius:3px; background-color:#ddd; margin-top:3px; overflow:hidden; }
+#password-strength-fill { height:100%; width:0%; border-radius:3px; transition: width 0.3s; }
 
-#password-requirements li { margin-bottom:2px; transition:color 0.2s; font-size:0.8rem; }
+#password-requirements li { margin-bottom:2px; transition:color 0.2s; font-size:0.75rem; }
 #password-requirements li.ok { color:green; }
 #password-requirements li.bad { color:red; }
 
 /* ---------------- RECAPTCHA ---------------- */
-.g-recaptcha { margin:0.8rem 0; display:flex; justify-content:center; }
+.g-recaptcha { margin:0.6rem 0; display:flex; justify-content:center; }
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   header { flex-direction:column; text-align:center; }
-  main { padding:1rem; }
+  main { padding:0.5rem; }
   form .row { flex-direction: column; gap:0.3rem; }
   form .col-half { flex:1 1 100%; }
 }
 
 @media (max-width: 480px) {
-  form { padding:0.8rem; font-size:0.85rem; }
+  form { padding:0.5rem; font-size:0.8rem; }
 }
 
 /* ---------------- ENLACES ---------------- */
