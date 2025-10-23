@@ -31,6 +31,7 @@ $con = conectar_bd();
   </div>
 
   <div class="accordion" id="accordionPanels">
+
     <!-- DOCENTES -->
     <div class="collapse mb-5" id="docentesCollapse" data-bs-parent="#accordionPanels">
       <section>
@@ -103,11 +104,11 @@ $con = conectar_bd();
             <tbody>
             <?php while($row = $result->fetch_assoc()): ?>
               <tr>
-                <td><?= $row['id_asignatura'] ?></td>
-                <td><?= htmlspecialchars($row['nombre']) ?></td>
-                <td><?= htmlspecialchars($row['codigo']) ?></td>
-                <td><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
-                <td>
+                <td data-label="ID"><?= $row['id_asignatura'] ?></td>
+                <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
+                <td data-label="Código"><?= htmlspecialchars($row['codigo']) ?></td>
+                <td data-label="Docentes"><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
+                <td data-label="Acciones">
                   <a href="editar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-primary">Editar</a>
                   <a href="eliminar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asignatura?');">Eliminar</a>
                 </td>
@@ -159,14 +160,14 @@ $con = conectar_bd();
             <tbody>
             <?php while($row = $result->fetch_assoc()): ?>
               <tr>
-                <td><?= $row['id_horario'] ?></td>
-                <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
-                <td><?= $row['dia'] ?></td>
-                <td><?= $row['hora_inicio'] ?></td>
-                <td><?= $row['hora_fin'] ?></td>
-                <td><?= htmlspecialchars($row['clase']) ?></td>
-                <td><?= htmlspecialchars($row['aula']) ?></td>
-                <td>
+                <td data-label="ID"><?= $row['id_horario'] ?></td>
+                <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
+                <td data-label="Día"><?= $row['dia'] ?></td>
+                <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
+                <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
+                <td data-label="Clase"><?= htmlspecialchars($row['clase']) ?></td>
+                <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
+                <td data-label="Acciones">
                   <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
                   <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
                 </td>
@@ -215,14 +216,14 @@ $con = conectar_bd();
             <tbody>
             <?php while($row = $result->fetch_assoc()): ?>
               <tr>
-                <td><?= $row['id_reserva'] ?></td>
-                <td><?= htmlspecialchars($row['nombre']) ?></td>
-                <td><?= htmlspecialchars($row['aula']) ?></td>
-                <td><?= htmlspecialchars($row['grupo']) ?></td>
-                <td><?= $row['fecha'] ?></td>
-                <td><?= $row['hora_inicio'] ?></td>
-                <td><?= $row['hora_fin'] ?></td>
-                <td>
+                <td data-label="ID"><?= $row['id_reserva'] ?></td>
+                <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
+                <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
+                <td data-label="Grupo"><?= htmlspecialchars($row['grupo']) ?></td>
+                <td data-label="Fecha"><?= $row['fecha'] ?></td>
+                <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
+                <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
+                <td data-label="Acciones">
                   <a href="editar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-primary">Editar</a>
                   <a href="eliminar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta reserva?');">Eliminar</a>
                 </td>
@@ -260,11 +261,11 @@ $con = conectar_bd();
             <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
               <tr>
-                <td><?= $row['id_grupo'] ?></td>
-                <td><?= htmlspecialchars($row['nombre']) ?></td>
-                <td><?= htmlspecialchars($row['orientacion']) ?></td>
-                <td><?= htmlspecialchars($row['cantidad_estudiantes']) ?></td>
-                <td>
+                <td data-label="ID"><?= $row['id_grupo'] ?></td>
+                <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
+                <td data-label="Orientación"><?= htmlspecialchars($row['orientacion']) ?></td>
+                <td data-label="Cantidad"><?= htmlspecialchars($row['cantidad_estudiantes']) ?></td>
+                <td data-label="Acciones">
                   <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
                   <a href="eliminar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">Eliminar</a>
                 </td>
@@ -278,8 +279,8 @@ $con = conectar_bd();
         <?php endif; ?>
       </section>
     </div>
-  </div>
 
+  </div>
 </main>
 
 <?php

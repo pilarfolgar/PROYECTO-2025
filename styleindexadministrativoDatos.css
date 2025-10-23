@@ -50,9 +50,7 @@ button[data-bs-toggle="collapse"] {
 button[data-bs-toggle="collapse"]:hover { background-color: rgba(24, 58, 75, 0.2); }
 button[data-bs-toggle="collapse"]:focus { outline: none; border: 2px solid var(--secundario); }
 button[data-bs-toggle="collapse"].active,
-button[data-bs-toggle="collapse"][aria-expanded="true"] {
-  background-color: rgba(24, 58, 75, 0.25);
-}
+button[data-bs-toggle="collapse"][aria-expanded="true"] { background-color: rgba(24, 58, 75, 0.25); }
 
 /* ================= SECCIONES ================= */
 section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
@@ -134,6 +132,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
     text-align: left; 
     font-size: 0.9rem;
   }
+  /* Mostrar nombre de columna */
   .table tbody tr td::before { 
     content: attr(data-label); 
     font-weight: 600; 
