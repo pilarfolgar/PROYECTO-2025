@@ -59,12 +59,12 @@ $con = conectar_bd();
   <div class="tarjeta">
   <h3>Reportes Objetos Rotos</h3>
   <p>Ver los reportes.</p>
-  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()"> ➕ Ver Reportes</button>
 </div>
 <div class="tarjeta">
     <h3>Reservas de Aulas</h3>
     <p>Visualizar y administrar reservas de aulas.</p>
-    <button class="boton" onclick="mostrarReservas()">Ver Reservas</button>
+    <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
   </div>
   <div class="tarjeta">
   <h3> Notificaciones Docentes</h3>
@@ -210,43 +210,42 @@ $result_reservas = $con->query($sql_reservas);
       </div>
       <div class="modal-body">
         <?php
-        // Consulta solo notificaciones enviadas por docentes
-        $sql_notificaciones = "
-          SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
-          FROM notificaciones n
-          INNER JOIN usuario u ON n.docente_cedula = u.cedula
-          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-          WHERE n.rol_emisor = 'docente'
-          ORDER BY n.fecha DESC
-        ";
-        $res_notis = $con->query($sql_notificaciones);
+// Solo notificaciones de docentes
+$sql_notificaciones = "
+    SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
+    FROM notificaciones n
+    LEFT JOIN usuario u ON n.docente_cedula = u.cedula
+    LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+    WHERE n.rol_emisor = 'docente'
+";
+$res_notis = $con->query($sql_notificaciones);
+?>
 
-        if ($res_notis && $res_notis->num_rows > 0):
-        ?>
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
-              <thead class="table-dark">
-                <tr>
-                  <th>Docente</th>
-                  <th>Grupo</th>
-                  <th>Título</th>
-                  <th>Mensaje</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php while($n = $res_notis->fetch_assoc()): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($n['docente']) ?></td>
-                    <td><?= htmlspecialchars($n['grupo']) ?></td>
-                    <td><?= htmlspecialchars($n['titulo']) ?></td>
-                    <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
-                    <td><?= htmlspecialchars($n['fecha']) ?></td>
-                  </tr>
-                <?php endwhile; ?>
-              </tbody>
-            </table>
-          </div>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Docente</th>
+        <th>Grupo</th>
+        <th>Título</th>
+        <th>Mensaje</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php while($n = $res_notis->fetch_assoc()): ?>
+        <tr>
+          <td><?= htmlspecialchars($n['docente']) ?></td>
+          <td><?= htmlspecialchars($n['grupo']) ?></td>
+          <td><?= htmlspecialchars($n['titulo']) ?></td>
+          <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
+          <td><?= htmlspecialchars($n['fecha']) ?></td>
+        </tr>
+      <?php endwhile; ?>
+    </tbody>
+  </table>
+</div>
+
         <?php else: ?>
           <p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>
         <?php endif; ?>

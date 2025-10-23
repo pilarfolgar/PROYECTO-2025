@@ -22,8 +22,7 @@ $stmtG->close();
 // Marcar como leído
 if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
-    $sqlVisto = "UPDATE notificaciones SET visto_estudiante = 1 
-                 WHERE id = ? AND id_grupo = ? AND rol_emisor = 'docente'";
+    $sqlVisto = "UPDATE notificaciones SET visto_estudiante = 1 WHERE id = ? AND id_grupo = ?";
     $stmtV = $con->prepare($sqlVisto);
     $stmtV->bind_param("ii", $id_notificacion, $id_grupo);
     $stmtV->execute();
@@ -31,11 +30,12 @@ if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
 }
 
 // ===============================
-// Consulta: solo notificaciones de docentes para el grupo del estudiante
+// Consulta modificada: solo notificaciones de docentes
 // ===============================
 $sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante
         FROM notificaciones
-        WHERE id_grupo = ? AND rol_emisor IN ('docente','adscriptor')";
+        WHERE id_grupo = ? AND rol_emisor = 'docente'
+        ORDER BY fecha DESC";
 
 $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $id_grupo);
@@ -79,12 +79,13 @@ $con->close();
 ?>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const notis = document.querySelectorAll('.notificacion');
-    notis.forEach((n, i) => {
-        setTimeout(() => n.classList.add('visible'), i * 100);
+    // Animación simple: revelar notificaciones al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+        const notis = document.querySelectorAll('.notificacion');
+        notis.forEach((n, i) => {
+            setTimeout(() => n.classList.add('visible'), i * 100);
+        });
     });
-});
 </script>
 
 </body>

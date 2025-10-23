@@ -59,12 +59,12 @@ $con = conectar_bd();
   <div class="tarjeta">
   <h3>Reportes Objetos Rotos</h3>
   <p>Ver los reportes.</p>
-  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()">Ver Reportes</button>
+  <button class="boton" id="btnVerReportes" onclick="mostrarReportes()"> ➕ Ver Reportes</button>
 </div>
 <div class="tarjeta">
     <h3>Reservas de Aulas</h3>
     <p>Visualizar y administrar reservas de aulas.</p>
-    <button class="boton" onclick="mostrarReservas()">Ver Reservas</button>
+    <button class="boton" onclick="mostrarReservas()">➕ Ver Reservas</button>
   </div>
   <div class="tarjeta">
   <h3> Notificaciones Docentes</h3>
