@@ -96,7 +96,8 @@ $sql = "SELECT n.id, n.titulo, n.mensaje, n.fecha, n.visto_estudiante, u.nombrec
         ORDER BY n.fecha DESC";
 
 $stmt = $con->prepare($sql);
-$stmt->bind_param("i", $cedula_estudiante);
+$stmt->bind_param("s", $cedula);
+
 $stmt->execute();
 $result = $stmt->get_result();
 ?>

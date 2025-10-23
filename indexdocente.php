@@ -74,12 +74,14 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         echo '<div class="docente-name fw-bold">'.htmlspecialchars($row['grupo_nombre'].' - '.$row['asignatura_nombre']).'</div>';
         echo '<div class="docente-subject text-muted">'.htmlspecialchars($row['orientacion']).'</div>';
         echo '<button class="btn btn-outline-primary boton ver-miembros" data-grupo="'.$row['id_grupo'].'">Ver miembros</button>';
+        echo '<button class="btn btn-outline-success boton enviar-notificacion" data-grupo="'.$row['id_grupo'].'">Enviar Notificación</button>';
         echo '<ul class="lista-miembros" id="miembros-'.$row['id_grupo'].'"></ul>';
         echo '</div>';
     }
     $stmt->close();
     ?>
   </div>
+
   
 </section>
 
@@ -233,6 +235,35 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     </div>
   </div>
 </main>
+<!-- Modal Enviar Notificación -->
+<div class="modal fade" id="modalNotificacion" tabindex="-1" aria-labelledby="modalNotificacionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="procesar-notificacion-docente.php" method="POST">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalNotificacionLabel">Enviar Notificación</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id_grupo" id="noti_id_grupo">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" name="titulo" id="titulo" required>
+          </div>
+          <div class="mb-3">
+            <label for="mensaje" class="form-label">Mensaje</label>
+            <textarea class="form-control" name="mensaje" id="mensaje" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 
 <?php require("footer.php"); ?>

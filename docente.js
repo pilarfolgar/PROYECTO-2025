@@ -101,3 +101,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const botones = document.querySelectorAll(".enviar-notificacion");
+  botones.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idGrupo = btn.getAttribute("data-grupo");
+      document.getElementById("noti_id_grupo").value = idGrupo;
+      const modal = new bootstrap.Modal(document.getElementById("modalNotificacion"));
+      modal.show();
+    });
+  });
+});
