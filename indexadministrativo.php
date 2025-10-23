@@ -198,12 +198,7 @@ $result_reservas = $con->query($sql_reservas);
 </div>
 
 
-<!-- BOTÓN PARA ABRIR MODAL -->
-<div class="tarjeta mt-4">
-  <h3>Notificaciones Docentes</h3>
-  <p>Mensajes enviados por docentes a los grupos.</p>
-  <button class="btn btn-primary" onclick="abrirModalNotificaciones()">Ver Notificaciones</button>
-</div>
+
 
 <!-- MODAL NOTIFICACIONES DOCENTES -->
 <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
