@@ -2,7 +2,7 @@
   --primario: #1B3A4B;
   --secundario: #588BAE;
   --acento: #A2D5F2;
-  --fondo: #F0F4F8;
+  --fondo: #F0F4F8; /* Un color de fondo claro base */
   --texto: #1B3A4B;
   --hover: #417899;
 }
@@ -14,58 +14,63 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+/* ---------------- BODY LOGIN ---------------- */
 body.login-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: 
-    linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
-  background-repeat: repeat;
-  background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
-  background-position: top left;
-  color: var(--texto);
-  overflow-x: hidden;
-}
-
-
-/* Contenedor centrado solo para el formulario */
-.login-container {
-  flex: 1; /* ocupa el espacio disponible entre header y footer */
+  /* Fondo base, pero ahora más claro para que los patrones y curvas resalten */
+  background-color: var(--fondo); 
+  
+  /* PATRÓN DE LÍNEAS ONDULADAS NEGRAS (ULTRA NOTORIO) */
+  background-image: repeating-linear-gradient(
+    45deg, /* Ángulo para la sensación ondulada */
+    transparent 0px, 
+    transparent 15px, /* Espacio entre líneas */
+    rgba(0, 0, 0, 0.25) 15px, /* Línea negra MUY visible (25% de opacidad) */
+    rgba(0, 0, 0, 0.25) 18px  /* Grosor de la línea de 3px */
+  );
+  
+  /* Para que las líneas se muestren sobre el fondo base */
+  background-blend-mode: multiply; 
+  
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem; /* margen interno adaptable */
+  min-height: 100vh;
+  color: var(--texto);
+  position: relative;
+  overflow: hidden;
 }
 
-
-/* Curvas decorativas sobre la imagen */
+/* Curvas suaves decorativas (ULTRA NOTORIAS) */
 body.login-page::before,
 body.login-page::after {
   content: '';
   position: absolute;
   border-radius: 50%;
-  opacity: 0.15;
-  z-index: 0;
+  /* Aumentamos DRAMÁTICAMENTE la opacidad */
+  opacity: 0.5; /* Opcional: Puedes ir hasta 0.8 o 1 si quieres que cubran más */
+  z-index: 0; /* Asegura que estén detrás del formulario */
 }
 
 body.login-page::before {
-  width: 600px;
-  height: 600px;
-  top: -200px;
-  left: -200px;
+  width: 700px; /* Un poco más grandes */
+  height: 700px;
+  top: -250px; /* Posición ajustada */
+  left: -250px;
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
 }
 
 body.login-page::after {
-  width: 500px;
-  height: 500px;
-  bottom: -150px;
-  right: -150px;}
+  width: 600px; /* Un poco más grandes */
+  height: 600px;
+  bottom: -200px; /* Posición ajustada */
+  right: -200px;
+  background: linear-gradient(135deg, var(--secundario), var(--acento));
+}
 
 /* ---------------- FORMULARIO ---------------- */
 #login_form {
   position: relative;
-  z-index: 1; /* Por encima de las curvas */
+  z-index: 1; /* Esto asegura que el formulario siempre esté encima de las curvas y líneas */
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -131,9 +136,9 @@ p.text-center a:hover {
 @media (max-width: 768px) {
   body.login-page::before,
   body.login-page::after {
-    width: 400px;
-    height: 400px;
-    opacity: 0.1;
+    width: 500px; /* Ajuste para que sigan siendo grandes en pantallas pequeñas */
+    height: 500px;
+    opacity: 0.3; /* Menos opacidad en móvil para no saturar tanto */
   }
 }
 

@@ -14,32 +14,19 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+/* ---------------- BODY LOGIN ---------------- */
 body.login-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: 
-    linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
-  background-repeat: repeat;
-  background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
-  background-position: top left;
-  color: var(--texto);
-  overflow-x: hidden;
-}
-
-
-/* Contenedor centrado solo para el formulario */
-.login-container {
-  flex: 1; /* ocupa el espacio disponible entre header y footer */
+  background-image: url(/imagenes/fondo.jpg);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem; /* margen interno adaptable */
+  min-height: 100vh;
+  color: var(--texto);
+  position: relative;
+  overflow: hidden;
 }
 
-
-/* Curvas decorativas sobre la imagen */
+/* Curvas suaves decorativas */
 body.login-page::before,
 body.login-page::after {
   content: '';
@@ -54,18 +41,21 @@ body.login-page::before {
   height: 600px;
   top: -200px;
   left: -200px;
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
 }
 
 body.login-page::after {
   width: 500px;
   height: 500px;
   bottom: -150px;
-  right: -150px;}
+  right: -150px;
+  background: linear-gradient(135deg, var(--secundario), var(--acento));
+}
 
 /* ---------------- FORMULARIO ---------------- */
 #login_form {
   position: relative;
-  z-index: 1; /* Por encima de las curvas */
+  z-index: 1;
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);

@@ -14,58 +14,68 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+/* ---------------- BODY LOGIN ---------------- */
+/* ---------------- BODY LOGIN ---------------- */
 body.login-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: 
-    linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
-  background-repeat: repeat;
-  background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
-  background-position: top left;
-  color: var(--texto);
-  overflow-x: hidden;
+    /* Mantenemos tu fondo degradado base */
+    background-color: var(--fondo); /* #F0F4F8 */
+    
+    /* Patrón de líneas onduladas sutiles usando CSS Gradient */
+    background-image: 
+        /* Curvas suaves más grandes (como las que ya tenías) */
+        radial-gradient(circle at 10% 20%, rgba(27,58,75,0.05) 0%, rgba(88,139,174,0) 80%),
+        radial-gradient(circle at 90% 80%, rgba(162,213,242,0.08) 0%, rgba(88,139,174,0) 80%),
+
+        /* Patrón de líneas onduladas sutiles (más cargado en el centro/fondo) */
+        repeating-linear-gradient(
+            30deg, /* Ángulo para la sensación ondulada */
+            rgba(0, 0, 0, 0) 0,
+            rgba(0, 0, 0, 0) 10px,
+            rgba(0, 0, 0, 0.03) 10px, /* Línea negra muy sutil */
+            rgba(0, 0, 0, 0.03) 12px,
+            rgba(0, 0, 0, 0) 12px,
+            rgba(0, 0, 0, 0) 25px
+        );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--texto);
+    position: relative;
+    overflow: hidden;
 }
 
-
-/* Contenedor centrado solo para el formulario */
-.login-container {
-  flex: 1; /* ocupa el espacio disponible entre header y footer */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 1rem; /* margen interno adaptable */
-}
-
-
-/* Curvas decorativas sobre la imagen */
+/* OPCIONAL: Elimina los pseudoelementos si usas el nuevo fondo CSS, ya que este lo reemplaza. */
+/* Si quieres mantener las grandes curvas de color, puedes dejarlos o integrarlos arriba */
+/* Si los eliminas, remueve estas reglas: */
+/*
 body.login-page::before,
 body.login-page::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-  z-index: 0;
+    content: none; 
 }
+*/
 
 body.login-page::before {
   width: 600px;
   height: 600px;
   top: -200px;
   left: -200px;
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
 }
 
 body.login-page::after {
   width: 500px;
   height: 500px;
   bottom: -150px;
-  right: -150px;}
+  right: -150px;
+  background: linear-gradient(135deg, var(--secundario), var(--acento));
+}
 
 /* ---------------- FORMULARIO ---------------- */
 #login_form {
   position: relative;
-  z-index: 1; /* Por encima de las curvas */
+  z-index: 1;
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
