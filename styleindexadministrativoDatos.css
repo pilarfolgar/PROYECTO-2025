@@ -117,7 +117,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
   .table thead { display: none; }
   .table { 
     display: block; 
-    width: 100%; 
+    width: 100% !important; /* todas las tablas ocupan mismo ancho */
     min-width: 0; 
     box-shadow: none; 
     border: none; 
@@ -132,6 +132,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
     background-color: #fff; 
     border-radius: 10px; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    width: 100%; /* ancho completo */
   }
   .table tbody tr td { 
     display: flex; 
@@ -141,6 +142,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
     text-align: left; 
     font-size: 0.9rem;
     border: none; /* quitar líneas negras */
+    width: 100%; /* forzar td a ocupar ancho completo */
   }
   /* Mostrar nombre de columna */
   .table tbody tr td::before { 
@@ -163,7 +165,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
   section { padding: 10px; }
   h1 { font-size: 1.3rem; }
   h3 { font-size: 1rem; }
-  .table tbody tr td { font-size: 0.85rem; flex-direction: column; align-items: flex-start; }
+  .table tbody tr td { font-size: 0.85rem; flex-direction: column; align-items: flex-start; width: 100%; }
   .table tbody tr td::before { flex-basis: 100%; margin-bottom: 4px; }
   .table .btn { width: 100%; }
 }
