@@ -1,7 +1,6 @@
 <?php
 session_start();
-require("conexion.php");
-$con = conectar_bd();
+
 ?>
 
 <!DOCTYPE html>
@@ -306,3 +305,4 @@ foreach ($tipos as $tipo) {
 <?php require("footer.php"); ?>
 </body>
 </html>
+
