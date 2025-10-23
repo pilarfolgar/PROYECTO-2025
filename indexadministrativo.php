@@ -206,33 +206,33 @@ $result_reservas = $con->query($sql_reservas);
       </div>
       <div class="modal-body">
         <?php
-$res_notis = $con->query("
-  SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
-  FROM notificaciones n
-  INNER JOIN usuario u ON n.docente_cedula = u.cedula
-  LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-  WHERE n.rol_emisor = 'docente'
-  ORDER BY n.fecha DESC
-");
+        // Consulta solo notificaciones de docentes, evitando duplicados
+        $res_notis = $con->query("
+          SELECT DISTINCT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
+          FROM notificaciones n
+          INNER JOIN usuario u ON n.docente_cedula = u.cedula
+          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          WHERE n.rol_emisor = 'docente'
+          ORDER BY n.fecha DESC
+        ");
 
-if ($res_notis && $res_notis->num_rows > 0) {
-    echo '<div class="table-responsive"><table class="table table-striped">';
-    echo '<thead class="table-dark"><tr><th>Docente</th><th>Grupo</th><th>Título</th><th>Mensaje</th><th>Fecha</th></tr></thead><tbody>';
-    while ($n = $res_notis->fetch_assoc()) {
-        echo '<tr>
-                <td>'.htmlspecialchars($n['docente']).'</td>
-                <td>'.htmlspecialchars($n['grupo'] ?? '—').'</td>
-                <td>'.htmlspecialchars($n['titulo']).'</td>
-                <td>'.nl2br(htmlspecialchars($n['mensaje'])).'</td>
-                <td>'.htmlspecialchars($n['fecha']).'</td>
-              </tr>';
-    }
-    echo '</tbody></table></div>';
-} else {
-    echo '<p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>';
-}
-?>
-
+        if ($res_notis && $res_notis->num_rows > 0) {
+            echo '<div class="table-responsive"><table class="table table-striped">';
+            echo '<thead class="table-dark"><tr><th>Docente</th><th>Grupo</th><th>Título</th><th>Mensaje</th><th>Fecha</th></tr></thead><tbody>';
+            while ($n = $res_notis->fetch_assoc()) {
+                echo '<tr>
+                        <td>'.htmlspecialchars($n['docente']).'</td>
+                        <td>'.htmlspecialchars($n['grupo'] ?? '—').'</td>
+                        <td>'.htmlspecialchars($n['titulo']).'</td>
+                        <td>'.nl2br(htmlspecialchars($n['mensaje'])).'</td>
+                        <td>'.htmlspecialchars($n['fecha']).'</td>
+                      </tr>';
+            }
+            echo '</tbody></table></div>';
+        } else {
+            echo '<p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>';
+        }
+        ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -247,6 +247,7 @@ function mostrarNotificaciones() {
   modal.show();
 }
 </script>
+
 
 
 
