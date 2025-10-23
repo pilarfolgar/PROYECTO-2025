@@ -111,49 +111,56 @@ section {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* ================= TABLAS RESPONSIVE ================= */
-.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* TABLAS */
+.table-responsive {
+  overflow-x: auto;
+}
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 0; /* quitar restricción que rompe el responsive */
+  min-width: 600px; /* evita que se rompa en móvil */
 }
 
-.table thead { 
-  background: linear-gradient(135deg, var(--secundario), var(--primario));
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 0.85rem;
+th, td {
+  white-space: nowrap; /* evita que el texto se corte */
 }
 
-.table th, .table td { padding: 10px; text-align: center; vertical-align: middle; }
+/* TITULOS */
+h1, h3, h5 {
+  text-align: center;
+}
 
-/* ================= MOVIL: CARD ================= */
+/* MEDIA QUERIES */
+
+/* Celulares */
 @media (max-width: 767px) {
-  .table thead { display: none; }
-  .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
-  .table tr { margin-bottom: 1rem; background-color: #fff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); padding: 12px; }
-  .table td { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 6px 0; 
-    text-align: left; 
+  h1 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+  }
+  .btn {
     font-size: 0.85rem;
+    padding: 6px 10px;
   }
-  .table td::before { 
-    content: attr(data-label); 
-    font-weight: 600; 
-    color: var(--primario); 
-    flex-basis: 40%; 
+  section {
+    padding: 10px;
   }
-  .table td:last-child { display: flex; justify-content: flex-start; gap: 10px; }
-  .table .btn { width: 48%; margin: 0; font-size: 0.8rem; padding: 5px; }
 }
 
-button[data-bs-toggle="collapse"] {
-  width: 48%;
-  margin-bottom: 8px;
+/* Tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+  }
 }
 
+/* PC */
+@media (min-width: 992px) {
+  .btn {
+    font-size: 1rem;
+  }
+}
