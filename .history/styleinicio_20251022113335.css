@@ -16,18 +16,15 @@
 
 body.login-page {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  flex-direction: column; /* organiza header, contenido y footer */
+  min-height: 100vh; /* ocupa toda la altura */
   background: 
-    linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
-  background-repeat: repeat;
-  background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
-  background-position: top left;
+    linear-gradient(rgba(240,244,248,0.6), rgba(229, 235, 240, 0.6)),
+    url("imagenes/fondo.jpg") no-repeat center center;
+  background-size: cover;
   color: var(--texto);
   overflow-x: hidden;
 }
-
 
 /* Contenedor centrado solo para el formulario */
 .login-container {
@@ -54,13 +51,16 @@ body.login-page::before {
   height: 600px;
   top: -200px;
   left: -200px;
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
 }
 
 body.login-page::after {
   width: 500px;
   height: 500px;
   bottom: -150px;
-  right: -150px;}
+  right: -150px;
+  background: linear-gradient(135deg, var(--secundario), var(--acento));
+}
 
 /* ---------------- FORMULARIO ---------------- */
 #login_form {

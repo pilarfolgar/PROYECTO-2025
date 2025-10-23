@@ -14,58 +14,52 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+/* ---------------- BODY LOGIN ---------------- */
 body.login-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: 
-    linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
-  background-repeat: repeat;
-  background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
-  background-position: top left;
-  color: var(--texto);
-  overflow-x: hidden;
-}
-
-
-/* Contenedor centrado solo para el formulario */
-.login-container {
-  flex: 1; /* ocupa el espacio disponible entre header y footer */
+  /* Fondo base: Blanco roto / Gris muy claro */
+  background-color: var(--fondo); 
+  
+  /* 1. Fondo de líneas onduladas sutiles (Negro muy transparente) */
+  background-image: repeating-linear-gradient(
+    45deg, /* Ángulo para la sensación ondulada */
+    transparent 0px, 
+    transparent 20px, 
+    rgba(0, 0, 0, 0.05) 20px, /* Línea negra sutil (5% de opacidad) */
+    rgba(0, 0, 0, 0.05) 22px /* Grosor de la línea de 2px */
+  );
+  
+  /* 2. Degradado suave para mantener el look moderno */
+  background-image: 
+      linear-gradient(135deg, rgba(240, 244, 248, 0.7), rgba(220, 232, 242, 0.7)), /* Degradado de tu fondo original pero más transparente */
+      repeating-linear-gradient(
+        45deg, 
+        transparent 0px, 
+        transparent 20px, 
+        rgba(0, 0, 0, 0.05) 20px,
+        rgba(0, 0, 0, 0.05) 22px
+      );
+  
+  background-blend-mode: multiply; /* Para combinar el degradado con las líneas */
+  
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem; /* margen interno adaptable */
+  min-height: 100vh;
+  color: var(--texto);
+  position: relative;
+  overflow: hidden;
 }
 
-
-/* Curvas decorativas sobre la imagen */
+/* Se ELIMINAN los pseudoelementos ::before y ::after para que no tapen el nuevo fondo con líneas */
 body.login-page::before,
 body.login-page::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-  z-index: 0;
+  content: none;
 }
-
-body.login-page::before {
-  width: 600px;
-  height: 600px;
-  top: -200px;
-  left: -200px;
-}
-
-body.login-page::after {
-  width: 500px;
-  height: 500px;
-  bottom: -150px;
-  right: -150px;}
 
 /* ---------------- FORMULARIO ---------------- */
 #login_form {
   position: relative;
-  z-index: 1; /* Por encima de las curvas */
+  z-index: 1;
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -129,12 +123,7 @@ p.text-center a:hover {
 
 /* ---------------- RESPONSIVO ---------------- */
 @media (max-width: 768px) {
-  body.login-page::before,
-  body.login-page::after {
-    width: 400px;
-    height: 400px;
-    opacity: 0.1;
-  }
+  /* Aquí puedes quitar esta regla ya que eliminamos los pseudoelementos */
 }
 
 @media (max-width: 480px) {

@@ -13,7 +13,7 @@ session_start();  // Al inicio absoluto para sesiones
 
     <?php require("HeaderIndex.php"); ?>
 
-    <div class="login-container">
+    <main class="container my-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
         <form action="procesar_inicio.php" method="POST" id="login_form" class="p-4 border rounded bg-light shadow-sm mx-auto" style="max-width: 400px;">
             <h3 class="text-center mb-4">Iniciar Sesión</h3>
 
@@ -39,12 +39,11 @@ session_start();  // Al inicio absoluto para sesiones
             <button type="submit" class="btn btn-primary w-100 mb-2">Ingresar</button>
             <button type="reset" class="btn btn-secondary w-100">Cancelar</button>
         </form>
-    </div>
+    </main>
 
     <p class="mt-3 text-center">
         ¿No tenés cuenta? <a href="registro.php">Registrate</a>
     </p>
-
 
     <?php require("footer.php"); ?>
 

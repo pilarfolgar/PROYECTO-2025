@@ -20,7 +20,7 @@ body.login-page {
   min-height: 100vh;
   background: 
     linear-gradient(rgba(193, 215, 236, 0.438), rgba(229, 235, 240, 0.342)),
-    url("imagenes/probar\ fondo.jpg");
+    url("imagenes/fondoazul.jpeg");
   background-repeat: repeat;
   background-size: 25% 33.33%; /* 100% / 4 = 25% horizontal, 100% / 3 ≈ 33.33% vertical */
   background-position: top left;
