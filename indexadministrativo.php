@@ -206,12 +206,13 @@ $result_reservas = $con->query($sql_reservas);
       </div>
       <div class="modal-body">
         <?php
-         $sql_notis = "SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
-              FROM notificaciones n
-              JOIN usuario u ON n.docente_cedula = u.cedula
-              JOIN grupo g ON n.id_grupo = g.id_grupo
-              WHERE n.rol_emisor = 'docente'
-              ORDER BY n.fecha DESC";
+        $sql_notis = "SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, g.nombre AS grupo
+      FROM notificaciones n
+      LEFT JOIN usuario u ON n.docente_cedula = u.cedula AND n.rol_emisor = 'docente'
+      LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+      WHERE n.rol_emisor = 'docente'
+      ORDER BY n.fecha DESC";
+
 
           $res_notis = $con->query($sql_notis);
           if ($res_notis->num_rows > 0) {

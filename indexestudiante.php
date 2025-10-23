@@ -85,6 +85,17 @@ foreach ($horarios as $h) {
       </div>
       <div class="docente-name">Notificaciones</div>
       <div class="docente-subject">Ver tus avisos importantes</div>
+      <div class="notificaciones-estudiante mt-2">
+      <ul class="list-group">
+      <?php while ($row = $result->fetch_assoc()): ?>
+          <li class="list-group-item <?php echo $row['visto_estudiante'] ? '' : 'fw-bold'; ?>">
+              <strong><?php echo htmlspecialchars($row['titulo']); ?></strong>
+              <p><?php echo htmlspecialchars($row['mensaje']); ?></p>
+              <small>De: <?php echo htmlspecialchars($row['docente_nombre']); ?> | <?php echo $row['fecha']; ?></small>
+          </li>
+      <?php endwhile; ?>
+      </ul>
+  </div>
       <a href="notificaciones.php" class="boton w-100 text-center">Ir a Notificaciones</a>
     </div>
     <?php
@@ -102,18 +113,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-<div class="notificaciones-estudiante">
-    
-    <ul class="list-group">
-    <?php while ($row = $result->fetch_assoc()): ?>
-        <li class="list-group-item <?php echo $row['visto_estudiante'] ? '' : 'fw-bold'; ?>">
-            <strong><?php echo htmlspecialchars($row['titulo']); ?></strong>
-            <p><?php echo htmlspecialchars($row['mensaje']); ?></p>
-            <small>De: <?php echo htmlspecialchars($row['docente_nombre']); ?> | <?php echo $row['fecha']; ?></small>
-        </li>
-    <?php endwhile; ?>
-    </ul>
-</div>
+
 
 
     <!-- Tarjeta Horario -->
