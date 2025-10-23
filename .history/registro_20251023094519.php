@@ -46,80 +46,81 @@ $con = conectar_bd();
 <?php require("HeaderIndex.php"); ?>
 
 <main class="container my-5">
-  <form action="procesar_registro.php" method="POST" id="registro_form">
+<form action="procesar_registro.php" method="POST" id="registro_form">
 
-    <h1>Registro</h1>
+  <h1 class="text-center mb-4">Registro</h1>
 
-    <div class="mb-3">
+  <div class="row">
+    <div class="col-half mb-3">
       <label for="nombre" class="form-label">Nombre *</label>
       <input type="text" name="nombre" id="nombre" class="form-control" required>
     </div>
-
-    <div class="mb-3">
+    <div class="col-half mb-3">
       <label for="apellido" class="form-label">Apellido *</label>
       <input type="text" name="apellido" id="apellido" class="form-control" required>
     </div>
+  </div>
 
-    <div class="mb-3">
+  <div class="row">
+    <div class="col-half mb-3">
       <label for="email" class="form-label">Email *</label>
       <input type="email" name="email" id="email" class="form-control" required>
     </div>
-
-    <div class="mb-3">
+    <div class="col-half mb-3">
       <label for="cedula" class="form-label">Cédula (Uruguaya, 8 dígitos) *</label>
       <input type="text" name="cedula" id="cedula" class="form-control" pattern="\d{8}" maxlength="8" required>
     </div>
+  </div>
 
-    <div class="mb-3">
+  <div class="row">
+    <div class="col-half mb-3">
       <label for="pass" class="form-label">Contraseña *</label>
       <input type="password" name="pass" id="pass" class="form-control" required minlength="12" maxlength="16">
       <div class="form-text">
-        Debe tener entre 12 y 16 caracteres, con mayúsculas, minúsculas, números y símbolos (@!$%&*?).
+        12-16 caracteres, mayúsculas, minúsculas, números y símbolos (@!$%&*?)
       </div>
-
-      <div id="password-strength" class="mt-2">
+      <div id="password-strength" class="mt-1">
         <div id="password-strength-fill"></div>
       </div>
-
-      <ul id="password-requirements" class="list-unstyled mt-2 small">
-        <li id="req-length" class="bad">❌ Mínimo 12 y máximo 16 caracteres</li>
-        <li id="req-upper" class="bad">❌ Al menos una letra mayúscula</li>
-        <li id="req-lower" class="bad">❌ Al menos una letra minúscula</li>
-        <li id="req-number" class="bad">❌ Al menos un número</li>
-        <li id="req-symbol" class="bad">❌ Al menos un símbolo (@!$%&*?)</li>
-      </ul>
     </div>
-
-    <div class="mb-3">
+    <div class="col-half mb-3">
       <label for="rol" class="form-label">Rol *</label>
       <select name="rol" id="rol" class="form-select" required>
         <option value="">Seleccione...</option>
         <option value="estudiante">Estudiante</option>
         <option value="docente">Docente</option>
       </select>
-    </div>
 
-    <div class="mb-3" id="grupo_div" style="display: none;">
-      <label for="grupo" class="form-label">Grupo *</label>
-      <select name="grupo" id="grupo" class="form-select">
-        <option value="">Seleccione un grupo...</option>
-        <?php
-        $res_grupo = $con->query("SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre");
-        while($row = $res_grupo->fetch_assoc()) {
-            $display = htmlspecialchars($row['nombre'] . ' - ' . $row['orientacion']);
-            echo "<option value='".htmlspecialchars($row['id_grupo'])."'>$display</option>";
-        }
-        ?>
-      </select>
+      <div id="grupo_div" style="display: none; margin-top:0.5rem;">
+        <label for="grupo" class="form-label">Grupo *</label>
+        <select name="grupo" id="grupo" class="form-select">
+          <option value="">Seleccione un grupo...</option>
+          <?php
+          $res_grupo = $con->query("SELECT id_grupo, nombre, orientacion FROM grupo ORDER BY nombre");
+          while($row = $res_grupo->fetch_assoc()) {
+              $display = htmlspecialchars($row['nombre'] . ' - ' . $row['orientacion']);
+              echo "<option value='".htmlspecialchars($row['id_grupo'])."'>$display</option>";
+          }
+          ?>
+        </select>
+      </div>
     </div>
+  </div>
 
+  <div class="mb-3 text-center">
     <div class="g-recaptcha" data-sitekey="6LfHIusrAAAAAClke9PL9JJcbDnGAijza1w_IARk"></div>
+  </div>
 
+  <div class="d-flex justify-content-center gap-2">
     <button type="submit" class="btn btn-primary">Registrarse</button>
     <button type="reset" class="btn btn-secondary">Cancelar</button>
+  </div>
 
-    <p>¿Ya tenés cuenta? <a href="iniciosesion.php">Iniciar sesión</a></p>
-  </form>
+  <p class="mt-3 text-center">
+    ¿Ya tenés cuenta? <a href="iniciosesion.php">Iniciar sesión</a>
+  </p>
+</form>
+
 </main>
 
 <?php require("footer.php"); ?>

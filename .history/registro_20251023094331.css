@@ -1,0 +1,149 @@
+:root { 
+  --primario: #1B3A4B;     
+  --secundario: #588BAE;   
+  --acento: #A2D5F2;       
+  --fondo: #F0F4F8;        
+  --texto: #1B3A4B;        
+  --hover: #417899;        
+}
+
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',sans-serif; }
+
+body {
+  background: 
+    linear-gradient(rgba(193,215,236,0.4), rgba(229,235,240,0.3)),
+    url("imagenes/probar fondo.jpg");
+  background-repeat: repeat;
+  background-size: 25% 33.33%;
+  background-position: top left;
+  color: var(--texto);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main { 
+  flex:1; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  padding:2rem 1rem; 
+}
+
+/* ---------------- HEADER ---------------- */
+header {
+  background-color: var(--primario);
+  color:white;
+  padding:1rem 2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.header-left { display:flex; align-items:center; gap:1rem; }
+.logo { width:70px; height:70px; border-radius:50%; background-color:white; box-shadow:0 4px 8px rgba(0,0,0,0.2); transition:transform 0.3s; }
+.logo:hover { transform:scale(1.1); }
+
+/* ---------------- FOOTER ---------------- */
+.footer {
+  background-color: var(--primario);
+  color:white;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+  font-size:1rem;
+}
+
+/* ---------------- FORMULARIO ---------------- */
+form {
+  max-width: 800px;   /* más ancho */
+  width: 100%;
+  background-color:white;
+  padding:2rem;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas */
+  gap: 1.5rem 2rem; /* espacio entre inputs */
+}
+
+/* Forzar que ciertos elementos ocupen las dos columnas */
+form h1, form .g-recaptcha, form button, form p {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+form .form-label { font-weight:bold; margin-bottom:0.5rem; display:block; }
+
+form .form-control,
+form .form-select {
+  width: 100%;
+  padding:0.5rem;
+  border:1px solid var(--secundario);
+  border-radius:6px;
+  margin-bottom:1rem;
+  transition:border-color 0.3s, box-shadow 0.3s;
+}
+
+form .form-control:focus,
+form .form-select:focus {
+  border-color: var(--hover);
+  box-shadow:0 0 0 0.2rem rgba(89,139,174,0.25);
+  outline:none;
+}
+
+/* Botones */
+.btn {
+  padding:0.5rem 1.2rem;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:background 0.3s, transform 0.2s;
+}
+
+.btn-primary { background-color: var(--acento); color: var(--texto); }
+.btn-primary:hover { background-color: var(--hover); color:white; transform:translateY(-2px); }
+
+.btn-secondary { background-color: var(--secundario); color:white; }
+.btn-secondary:hover { background-color: var(--hover); transform:translateY(-2px); }
+
+/* ---------------- BARRA DE FUERZA DE CONTRASEÑA ---------------- */
+#password-strength {
+  height:8px;
+  border-radius:5px;
+  background-color:#ddd;
+  margin-top:5px;
+  overflow:hidden;
+}
+
+#password-strength-fill {
+  height:100%;
+  width:0%;
+  border-radius:5px;
+  transition: width 0.3s;
+}
+
+/* Lista de requisitos */
+#password-requirements li { margin-bottom:3px; transition:color 0.2s; }
+#password-requirements li.ok { color:green; }
+#password-requirements li.bad { color:red; }
+
+/* ---------------- RECAPTCHA ---------------- */
+.g-recaptcha { margin:1rem 0; display:flex; justify-content:center; }
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 992px) {
+  form { grid-template-columns: 1fr; max-width: 90%; padding: 1.5rem; }
+  form h1, form .g-recaptcha, form button, form p { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+  form { padding:1rem; }
+}
+
+/* ---------------- ENLACES ---------------- */
+a { color: var(--primario); text-decoration:none; transition:color 0.3s; }
+a:hover { color: var(--hover); text-decoration:underline; }
