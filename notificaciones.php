@@ -29,29 +29,28 @@ if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $stmtV->close();
 }
 
-// Traer notificaciones (adscripto + docente)
-$sql = "SELECT n.id, n.titulo, n.mensaje, n.fecha, n.visto_estudiante, 
-               n.rol_emisor, u.nombrecompleto AS remitente
-        FROM notificaciones n
-        LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-        WHERE n.id_grupo = ?
-        ORDER BY n.fecha DESC";
+// Traer notificaciones del grupo del estudiante
+$sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante
+        FROM notificaciones
+        WHERE id_grupo = ?
+        ORDER BY fecha DESC";
 
 $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $id_grupo);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($id, $titulo, $mensaje, $fecha, $visto, $rol_emisor, $remitente);
-
+$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Mis Notificaciones</title>
-    <link rel="stylesheet" href="notificaciones.css">
+<meta charset="UTF-8">
+<title>Mis Notificaciones</title>
+<link rel="stylesheet" href="notificaciones.css">
 </head>
 <body>
+
 <?php include('header.php'); ?>
 
 <main>
@@ -62,18 +61,8 @@ $stmt->bind_result($id, $titulo, $mensaje, $fecha, $visto, $rol_emisor, $remiten
                 <h3><?php echo htmlspecialchars($titulo); ?></h3>
                 <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
                 <p class="fecha"><?php echo $fecha; ?></p>
-                <p class="remitente">
-                    <strong>Enviado por:</strong>
-                    <?php
-                    if ($rol_emisor === 'docente') {
-                        echo htmlspecialchars($remitente ?: 'Docente');
-                    } else {
-                        echo 'Adscripto';
-                    }
-                    ?>
-                </p>
                 <?php if(!$visto): ?>
-                    <a href="?marcar_visto=<?php echo $id; ?>" class="btn-marcar">Marcar como leído</a>
+                    <a href="?marcar_visto=<?php echo $id_notificacion; ?>" class="btn-marcar">Marcar como leído</a>
                 <?php else: ?>
                     <span class="leido">Leído</span>
                 <?php endif; ?>
@@ -85,6 +74,20 @@ $stmt->bind_result($id, $titulo, $mensaje, $fecha, $visto, $rol_emisor, $remiten
 <?php
 $stmt->close();
 $con->close();
-include('footer.php');
 ?>
 
+
+<script>
+    // Animación simple: revelar notificaciones al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+        const notis = document.querySelectorAll('.notificacion');
+        notis.forEach((n, i) => {
+            setTimeout(() => n.classList.add('visible'), i * 100);
+        });
+    });
+</script>
+
+</body>
+</html>
+
+<?php require('footer.php'); ?>
