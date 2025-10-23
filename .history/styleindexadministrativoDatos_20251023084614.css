@@ -1,4 +1,4 @@
-/* ================= VARIABLES ================= */ 
+/* ================= VARIABLES ================= */   
 :root {
   --primario: #1B3A4B;
   --secundario: #588BAE;
@@ -6,6 +6,10 @@
   --fondo: #F0F4F8;
   --texto: #1B3A4B;
   --hover: #417899;
+  --input-bg: #e8f4fc; /* fondo de inputs suave y educativo */
+  --input-border: #a8c8e0; /* borde de inputs */
+  --input-focus: #588BAE; /* borde al enfocar */
+  --input-placeholder: #7b9cae; /* placeholder */
 }
 
 /* ================= RESET Y BODY ================= */
@@ -46,27 +50,58 @@ button[data-bs-toggle="collapse"] {
   font-size: 0.9rem;
   font-weight: 600;
   border: 2px solid transparent;
-  background-color: rgba(24, 58, 75, 0.1); /* muy transparente */
+  background-color: rgba(24, 58, 75, 0.1);
   color: var(--primario);
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 button[data-bs-toggle="collapse"]:hover {
-  background-color: rgba(24, 58, 75, 0.2); /* sutil al pasar el mouse */
+  background-color: rgba(24, 58, 75, 0.2);
   color: var(--primario);
 }
 
 button[data-bs-toggle="collapse"]:focus {
   outline: none;
-  border: 2px solid var(--secundario); /* halo sutil */
+  border: 2px solid var(--secundario);
 }
 
-/* ================= BOTONES COLAPSABLES ACTIVOS ================= */
 button[data-bs-toggle="collapse"].active,
 button[data-bs-toggle="collapse"][aria-expanded="true"] {
   background-color: rgba(24, 58, 75, 0.25);
   color: var(--primario);
+}
+
+/* ================= FORMULARIOS MINIMALISTAS ================= */
+input, select, textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--primario);
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  background-color: #f0faff;
+  box-shadow: 0 0 0 3px rgba(88, 139, 174, 0.15);
+}
+
+label {
+  font-weight: 600;
+  color: var(--primario);
+  margin-bottom: 5px;
+  display: block;
 }
 
 /* ================= RESPONSIVE ================= */
@@ -75,12 +110,12 @@ button[data-bs-toggle="collapse"][aria-expanded="true"] {
   .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table th, .table td { padding: 10px; }
   .table .btn { margin-right: 8px; margin-bottom: 4px; }
+  input, select, textarea { font-size: 0.88rem; padding: 8px 12px; }
 }
 
 @media (max-width: 768px) {
   main.contenedor { padding: 15px 20px; }
 
-  /* Tablas se convierten en cards */
   .table thead { display: none; }
   .table { display: block; box-shadow: none; border: none; }
   .table tbody tr { display: block; margin-bottom: 1rem; padding: 12px; background-color: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
@@ -88,79 +123,4 @@ button[data-bs-toggle="collapse"][aria-expanded="true"] {
   .table tbody tr td::before { content: attr(data-label); font-weight: 600; color: var(--primario); flex-basis: 40%; }
   .table tbody tr td:last-child { display: flex; justify-content: flex-start; gap: 10px; }
   .table .btn { width: 48%; margin: 0; }
-}
-/* Contenedor principal */
-.contenedor {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 15px;
-}
-
-/* BOTONES COLAPSABLES */
-.d-flex.flex-wrap.gap-2 {
-  flex-wrap: wrap;
-  justify-content: center; /* centra los botones en pantalla pequeña */
-  gap: 10px;
-}
-
-/* SECCIONES */
-section {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-/* TABLAS */
-.table-responsive {
-  overflow-x: auto;
-}
-
-.table {
-  min-width: 600px; /* evita que se rompa en móvil */
-}
-
-th, td {
-  white-space: nowrap; /* evita que el texto se corte */
-}
-
-/* TITULOS */
-h1, h3, h5 {
-  text-align: center;
-}
-
-/* MEDIA QUERIES */
-
-/* Celulares */
-@media (max-width: 767px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-  h3 {
-    font-size: 1.2rem;
-  }
-  .btn {
-    font-size: 0.85rem;
-    padding: 6px 10px;
-  }
-  section {
-    padding: 10px;
-  }
-}
-
-/* Tablets */
-@media (min-width: 768px) and (max-width: 991px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-  h3 {
-    font-size: 1.4rem;
-  }
-}
-
-/* PC */
-@media (min-width: 992px) {
-  .btn {
-    font-size: 1rem;
-  }
 }

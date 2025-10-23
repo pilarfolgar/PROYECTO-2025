@@ -30,49 +30,50 @@ $con = conectar_bd();
     <button class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#gruposCollapse">Grupos</button>
   </div>
 
-  <!-- DOCENTES -->
-  <div class="collapse show mb-5" id="docentesCollapse">
-    <section>
-      <h3>Docentes</h3>
-      <?php
-      $sql = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
-      $result = $con->query($sql);
-      if($result && $result->num_rows > 0):
-      ?>
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-          <thead class="table-dark">
-            <tr>
-              <th>Cédula</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
-              <td data-label="Cédula"><?= $row['cedula'] ?></td>
-              <td data-label="Nombre"><?= htmlspecialchars($row['nombrecompleto']) ?></td>
-              <td data-label="Apellido"><?= htmlspecialchars($row['apellido']) ?></td>
-              <td data-label="Email"><?= htmlspecialchars($row['email']) ?></td>
-              <td data-label="Teléfono"><?= htmlspecialchars($row['telefono']) ?></td>
-              <td data-label="Acciones">
-                <a href="editar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-primary">Editar</a>
-                <a href="eliminar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este docente?');">Eliminar</a>
-              </td>
-            </tr>
-          <?php endwhile; ?>
-          </tbody>
-        </table>
-      </div>
-      <?php else: ?>
-        <p>No hay docentes registrados.</p>
-      <?php endif; ?>
-    </section>
-  </div>
+  <div class="accordion" id="accordionPanels">
+    <!-- DOCENTES -->
+    <div class="collapse mb-5" id="docentesCollapse" data-bs-parent="#accordionPanels">
+      <section>
+        <h3>Docentes</h3>
+        <?php
+        $sql = "SELECT * FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
+        $result = $con->query($sql);
+        if($result && $result->num_rows > 0):
+        ?>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php while($row = $result->fetch_assoc()): ?>
+              <tr>
+                <td data-label="Cédula"><?= $row['cedula'] ?></td>
+                <td data-label="Nombre"><?= htmlspecialchars($row['nombrecompleto']) ?></td>
+                <td data-label="Apellido"><?= htmlspecialchars($row['apellido']) ?></td>
+                <td data-label="Email"><?= htmlspecialchars($row['email']) ?></td>
+                <td data-label="Teléfono"><?= htmlspecialchars($row['telefono']) ?></td>
+                <td data-label="Acciones">
+                  <a href="editar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-primary">Editar</a>
+                  <a href="eliminar-docente.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este docente?');">Eliminar</a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+            </tbody>
+          </table>
+        </div>
+        <?php else: ?>
+          <p>No hay docentes registrados.</p>
+        <?php endif; ?>
+      </section>
+    </div>
 
   <!-- ASIGNATURAS -->
   <div class="collapse mb-5" id="asignaturasCollapse">
@@ -102,11 +103,11 @@ $con = conectar_bd();
           <tbody>
           <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-              <td data-label="ID"><?= $row['id_asignatura'] ?></td>
-              <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
-              <td data-label="Código"><?= htmlspecialchars($row['codigo']) ?></td>
-              <td data-label="Docentes"><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
-              <td data-label="Acciones">
+              <td><?= $row['id_asignatura'] ?></td>
+              <td><?= htmlspecialchars($row['nombre']) ?></td>
+              <td><?= htmlspecialchars($row['codigo']) ?></td>
+              <td><?= htmlspecialchars($row['docentes_asignados'] ?? '—') ?></td>
+              <td>
                 <a href="editar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-primary">Editar</a>
                 <a href="eliminar-asignatura.php?id=<?= $row['id_asignatura'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asignatura?');">Eliminar</a>
               </td>
@@ -126,6 +127,7 @@ $con = conectar_bd();
     <section>
       <h3>Horarios</h3>
       <?php
+      // Mostrar horarios separados por grupo
       $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre
               FROM grupo g
               ORDER BY g.nombre";
@@ -158,14 +160,14 @@ $con = conectar_bd();
           <tbody>
           <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-              <td data-label="ID"><?= $row['id_horario'] ?></td>
-              <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
-              <td data-label="Día"><?= $row['dia'] ?></td>
-              <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
-              <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
-              <td data-label="Clase"><?= htmlspecialchars($row['clase']) ?></td>
-              <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
-              <td data-label="Acciones">
+              <td><?= $row['id_horario'] ?></td>
+              <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
+              <td><?= $row['dia'] ?></td>
+              <td><?= $row['hora_inicio'] ?></td>
+              <td><?= $row['hora_fin'] ?></td>
+              <td><?= htmlspecialchars($row['clase']) ?></td>
+              <td><?= htmlspecialchars($row['aula']) ?></td>
+              <td>
                 <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
                 <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
               </td>
@@ -214,14 +216,14 @@ $con = conectar_bd();
           <tbody>
           <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-              <td data-label="ID"><?= $row['id_reserva'] ?></td>
-              <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
-              <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
-              <td data-label="Grupo"><?= htmlspecialchars($row['grupo']) ?></td>
-              <td data-label="Fecha"><?= $row['fecha'] ?></td>
-              <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
-              <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
-              <td data-label="Acciones">
+              <td><?= $row['id_reserva'] ?></td>
+              <td><?= htmlspecialchars($row['nombre']) ?></td>
+              <td><?= htmlspecialchars($row['aula']) ?></td>
+              <td><?= htmlspecialchars($row['grupo']) ?></td>
+              <td><?= $row['fecha'] ?></td>
+              <td><?= $row['hora_inicio'] ?></td>
+              <td><?= $row['hora_fin'] ?></td>
+              <td>
                 <a href="editar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-primary">Editar</a>
                 <a href="eliminar-reserva.php?id=<?= $row['id_reserva'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta reserva?');">Eliminar</a>
               </td>
@@ -259,11 +261,11 @@ $con = conectar_bd();
           <tbody>
           <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-              <td data-label="ID"><?= $row['id_grupo'] ?></td>
-              <td data-label="Nombre"><?= htmlspecialchars($row['nombre']) ?></td>
-              <td data-label="Orientación"><?= htmlspecialchars($row['orientacion']) ?></td>
-              <td data-label="Cantidad"><?= htmlspecialchars($row['cantidad_estudiantes']) ?></td>
-              <td data-label="Acciones">
+              <td><?= $row['id_grupo'] ?></td>
+              <td><?= htmlspecialchars($row['nombre']) ?></td>
+              <td><?= htmlspecialchars($row['orientacion']) ?></td>
+              <td><?= htmlspecialchars($row['cantidad_estudiantes']) ?></td>
+              <td>
                 <a href="editar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-primary">Editar</a>
                 <a href="eliminar-grupo.php?id=<?= $row['id_grupo'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">Eliminar</a>
               </td>
