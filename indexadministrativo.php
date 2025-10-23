@@ -69,7 +69,7 @@ $con = conectar_bd();
   <div class="tarjeta">
   <h3> Notificaciones Docentes</h3>
   <p>Mensajes enviados por docentes a los grupos.</p>
-  <button class="boton" onclick="mostrarNotificaciones()">Ver Notificaciones</button>
+  <button class="boton" onclick="abrirModalNotificaciones()">Ver Notificaciones</button>
 </div>
 
 
