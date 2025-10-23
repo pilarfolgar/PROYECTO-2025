@@ -306,3 +306,4 @@ foreach ($tipos as $tipo) {
 <?php require("footer.php"); ?>
 </body>
 </html>
+
