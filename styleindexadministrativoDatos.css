@@ -115,7 +115,16 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
 
   /* Tablas estilo “tarjeta” */
   .table thead { display: none; }
-  .table { display: block; min-width: 0; box-shadow: none; border: none; }
+  .table { 
+    display: block; 
+    width: 100%; 
+    min-width: 0; 
+    box-shadow: none; 
+    border: none; 
+    border-radius: 10px; 
+    background-color: #fff; 
+    padding: 10px;
+  }
   .table tbody tr { 
     display: block; 
     margin-bottom: 1rem; 
@@ -131,6 +140,7 @@ section { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sha
     padding: 6px 0; 
     text-align: left; 
     font-size: 0.9rem;
+    border: none; /* quitar líneas negras */
   }
   /* Mostrar nombre de columna */
   .table tbody tr td::before { 
