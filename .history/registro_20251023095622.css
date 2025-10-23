@@ -31,7 +31,7 @@ main {
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:1.5rem 1rem;
+  padding:1rem;
 }
 
 /* ---------------- HEADER ---------------- */
@@ -47,13 +47,7 @@ header {
 }
 
 .header-left { display:flex; align-items:center; gap:0.8rem; }
-.logo {
-  width:60px; height:60px;
-  border-radius:50%;
-  background-color:white;
-  box-shadow:0 4px 8px rgba(0,0,0,0.2);
-  transition:transform 0.3s;
-}
+.logo { width:60px; height:60px; border-radius:50%; background-color:white; box-shadow:0 4px 8px rgba(0,0,0,0.2); transition:transform 0.3s; }
 .logo:hover { transform:scale(1.1); }
 
 /* ---------------- FOOTER ---------------- */
@@ -66,42 +60,49 @@ header {
   font-size:0.9rem;
 }
 
-/* ---------------- FORMULARIO ---------------- */
+/* ---------------- FORMULARIO COMPACTO ---------------- */
 form {
-  max-width:450px; /* más compacto */
+  max-width:380px;   /* más estrecho horizontalmente */
   width:100%;
   background-color:white;
-  padding:1rem; /* menos padding */
+  padding:0.8rem 1rem; /* menos padding */
   border-radius:10px;
   box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  font-size:0.9rem; /* letra más chica */
+  font-size:0.85rem;  /* letra más chica */
 }
 
-/* Dos columnas compactas */
+/* Layout de dos columnas horizontal */
 form .row {
-  display: flex;
+  display:flex;
   gap:0.5rem;
-  flex-wrap: wrap;
+  flex-wrap:wrap;
+  align-items:flex-start;
 }
 
 form .col-half {
-  flex: 1 1 48%;
+  flex:1 1 48%;
+  min-width: 140px;  /* evita que se achique demasiado */
 }
 
-form .col-half input,
-form .col-half select {
-  width:100%;
+form .col-full {
+  flex:1 1 100%;
 }
 
-form .form-label { font-weight:bold; margin-bottom:0.3rem; display:block; }
+form .form-label {
+  font-weight:bold;
+  margin-bottom:0.2rem; /* menos espacio */
+  display:block;
+  font-size:0.85rem;
+}
 
 form .form-control,
 form .form-select {
   width:100%;
-  padding:0.4rem;
+  padding:0.35rem 0.4rem; /* inputs más compactos */
   border:1px solid var(--secundario);
   border-radius:5px;
-  margin-bottom:0.6rem;
+  margin-bottom:0.5rem; /* menos espacio entre campos */
+  font-size:0.85rem;
   transition:border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -114,11 +115,11 @@ form .form-select:focus {
 
 /* Botones */
 .btn {
-  padding:0.4rem 1rem;
+  padding:0.35rem 0.8rem;
   border:none;
   border-radius:5px;
   font-weight:bold;
-  font-size:0.9rem;
+  font-size:0.85rem;
   cursor:pointer;
   transition:background 0.3s, transform 0.2s;
 }
@@ -130,26 +131,26 @@ form .form-select:focus {
 .btn-secondary:hover { background-color: var(--hover); transform:translateY(-1px); }
 
 /* ---------------- BARRA DE FUERZA DE CONTRASEÑA ---------------- */
-#password-strength { height:6px; border-radius:4px; background-color:#ddd; margin-top:4px; overflow:hidden; }
+#password-strength { height:6px; border-radius:4px; background-color:#ddd; margin-top:3px; overflow:hidden; }
 #password-strength-fill { height:100%; width:0%; border-radius:4px; transition: width 0.3s; }
 
-#password-requirements li { margin-bottom:2px; transition:color 0.2s; font-size:0.8rem; }
+#password-requirements li { margin-bottom:2px; transition:color 0.2s; font-size:0.75rem; }
 #password-requirements li.ok { color:green; }
 #password-requirements li.bad { color:red; }
 
 /* ---------------- RECAPTCHA ---------------- */
-.g-recaptcha { margin:0.8rem 0; display:flex; justify-content:center; }
+.g-recaptcha { margin:0.5rem 0; display:flex; justify-content:center; }
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   header { flex-direction:column; text-align:center; }
-  main { padding:1rem; }
+  main { padding:0.8rem; }
   form .row { flex-direction: column; gap:0.3rem; }
   form .col-half { flex:1 1 100%; }
 }
 
 @media (max-width: 480px) {
-  form { padding:0.8rem; font-size:0.85rem; }
+  form { padding:0.5rem 0.8rem; font-size:0.8rem; }
 }
 
 /* ---------------- ENLACES ---------------- */
