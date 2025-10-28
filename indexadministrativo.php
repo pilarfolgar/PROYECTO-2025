@@ -198,8 +198,6 @@ $result_reservas = $con->query($sql_reservas);
 </div>
 
 
-
-
 <!-- MODAL NOTIFICACIONES DOCENTES -->
 <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
