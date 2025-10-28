@@ -28,6 +28,7 @@ $con = conectar_bd();
     <button class="btn btn-warning" data-bs-toggle="collapse" data-bs-target="#horariosCollapse">Horarios</button>
     <button class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#reservasCollapse">Reservas</button>
     <button class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#gruposCollapse">Grupos</button>
+    <button class="btn btn-dark" data-bs-toggle="collapse" data-bs-target="#aulasCollapse">Aulas</button>
   </div>
 
   <div class="accordion" id="accordionPanels">
@@ -276,6 +277,58 @@ $con = conectar_bd();
         </div>
         <?php else: ?>
           <p>No hay grupos registrados.</p>
+        <?php endif; ?>
+      </section>
+    </div>
+
+    <!-- AULAS -->
+    <div class="collapse mb-5" id="aulasCollapse" data-bs-parent="#accordionPanels">
+      <section>
+        <h3>Aulas</h3>
+        <?php
+        $sql = "SELECT * FROM aula ORDER BY codigo";
+        $result = $con->query($sql);
+        if($result && $result->num_rows > 0):
+        ?>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Código</th>
+                <th>Capacidad</th>
+                <th>Ubicación</th>
+                <th>Tipo</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php while($row = $result->fetch_assoc()): ?>
+              <tr>
+                <td data-label="ID"><?= $row['id_aula'] ?></td>
+                <td data-label="Código"><?= htmlspecialchars($row['codigo']) ?></td>
+                <td data-label="Capacidad"><?= htmlspecialchars($row['capacidad']) ?></td>
+                <td data-label="Ubicación"><?= htmlspecialchars($row['ubicacion']) ?></td>
+                <td data-label="Tipo"><?= htmlspecialchars($row['tipo']) ?></td>
+                <td data-label="Imagen">
+                  <?php if($row['imagen']): ?>
+                    <img src="<?= htmlspecialchars($row['imagen']) ?>" alt="Aula" style="width:50px; height:auto;">
+                  <?php else: ?>
+                    —
+                  <?php endif; ?>
+                </td>
+                <td data-label="Acciones">
+                  <a href="editar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-primary">Editar</a>
+                  <a href="eliminar-aula.php?codigo=<?= urlencode($row['codigo']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta aula?');">Eliminar</a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+            </tbody>
+          </table>
+        </div>
+        <?php else: ?>
+          <p>No hay aulas registradas.</p>
         <?php endif; ?>
       </section>
     </div>
