@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 <body>
+    <?php require("header.php"); ?>
 <div class="container mt-4">
 <h2>✏️ Editar Horario</h2>
 <form method="POST">

@@ -2,6 +2,7 @@
 session_start();
 require("conexion.php");
 $con = conectar_bd();
+require("header.php");
 
 $id = $_GET['id'] ?? null;
 if (!$id) {

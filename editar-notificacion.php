@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
+    <?php require("header.php"); ?>
 <div class="container mt-5">
   <div class="card shadow-lg">
     <div class="card-header bg-primary text-white">

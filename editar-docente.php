@@ -3,6 +3,7 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
+
 $cedula = $_GET['cedula'] ?? null;
 if (!$cedula) {
     die("Cédula no proporcionada");

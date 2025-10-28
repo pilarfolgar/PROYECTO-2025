@@ -2,7 +2,7 @@
 session_start();
 require("conexion.php");
 $con = conectar_bd();
-require("header.php"); // Incluye el header
+require("header.php");
 ?>
 
 <?php
