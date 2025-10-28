@@ -4,7 +4,7 @@ require("conexion.php");
 $con = conectar_bd();
 
 // Verificar sesión y permisos
-if (!isset($_SESSION['cedula']) || $_SESSION['rol'] !== 'adscripto') {
+if (!isset($_SESSION['cedula']) || $_SESSION['rol'] !== 'administrativo') {
     header("Location: login.php");
     exit();
 }
@@ -13,7 +13,7 @@ $cedula_actual = $_SESSION['cedula'];
 $id = $_GET['id'] ?? null;
 
 // Verificar que la notificación exista y sea del adscripto actual
-$sql = "SELECT * FROM notificaciones WHERE id = ? AND docente_cedula = ? AND rol_emisor = 'adscripto'";
+$sql = "SELECT * FROM notificaciones WHERE id = ? AND adscripto_cedula = ? AND rol_emisor = 'administrativo'";
 $stmt = $con->prepare($sql);
 $stmt->bind_param("is", $id, $cedula_actual);
 $stmt->execute();
@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $update = $con->prepare("
         UPDATE notificaciones 
-        SET titulo = ?, mensaje = ?, rol_emisor = 'adscripto'
-        WHERE id = ? AND docente_cedula = ? AND rol_emisor = 'adscripto'
+        SET titulo = ?, mensaje = ?, rol_emisor = 'administrativo'
+        WHERE id = ? AND adscripto_cedula = ? AND rol_emisor = 'administrativo'
     ");
     $update->bind_param("ssis", $titulo, $mensaje, $id, $cedula_actual);
 
@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -55,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
-
 <div class="container mt-5">
   <div class="card shadow-lg">
     <div class="card-header bg-primary text-white">
@@ -77,7 +75,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
-
 </body>
 </html>
-

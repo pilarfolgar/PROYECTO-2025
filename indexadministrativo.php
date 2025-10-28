@@ -211,18 +211,17 @@ $result_reservas = $con->query($sql_reservas);
         <?php
         $cedula_actual = $_SESSION['cedula'] ?? null;
 
-        // Consulta todas las notificaciones (de docentes y adscripto)
-       $sql_notificaciones = "
-  SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor,
-         COALESCE(u.nombrecompleto, 'Adscripto') AS emisor,
-         n.docente_cedula AS cedula_emisor,
-         COALESCE(g.nombre, 'Todos') AS grupo
-  FROM notificaciones n
-  LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-  LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-  ORDER BY n.fecha DESC
-";
-
+        // Consulta todas las notificaciones
+        $sql_notificaciones = "
+          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor,
+                 COALESCE(u.nombrecompleto, '—') AS emisor,
+                 n.docente_cedula, n.adscripto_cedula,
+                 COALESCE(g.nombre, 'Todos') AS grupo
+          FROM notificaciones n
+          LEFT JOIN usuario u ON (n.rol_emisor = 'docente' AND n.docente_cedula = u.cedula)
+          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          ORDER BY n.fecha DESC
+        ";
         $res_notis = $con->query($sql_notificaciones);
 
         if ($res_notis && $res_notis->num_rows > 0):
@@ -251,8 +250,8 @@ $result_reservas = $con->query($sql_reservas);
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
                     <td class="text-center">
                       <?php
-                      // Si la notificación fue enviada por el adscripto actual
-                      if ($n['rol_emisor'] === 'adscripto' && $cedula_actual && $cedula_actual == $n['cedula_emisor']):
+                      // Mostrar botones solo si la notificación fue enviada por el adscripto actual
+                      if ($n['rol_emisor'] === 'administrativo' && $cedula_actual && $cedula_actual == $n['adscripto_cedula']):
                       ?>
                         <a href="editar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
                         <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
@@ -276,13 +275,13 @@ $result_reservas = $con->query($sql_reservas);
   </div>
 </div>
 
-<!-- SCRIPT PARA ABRIR MODAL -->
 <script>
 function abrirModalNotificaciones() {
   const modal = new bootstrap.Modal(document.getElementById('modalNotificaciones'));
   modal.show();
 }
 </script>
+
 
 
 
