@@ -212,15 +212,17 @@ $result_reservas = $con->query($sql_reservas);
         $cedula_actual = $_SESSION['cedula'] ?? null;
 
         // Consulta todas las notificaciones (de docentes y adscripto)
-        $sql_notificaciones = "
-          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor,
-                 u.nombrecompleto AS emisor, u.cedula AS cedula_emisor,
-                 COALESCE(g.nombre, 'Todos') AS grupo
-          FROM notificaciones n
-          INNER JOIN usuario u ON n.docente_cedula = u.cedula
-          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-          ORDER BY n.fecha DESC
-        ";
+       $sql_notificaciones = "
+  SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor,
+         COALESCE(u.nombrecompleto, 'Adscripto') AS emisor,
+         n.docente_cedula AS cedula_emisor,
+         COALESCE(g.nombre, 'Todos') AS grupo
+  FROM notificaciones n
+  LEFT JOIN usuario u ON n.docente_cedula = u.cedula
+  LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+  ORDER BY n.fecha DESC
+";
+
         $res_notis = $con->query($sql_notificaciones);
 
         if ($res_notis && $res_notis->num_rows > 0):
