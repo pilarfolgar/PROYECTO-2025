@@ -17,7 +17,7 @@ if($id_grupo && $titulo && $mensaje && $cedula_emisor){
     $visto_adscripto  = ($rol == 'administrativo') ? 0 : 1;
 
     $sql = "INSERT INTO notificaciones 
-            (id_grupo, docente_cedula, adscripto_cedula, titulo, mensaje, fecha, visto_estudiante, visto_adscripto, rol_emisor)
+            (id_grupo, docente_cedula, administrativo_cedula, titulo, mensaje, fecha, visto_estudiante, visto_adscripto, rol_emisor)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $con->prepare($sql);
     if(!$stmt) die("Error prepare notificaciones: ".$con->error);

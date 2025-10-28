@@ -232,31 +232,19 @@ $result_reservas = $con->query($sql_reservas);
                   <th>Título</th>
                   <th>Mensaje</th>
                   <th>Fecha</th>
-                  <th>Acciones</th>
+                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <?php while($n = $res_notis->fetch_assoc()): ?>
-<tr>
-  <td><?= htmlspecialchars($n['docente']) ?></td>
-  <td><?= htmlspecialchars($n['grupo']) ?></td>
-  <td><?= htmlspecialchars($n['titulo']) ?></td>
-  <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
-  <td><?= htmlspecialchars($n['fecha']) ?></td>
-  <td class="text-center">
-    <?php
-    // Mostrar botones solo si la notificación fue enviada por el adscripto actual
-    if ($n['rol_emisor'] === 'administrativo' && $cedula_actual && $cedula_actual == $n['adscripto_cedula']):
-    ?>
-        <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
-        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
-    <?php else: ?>
-        <span class="text-muted">—</span>
-    <?php endif; ?>
-  </td>
-</tr>
-<?php endwhile; ?>
-
+                  <tr>
+                    <td><?= htmlspecialchars($n['docente']) ?></td>
+                    <td><?= htmlspecialchars($n['grupo']) ?></td>
+                    <td><?= htmlspecialchars($n['titulo']) ?></td>
+                    <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
+                    <td><?= htmlspecialchars($n['fecha']) ?></td>
+                  </tr>
+                <?php endwhile; ?>
               </tbody>
             </table>
           </div>

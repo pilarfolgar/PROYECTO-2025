@@ -3,8 +3,9 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
+// Verificar sesión y permisos
 if (!isset($_SESSION['cedula']) || $_SESSION['rol'] !== 'administrativo') {
-    header("Location: iniciosesion.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -14,7 +15,7 @@ $id = $_GET['id'] ?? null;
 // Verificar que la notificación exista y sea del adscripto actual
 $sql = "SELECT * FROM notificaciones WHERE id = ? AND adscripto_cedula = ? AND rol_emisor = 'administrativo'";
 $stmt = $con->prepare($sql);
-$stmt->bind_param("ii", $id, $cedula_actual); // CORREGIDO: "ii" en lugar de "is"
+$stmt->bind_param("is", $id, $cedula_actual);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -25,6 +26,7 @@ if ($result->num_rows === 0) {
 
 $noti = $result->fetch_assoc();
 
+// Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo']);
     $mensaje = trim($_POST['mensaje']);
@@ -34,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         SET titulo = ?, mensaje = ?, rol_emisor = 'administrativo'
         WHERE id = ? AND adscripto_cedula = ? AND rol_emisor = 'administrativo'
     ");
-    $update->bind_param("ssii", $titulo, $mensaje, $id, $cedula_actual); // CORREGIDO: "ssii"
+    $update->bind_param("ssis", $titulo, $mensaje, $id, $cedula_actual);
 
     if ($update->execute()) {
         echo "<script>alert('✅ Notificación modificada correctamente.');window.location='indexadministrativo.php';</script>";
