@@ -129,61 +129,69 @@ $con = conectar_bd();
       <section>
         <h3>Horarios</h3>
         <?php
-        $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre
-                FROM grupo g
-                ORDER BY g.nombre";
-        $grupos = $con->query($sql);
-        if($grupos && $grupos->num_rows > 0):
-          while($grupo = $grupos->fetch_assoc()):
-            echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
+        $grupos = $con->query("SELECT * FROM grupo ORDER BY nombre");
+        if ($grupos && $grupos->num_rows > 0):
+            while ($grupo = $grupos->fetch_assoc()):
+                $grupo_id = $grupo['id_grupo'];
+        ?>
+          <!-- Botón del grupo -->
+          <button class="btn btn-outline-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#grupo<?= $grupo_id ?>" aria-expanded="false" aria-controls="grupo<?= $grupo_id ?>">
+            <?= htmlspecialchars($grupo['nombre']) ?>
+          </button>
+
+          <!-- Tabla de horarios colapsable -->
+          <div class="collapse mb-3" id="grupo<?= $grupo_id ?>">
+            <?php
             $sql_hor = "SELECT h.*, a.nombre AS asignatura
                         FROM horarios h
                         LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
-                        WHERE h.id_grupo = " . $grupo['id_grupo'] . "
+                        WHERE h.id_grupo = $grupo_id
                         ORDER BY h.dia, h.hora_inicio";
-            $result = $con->query($sql_hor);
-            if($result && $result->num_rows > 0):
-        ?>
-        <div class="table-responsive mb-3">
-          <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th>
-                <th>Asignatura</th>
-                <th>Día</th>
-                <th>Hora Inicio</th>
-                <th>Hora Fin</th>
-                <th>Clase</th>
-                <th>Aula</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-            <?php while($row = $result->fetch_assoc()): ?>
-              <tr>
-                <td data-label="ID"><?= $row['id_horario'] ?></td>
-                <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
-                <td data-label="Día"><?= $row['dia'] ?></td>
-                <td data-label="Hora Inicio"><?= $row['hora_inicio'] ?></td>
-                <td data-label="Hora Fin"><?= $row['hora_fin'] ?></td>
-                <td data-label="Clase"><?= htmlspecialchars($row['clase']) ?></td>
-                <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
-                <td data-label="Acciones">
-                  <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
-                  <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
-                </td>
-              </tr>
-            <?php endwhile; ?>
-            </tbody>
-          </table>
-        </div>
+            $horarios = $con->query($sql_hor);
+
+            if ($horarios && $horarios->num_rows > 0):
+            ?>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>Asignatura</th>
+                    <th>Día</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                    <th>Clase</th>
+                    <th>Aula</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php while ($h = $horarios->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= $h['id_horario'] ?></td>
+                    <td><?= htmlspecialchars($h['asignatura'] ?? '—') ?></td>
+                    <td><?= $h['dia'] ?></td>
+                    <td><?= $h['hora_inicio'] ?></td>
+                    <td><?= $h['hora_fin'] ?></td>
+                    <td><?= htmlspecialchars($h['clase']) ?></td>
+                    <td><?= htmlspecialchars($h['aula']) ?></td>
+                    <td>
+                      <a href="editar-horario.php?id=<?= $h['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
+                      <a href="eliminar-horario.php?id=<?= $h['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
+                    </td>
+                  </tr>
+                  <?php endwhile; ?>
+                </tbody>
+              </table>
+            </div>
+            <?php else: ?>
+              <p>No hay horarios registrados para este grupo.</p>
+            <?php endif; ?>
+          </div>
         <?php
-            else:
-              echo "<p>No hay horarios registrados para este grupo.</p>";
-            endif;
-          endwhile;
+            endwhile;
         else:
-          echo "<p>No hay grupos registrados.</p>";
+            echo "<p>No hay grupos registrados.</p>";
         endif;
         ?>
       </section>

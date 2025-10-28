@@ -3,13 +3,10 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 require("header.php");
-?>
 
-<?php
 if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
 
-    // Traer datos actuales de forma segura
     $sql = "SELECT * FROM aula WHERE codigo = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $codigo);
@@ -24,10 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ubicacion = $_POST['ubicacion'];
     $tipo = $_POST['tipo'];
 
-    // Actualizar con prepared statement
-    $sql = "UPDATE aula SET capacidad = ?, ubicacion = ?, tipo = ? WHERE codigo = ?";
+    // Procesar imagen si se subió una nueva
+    $imagenPath = $aula['imagen']; // Mantener la actual si no se sube otra
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+        $nombreArchivo = basename($_FILES['imagen']['name']);
+        $rutaDestino = "uploads/" . $nombreArchivo; // Carpeta donde guardas las imágenes
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
+            $imagenPath = $rutaDestino;
+        }
+    }
+
+    $sql = "UPDATE aula SET capacidad = ?, ubicacion = ?, tipo = ?, imagen = ? WHERE codigo = ?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("ssss", $capacidad, $ubicacion, $tipo, $codigo);
+    $stmt->bind_param("sssss", $capacidad, $ubicacion, $tipo, $imagenPath, $codigo);
 
     if ($stmt->execute()) {
         $_SESSION['msg_aula'] = "Aula modificada con éxito ✅";
@@ -50,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <div class="container mt-4">
     <h2>✏️ Editar Aula</h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="codigo" value="<?= htmlspecialchars($aula['codigo']) ?>">
 
         <div class="mb-3">
@@ -73,12 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="tipo" class="form-control" value="<?= htmlspecialchars($aula['tipo']) ?>" required>
         </div>
 
-        <?php if (!empty($aula['imagen'])): ?>
         <div class="mb-3">
             <label>Imagen actual:</label><br>
-            <img src="<?= htmlspecialchars($aula['imagen']) ?>" alt="Aula" style="width:150px; height:auto;">
+            <?php if (!empty($aula['imagen'])): ?>
+                <img src="<?= htmlspecialchars($aula['imagen']) ?>" alt="Aula" style="width:150px; height:auto;">
+            <?php else: ?>
+                <p>No hay imagen.</p>
+            <?php endif; ?>
         </div>
-        <?php endif; ?>
+
+        <div class="mb-3">
+            <label>Cambiar imagen:</label>
+            <input type="file" name="imagen" class="form-control" accept="image/*">
+        </div>
 
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
         <a href="indexadministrativoDatos.php" class="btn btn-secondary">Cancelar</a>
