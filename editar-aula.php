@@ -2,7 +2,10 @@
 session_start();
 require("conexion.php");
 $con = conectar_bd();
+require("header.php"); // Incluye el header
+?>
 
+<?php
 if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
 
@@ -35,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,7 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>✏️ Editar Aula</h2>
     <form method="POST">
         <input type="hidden" name="codigo" value="<?= htmlspecialchars($aula['codigo']) ?>">
-        
+
+        <div class="mb-3">
+            <label>Código:</label>
+            <input type="text" class="form-control" value="<?= htmlspecialchars($aula['codigo']) ?>" disabled>
+        </div>
+
         <div class="mb-3">
             <label>Capacidad:</label>
             <input type="text" name="capacidad" class="form-control" value="<?= htmlspecialchars($aula['capacidad']) ?>" required>
@@ -64,9 +73,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="tipo" class="form-control" value="<?= htmlspecialchars($aula['tipo']) ?>" required>
         </div>
 
+        <?php if (!empty($aula['imagen'])): ?>
+        <div class="mb-3">
+            <label>Imagen actual:</label><br>
+            <img src="<?= htmlspecialchars($aula['imagen']) ?>" alt="Aula" style="width:150px; height:auto;">
+        </div>
+        <?php endif; ?>
+
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
         <a href="indexadministrativoDatos.php" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+
+<?php require("footer.php"); ?>
 </body>
 </html>
