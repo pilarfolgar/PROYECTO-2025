@@ -199,24 +199,26 @@ $result_reservas = $con->query($sql_reservas);
 
 
 
-
-<!-- MODAL NOTIFICACIONES DOCENTES -->
+<!-- MODAL NOTIFICACIONES EXISTENTES -->
 <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel">📢 Notificaciones de Docentes</h5>
+        <h5 class="modal-title" id="modalNotificacionesLabel">📢 Notificaciones Existentes</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <?php
-        // Consulta solo notificaciones enviadas por docentes
+        $cedula_actual = $_SESSION['cedula'] ?? null;
+
+        // Consulta todas las notificaciones (de docentes y adscripto)
         $sql_notificaciones = "
-          SELECT n.titulo, n.mensaje, n.fecha, u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
+          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor,
+                 u.nombrecompleto AS emisor, u.cedula AS cedula_emisor,
+                 COALESCE(g.nombre, 'Todos') AS grupo
           FROM notificaciones n
           INNER JOIN usuario u ON n.docente_cedula = u.cedula
           LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-          WHERE n.rol_emisor = 'docente'
           ORDER BY n.fecha DESC
         ";
         $res_notis = $con->query($sql_notificaciones);
@@ -227,28 +229,42 @@ $result_reservas = $con->query($sql_reservas);
             <table class="table table-striped table-bordered align-middle">
               <thead class="table-dark">
                 <tr>
-                  <th>Docente</th>
+                  <th>Emisor</th>
+                  <th>Rol</th>
                   <th>Grupo</th>
                   <th>Título</th>
                   <th>Mensaje</th>
                   <th>Fecha</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <?php while($n = $res_notis->fetch_assoc()): ?>
                   <tr>
-                    <td><?= htmlspecialchars($n['docente']) ?></td>
+                    <td><?= htmlspecialchars($n['emisor']) ?></td>
+                    <td><?= htmlspecialchars(ucfirst($n['rol_emisor'])) ?></td>
                     <td><?= htmlspecialchars($n['grupo']) ?></td>
                     <td><?= htmlspecialchars($n['titulo']) ?></td>
                     <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
+                    <td class="text-center">
+                      <?php
+                      // Si la notificación fue enviada por el adscripto actual
+                      if ($n['rol_emisor'] === 'adscripto' && $cedula_actual && $cedula_actual == $n['cedula_emisor']):
+                      ?>
+                        <a href="editar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
+                        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
+                      <?php else: ?>
+                        <span class="text-muted">—</span>
+                      <?php endif; ?>
+                    </td>
                   </tr>
                 <?php endwhile; ?>
               </tbody>
             </table>
           </div>
         <?php else: ?>
-          <p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>
+          <p class="text-center text-muted mb-0">No hay notificaciones registradas aún.</p>
         <?php endif; ?>
       </div>
       <div class="modal-footer">
