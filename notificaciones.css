@@ -29,7 +29,42 @@ h2 {
     margin-bottom: 2rem;
 }
 
-/* Contenedor de notificaciones (ahora horizontal) */
+/* ===================== HEADER RESPONSIVE ===================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--primario);
+    color: white;
+    flex-wrap: wrap;
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+header nav a:hover {
+    background-color: var(--hover);
+}
+
+/* ===================== NOTIFICACIONES ===================== */
 .notificaciones-container {
     display: flex;
     gap: 1.5rem;
@@ -55,7 +90,7 @@ h2 {
 
 /* Tarjetas de notificación */
 .notificacion {
-    flex: 0 0 320px; /* ancho fijo para que se dispongan en fila */
+    flex: 0 0 320px; /* ancho fijo en horizontal */
     background-color: #fff;
     border-radius: 12px;
     padding: 1.5rem 2rem;
@@ -128,6 +163,7 @@ h2 {
     font-weight: bold;
 }
 
+/* ===================== FOOTER ===================== */
 .footer {
     background-color: var(--primario);
     text-align: center;
@@ -136,4 +172,47 @@ h2 {
     font-size: 1rem;
     color: white;
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    /* Notificaciones verticales en móvil */
+    .notificaciones-container {
+        flex-direction: column;
+        overflow-x: visible;
+        scroll-snap-type: none;
+    }
+
+    .notificacion {
+        flex: 1 1 auto;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Header adaptativo */
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    header nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    header nav a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .notificacion {
+        padding: 1rem;
+    }
 }
