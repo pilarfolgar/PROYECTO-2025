@@ -139,52 +139,51 @@ $result = $stmt->get_result();
 
 <section class="container my-5" id="horarioGrupo">
     <h2 class="text-center mb-4">Horario de tu Grupo</h2>
-    <?php if(count($horarios) > 0): ?>
-        <div class="accordion" id="accordionHorarios">
-            <?php foreach($dias as $index => $dia): ?>
+
+    <!-- Botones de días -->
+    <div class="dias-semana d-flex justify-content-center flex-wrap gap-2 mb-3">
+        <?php foreach($dias as $dia): ?>
+            <button class="btn btn-primary btn-dia" data-dia="<?= $dia ?>"><?= ucfirst($dia) ?></button>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Contenedor de horarios -->
+    <div id="horarios-contenedor">
+        <?php foreach($dias as $dia): ?>
+            <div class="horario-dia d-none" id="horario-<?= $dia ?>">
                 <?php if(count($horarios_por_dia[$dia]) > 0): ?>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading<?= $index ?>">
-                            <button class="accordion-button <?= $index > 0 ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="collapse<?= $index ?>">
-                                <?= ucfirst($dia) ?>
-                            </button>
-                        </h2>
-                        <div id="collapse<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="heading<?= $index ?>" data-bs-parent="#accordionHorarios">
-                            <div class="accordion-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped text-center">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Hora Inicio</th>
-                                                <th>Hora Fin</th>
-                                                <th>Clase</th>
-                                                <th>Aula</th>
-                                                <th>Asignatura</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach($horarios_por_dia[$dia] as $h): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
-                                                    <td><?= htmlspecialchars($h['hora_fin']) ?></td>
-                                                    <td><?= htmlspecialchars($h['clase']) ?></td>
-                                                    <td><?= htmlspecialchars($h['aula']) ?></td>
-                                                    <td><?= htmlspecialchars($h['asignatura']) ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Hora Inicio</th>
+                                    <th>Hora Fin</th>
+                                    <th>Clase</th>
+                                    <th>Aula</th>
+                                    <th>Asignatura</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($horarios_por_dia[$dia] as $h): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
+                                        <td><?= htmlspecialchars($h['hora_fin']) ?></td>
+                                        <td><?= htmlspecialchars($h['clase']) ?></td>
+                                        <td><?= htmlspecialchars($h['aula']) ?></td>
+                                        <td><?= htmlspecialchars($h['asignatura']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
+                <?php else: ?>
+                    <p class="text-center text-muted">No hay clases asignadas para <?= ucfirst($dia) ?>.</p>
                 <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p class="text-center text-muted">No hay horarios asignados para tu grupo aún.</p>
-    <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </section>
+
 
 <!-- Botón flotante Reporte -->
 <button id="btnAbrirReporte" class="btn-flotante">📝</button>

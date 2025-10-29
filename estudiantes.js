@@ -45,3 +45,24 @@ document.getElementById('verHorarioBtn').addEventListener('click', function(e){
     horario.style.display = horario.style.display === 'none' ? 'block' : 'none';
     horario.scrollIntoView({behavior: "smooth"});
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const botonesDia = document.querySelectorAll(".btn-dia");
+    const horariosDias = document.querySelectorAll(".horario-dia");
+
+    botonesDia.forEach(btn => {
+        btn.addEventListener("click", () => {
+            // Quitar active de todos los botones
+            botonesDia.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // Ocultar todos los horarios
+            horariosDias.forEach(h => h.classList.add("d-none"));
+
+            // Mostrar solo el horario correspondiente
+            const dia = btn.getAttribute("data-dia");
+            const contenedor = document.getElementById("horario-" + dia);
+            if (contenedor) contenedor.classList.remove("d-none");
+        });
+    });
+});
