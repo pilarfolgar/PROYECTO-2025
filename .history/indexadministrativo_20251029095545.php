@@ -340,20 +340,14 @@ function abrirModalNotificaciones() {
   <form action="procesar-asignatura.php" method="POST" class="needs-validation form-reserva-style novalidate">
     <h2 class="form-title">Registrar Asignatura</h2>
     <div class="row g-3">
-
-      <!-- Nombre de la asignatura -->
       <div class="col-md-6">
         <label for="nombreAsignatura" class="form-label">Nombre de la asignatura</label>
         <input type="text" class="form-control" id="nombreAsignatura" name="nombre" required placeholder="Ej. Programación II">
       </div>
-
-      <!-- Código de la asignatura -->
       <div class="col-md-6">
         <label for="codigoAsignatura" class="form-label">Código</label>
         <input type="text" class="form-control" id="codigoAsignatura" name="codigo" required placeholder="Ej. PROG201">
       </div>
-
-      <!-- Selección múltiple de docentes -->
       <div class="col-12">
         <label for="docentesAsignatura" class="form-label">Docentes asignados (seleccione múltiples)</label>
         <select class="form-select" id="docentesAsignatura" name="docentes[]" multiple required>
@@ -361,22 +355,15 @@ function abrirModalNotificaciones() {
           $sql = "SELECT cedula, nombrecompleto FROM usuario WHERE rol='docente'";
           $result = $con->query($sql);
           while($row = $result->fetch_assoc()){
-              echo '<option value="'.$row['cedula'].'">Prof. '.$row['nombrecompleto'].'</option>';
+              echo '<option value="'.$row['cedula'].'">Prof. '.$row['nombrecompleto'].' </option>';
           }
           ?>
         </select>
-        <small class="text-muted">
-          💡 Mantén presionada la tecla <strong>Ctrl</strong> (o <strong>Cmd</strong> en Mac) para seleccionar varios docentes.
-        </small>
       </div>
-
     </div>
-
-    <!-- Botón guardar -->
     <button type="submit" class="boton mt-3">Guardar</button>
   </form>
 </section>
-
 
 <!-- FORM HORARIO -->
 <!-- FORM HORARIO -->

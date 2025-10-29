@@ -5,7 +5,7 @@ $con = conectar_bd();
 
 // Verificar sesión
 if (!isset($_SESSION['cedula'])) {
-    header("Location: iniciosesion.php");
+    header("Location: login.php");
     exit;
 }
 

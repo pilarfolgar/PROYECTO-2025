@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_cuenta'])) {
 
     // Cerrar sesión y redirigir
     session_destroy();
-    header("Location: iniciosesion.php");
+    header("Location: login.php");
     exit;
 }
 

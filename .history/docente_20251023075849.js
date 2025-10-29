@@ -21,7 +21,7 @@ document.querySelectorAll('.ver-miembros').forEach(btn => {
       if (data.length > 0) {
         data.forEach(m => {
           const li = document.createElement('li');
-          li.textContent = `${m.nombrecompleto}`;
+          li.textContent = `${m.nombrecompleto} ${m.apellido}`;
           ul.appendChild(li);
         });
       } else {
