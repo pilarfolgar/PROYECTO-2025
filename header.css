@@ -104,3 +104,13 @@
     right: 20px;
   }
 }
+/* Logo con bordes redondeados como la foto de perfil */
+.header .logo {
+
+
+    border-radius: 16px;       /* bordes redondeados */
+    border: 4px solid #588BAE; /* mismo borde que la foto de perfil */
+    height: 60px;              /* ajustar tamaño según tu header */
+    width: auto;               /* mantiene la proporción */
+    object-fit: cover;         /* mantiene la imagen bien ajustada */
+}
