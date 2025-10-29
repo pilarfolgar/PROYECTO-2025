@@ -3,17 +3,26 @@ const btnAbrir = document.getElementById('btnAbrirReporte');
 const btnCerrar = document.getElementById('btnCerrarReporte');
 const formSection = document.getElementById('form-reporte');
 const overlay = document.getElementById('overlayReporte');
-const form = document.getElementById('reporteForm');
 
 btnAbrir.addEventListener('click', () => {
-  formSection.style.display = 'block';
+  formSection.classList.add('visible');
   overlay.style.display = 'block';
 });
 
 btnCerrar.addEventListener('click', () => {
-  formSection.style.display = 'none';
+  formSection.classList.remove('visible');
   overlay.style.display = 'none';
 });
+
+// Cerrar formulario al hacer click en overlay
+overlay.addEventListener('click', () => {
+  formSection.classList.remove('visible');
+  overlay.style.display = 'none';
+});
+
+overlay.classList.add('visible'); // al abrir
+overlay.classList.remove('visible'); // al cerrar
+
 
 // Validación del formulario de reporte
 form.addEventListener('submit', function (event) {
