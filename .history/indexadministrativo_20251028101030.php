@@ -2,11 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
-    // Opcional: redirigir a login si no es admin
-    header("Location: iniciosesion.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -213,16 +208,14 @@ $result_reservas = $con->query($sql_reservas);
       </div>
       <div class="modal-body">
         <?php
-        // Consulta notificaciones enviadas por docentes
-        $sql_notificaciones = "
-SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
-       u.nombrecompleto AS docente,
-       COALESCE(g.nombre, 'Todos') AS grupo,
-       n.rol_emisor
-FROM notificaciones n
-LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-ORDER BY n.fecha DESC
+        // Consulta solo notificaciones enviadas por docentes
+$sql_notificaciones = "
+  SELECT n.titulo, n.mensaje, n.fecha, n.rol_emisor, u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
+  FROM notificaciones n
+  INNER JOIN usuario u ON n.docente_cedula = u.cedula
+  LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+  WHERE n.rol_emisor = 'docente'
+  ORDER BY n.fecha DESC
 ";
 
         $res_notis = $con->query($sql_notificaciones);
@@ -243,23 +236,26 @@ ORDER BY n.fecha DESC
               </thead>
               <tbody>
                 <?php while($n = $res_notis->fetch_assoc()): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($n['docente']) ?></td>
-                    <td><?= htmlspecialchars($n['grupo']) ?></td>
-                    <td><?= htmlspecialchars($n['titulo']) ?></td>
-                    <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
-                    <td><?= htmlspecialchars($n['fecha']) ?></td>
-                    <td class="text-center">
-<?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'): ?>
-    <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
-    <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
-<?php else: ?>
-    <span class="text-muted">—</span>
-<?php endif; ?>
+<tr>
+  <td><?= htmlspecialchars($n['docente']) ?></td>
+  <td><?= htmlspecialchars($n['grupo']) ?></td>
+  <td><?= htmlspecialchars($n['titulo']) ?></td>
+  <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
+  <td><?= htmlspecialchars($n['fecha']) ?></td>
+  <td class="text-center">
+    <?php
+    // Mostrar botones solo si la notificación fue enviada por el adscripto actual
+    if ($n['rol_emisor'] === 'administrativo' && $cedula_actual && $cedula_actual == $n['adscripto_cedula']):
+    ?>
+        <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
+        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
+    <?php else: ?>
+        <span class="text-muted">—</span>
+    <?php endif; ?>
+  </td>
+</tr>
+<?php endwhile; ?>
 
-                    </td>
-                  </tr>
-                <?php endwhile; ?>
               </tbody>
             </table>
           </div>

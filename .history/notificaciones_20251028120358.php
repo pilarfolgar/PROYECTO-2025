@@ -5,7 +5,7 @@ $con = conectar_bd();
 
 $cedula_estudiante = $_SESSION['cedula'] ?? 0;
 
-if (!$cedula_estudiante) {
+if(!$cedula_estudiante){
     echo "No se ha iniciado sesión.";
     exit();
 }
@@ -19,28 +19,29 @@ $stmtG->bind_result($id_grupo);
 $stmtG->fetch();
 $stmtG->close();
 
-// Marcar notificación como leída
-if (isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])) {
+// Marcar como leído
+if(isset($_GET['marcar_visto']) && is_numeric($_GET['marcar_visto'])){
     $id_notificacion = intval($_GET['marcar_visto']);
-    $sqlVisto = "UPDATE notificaciones 
-                 SET visto_estudiante = 1 
-                 WHERE id = ? AND id_grupo = ?";
+    $sqlVisto = "UPDATE notificaciones SET visto_estudiante = 1 
+                 WHERE id = ? AND id_grupo = ? AND rol_emisor = 'docente'";
     $stmtV = $con->prepare($sqlVisto);
     $stmtV->bind_param("ii", $id_notificacion, $id_grupo);
     $stmtV->execute();
     $stmtV->close();
 }
 
-// Obtener todas las notificaciones del grupo
-$sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante, rol_emisor
+// ===============================
+// Consulta: solo notificaciones de docentes para el grupo del estudiante
+// ===============================
+$sql = "SELECT id, titulo, mensaje, fecha, visto_estudiante
         FROM notificaciones
-        WHERE id_grupo = ?
-        ORDER BY fecha DESC";
+        WHERE id_grupo = ? AND rol_emisor IN ('docente','administrativo')";
+
 $stmt = $con->prepare($sql);
 $stmt->bind_param("i", $id_grupo);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto, $rol_emisor);
+$stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto);
 ?>
 
 <!DOCTYPE html>
@@ -57,22 +58,18 @@ $stmt->bind_result($id_notificacion, $titulo, $mensaje, $fecha, $visto, $rol_emi
 <main>
     <h2>Mis Notificaciones</h2>
     <div class="notificaciones-container">
-        <?php while ($stmt->fetch()): ?>
+        <?php while($stmt->fetch()): ?>
             <div class="notificacion <?php echo $visto ? 'visto' : 'nuevo'; ?>">
                 <h3><?php echo htmlspecialchars($titulo); ?></h3>
                 <p><?php echo nl2br(htmlspecialchars($mensaje)); ?></p>
-                <p class="remitente">Enviado por: <?php echo htmlspecialchars($rol_emisor); ?></p>
                 <p class="fecha"><?php echo $fecha; ?></p>
-                <?php if (!$visto): ?>
+                <?php if(!$visto): ?>
                     <a href="?marcar_visto=<?php echo $id_notificacion; ?>" class="btn-marcar">Marcar como leído</a>
                 <?php else: ?>
                     <span class="leido">Leído</span>
                 <?php endif; ?>
             </div>
         <?php endwhile; ?>
-        <?php if ($stmt->num_rows === 0): ?>
-            <p class="text-muted">No hay notificaciones en este momento.</p>
-        <?php endif; ?>
     </div>
 </main>
 
@@ -90,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<?php include('footer.php'); ?>
 </body>
 </html>
+
+<?php require('footer.php'); ?>

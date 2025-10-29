@@ -2,11 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
-    // Opcional: redirigir a login si no es admin
-    header("Location: iniciosesion.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -215,16 +210,16 @@ $result_reservas = $con->query($sql_reservas);
         <?php
         // Consulta notificaciones enviadas por docentes
         $sql_notificaciones = "
-SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
-       u.nombrecompleto AS docente,
-       COALESCE(g.nombre, 'Todos') AS grupo,
-       n.rol_emisor
-FROM notificaciones n
-LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-ORDER BY n.fecha DESC
-";
-
+          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
+                 u.nombrecompleto AS docente,
+                 COALESCE(g.nombre, 'Todos') AS grupo,
+                 n.rol_emisor
+          FROM notificaciones n
+          INNER JOIN usuario u ON n.docente_cedula = u.cedula
+          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          WHERE n.rol_emisor = 'docente'
+          ORDER BY n.fecha DESC
+        ";
         $res_notis = $con->query($sql_notificaciones);
 
         if ($res_notis && $res_notis->num_rows > 0):
@@ -250,13 +245,15 @@ ORDER BY n.fecha DESC
                     <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
                     <td class="text-center">
-<?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'): ?>
-    <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
-    <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
-<?php else: ?>
-    <span class="text-muted">—</span>
-<?php endif; ?>
-
+                      <?php
+                      // Mostrar botones solo si el usuario actual es administrativo y el emisor es docente
+                      if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo' && $n['rol_emisor'] === 'docente'):
+                      ?>
+                        <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
+                        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
+                      <?php else: ?>
+                        <span class="text-muted">—</span>
+                      <?php endif; ?>
                     </td>
                   </tr>
                 <?php endwhile; ?>

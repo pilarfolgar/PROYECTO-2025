@@ -2,11 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
-    // Opcional: redirigir a login si no es admin
-    header("Location: iniciosesion.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">

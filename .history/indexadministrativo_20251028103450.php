@@ -2,11 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
-    // Opcional: redirigir a login si no es admin
-    header("Location: iniciosesion.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -208,23 +203,51 @@ $result_reservas = $con->query($sql_reservas);
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel"> Notificaciones existentes</h5>
+        <h5 class="modal-title" id="modalNotificacionesLabel">Notificaciones existentes</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
+        <!-- ===================== FORMULARIO NUEVA NOTIFICACIÓN ===================== -->
+        <?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'): ?>
+        <form method="POST" action="crear-notificacion.php" class="mb-4">
+          <h6>Crear nueva notificación</h6>
+          <div class="mb-2">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" name="titulo" id="titulo" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label for="mensaje" class="form-label">Mensaje</label>
+            <textarea name="mensaje" id="mensaje" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="mb-2">
+            <label for="id_grupo" class="form-label">Grupo (opcional)</label>
+            <select name="id_grupo" id="id_grupo" class="form-select">
+              <option value="">Todos</option>
+              <?php
+              $grupos = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
+              while($g = $grupos->fetch_assoc()):
+              ?>
+                <option value="<?= $g['id_grupo'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
+              <?php endwhile; ?>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">💾 Enviar notificación</button>
+        </form>
+        <?php endif; ?>
+        <!-- ===================== FIN FORMULARIO ===================== -->
+
         <?php
         // Consulta notificaciones enviadas por docentes
         $sql_notificaciones = "
-SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
-       u.nombrecompleto AS docente,
-       COALESCE(g.nombre, 'Todos') AS grupo,
-       n.rol_emisor
-FROM notificaciones n
-LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-ORDER BY n.fecha DESC
-";
-
+          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
+                 u.nombrecompleto AS docente,
+                 COALESCE(g.nombre, 'Todos') AS grupo,
+                 n.rol_emisor
+          FROM notificaciones n
+          INNER JOIN usuario u ON n.docente_cedula = u.cedula
+          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          ORDER BY n.fecha DESC
+        ";
         $res_notis = $con->query($sql_notificaciones);
 
         if ($res_notis && $res_notis->num_rows > 0):
@@ -233,7 +256,7 @@ ORDER BY n.fecha DESC
             <table class="table table-striped table-bordered align-middle">
               <thead class="table-dark">
                 <tr>
-                  <th>Docente</th>
+                  <th>Docente/Admin</th>
                   <th>Grupo</th>
                   <th>Título</th>
                   <th>Mensaje</th>
@@ -250,13 +273,14 @@ ORDER BY n.fecha DESC
                     <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
                     <td class="text-center">
-<?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'): ?>
-    <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
-    <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
-<?php else: ?>
-    <span class="text-muted">—</span>
-<?php endif; ?>
-
+                      <?php
+                      if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'):
+                      ?>
+                        <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
+                        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
+                      <?php else: ?>
+                        <span class="text-muted">—</span>
+                      <?php endif; ?>
                     </td>
                   </tr>
                 <?php endwhile; ?>
@@ -264,7 +288,7 @@ ORDER BY n.fecha DESC
             </table>
           </div>
         <?php else: ?>
-          <p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>
+          <p class="text-center text-muted mb-0">No hay notificaciones aún.</p>
         <?php endif; ?>
       </div>
       <div class="modal-footer">
@@ -273,6 +297,7 @@ ORDER BY n.fecha DESC
     </div>
   </div>
 </div>
+
 
 <!-- SCRIPT PARA ABRIR MODAL -->
 <script>

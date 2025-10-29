@@ -9,6 +9,7 @@ if (!isset($_SESSION['cedula']) || $_SESSION['rol'] !== 'administrativo') {
     exit();
 }
 
+$cedula_admin = $_SESSION['cedula'];
 $id = $_GET['id'] ?? null;
 
 if (!$id || !is_numeric($id)) {
@@ -16,19 +17,19 @@ if (!$id || !is_numeric($id)) {
     exit();
 }
 
-// 1️⃣ Eliminar notificaciones expiradas automáticamente
+// 1️⃣ Eliminar notificaciones expiradas automáticamente (fecha_expiracion < NOW)
 $sql_expira = "DELETE FROM notificaciones WHERE fecha_expiracion IS NOT NULL AND fecha_expiracion < NOW()";
 $con->query($sql_expira);
 
-// 2️⃣ Verificar que la notificación exista
-$sql_verif = "SELECT id FROM notificaciones WHERE id = ?";
+// 2️⃣ Verificar que la notificación exista y sea del administrativo
+$sql_verif = "SELECT id FROM notificaciones WHERE id = ? AND rol_emisor = 'administrativo'";
 $stmt_verif = $con->prepare($sql_verif);
 $stmt_verif->bind_param("i", $id);
 $stmt_verif->execute();
 $result = $stmt_verif->get_result();
 
 if ($result->num_rows === 0) {
-    echo "<script>alert('🚫 No existe la notificación.');window.location='indexadministrativo.php';</script>";
+    echo "<script>alert('🚫 No tienes permiso para eliminar esta notificación o no existe.');window.location='indexadministrativo.php';</script>";
     exit();
 }
 
@@ -42,8 +43,6 @@ if ($del->execute()) {
     echo "<script>alert('❌ Error al eliminar la notificación.');window.location='indexadministrativo.php';</script>";
 }
 
-// Cerrar conexiones
 $stmt_verif->close();
-$del->close();
 $con->close();
 ?>

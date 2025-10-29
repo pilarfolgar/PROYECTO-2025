@@ -2,11 +2,6 @@
 session_start(); // Inicia sesión
 require("conexion.php");
 $con = conectar_bd();
-if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
-    // Opcional: redirigir a login si no es admin
-    header("Location: iniciosesion.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -208,27 +203,24 @@ $result_reservas = $con->query($sql_reservas);
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel"> Notificaciones existentes</h5>
+        <h5 class="modal-title" id="modalNotificacionesLabel">Notificaciones existentes</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <?php
-        // Consulta notificaciones enviadas por docentes
+        // Consulta todas las notificaciones, trayendo rol_emisor y adscripto_cedula
         $sql_notificaciones = "
-SELECT n.id, n.titulo, n.mensaje, n.fecha, n.id_grupo,
-       u.nombrecompleto AS docente,
-       COALESCE(g.nombre, 'Todos') AS grupo,
-       n.rol_emisor
-FROM notificaciones n
-LEFT JOIN usuario u ON n.docente_cedula = u.cedula
-LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
-ORDER BY n.fecha DESC
-";
-
+          SELECT n.id, n.titulo, n.mensaje, n.fecha, n.rol_emisor, n.adscripto_cedula,
+                 u.nombrecompleto AS docente, COALESCE(g.nombre, 'Todos') AS grupo
+          FROM notificaciones n
+          INNER JOIN usuario u ON n.docente_cedula = u.cedula
+          LEFT JOIN grupo g ON n.id_grupo = g.id_grupo
+          ORDER BY n.fecha DESC
+        ";
         $res_notis = $con->query($sql_notificaciones);
-
-        if ($res_notis && $res_notis->num_rows > 0):
         ?>
+
+        <?php if ($res_notis && $res_notis->num_rows > 0): ?>
           <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
               <thead class="table-dark">
@@ -242,7 +234,7 @@ ORDER BY n.fecha DESC
                 </tr>
               </thead>
               <tbody>
-                <?php while($n = $res_notis->fetch_assoc()): ?>
+                <?php while ($n = $res_notis->fetch_assoc()): ?>
                   <tr>
                     <td><?= htmlspecialchars($n['docente']) ?></td>
                     <td><?= htmlspecialchars($n['grupo']) ?></td>
@@ -250,13 +242,17 @@ ORDER BY n.fecha DESC
                     <td><?= nl2br(htmlspecialchars($n['mensaje'])) ?></td>
                     <td><?= htmlspecialchars($n['fecha']) ?></td>
                     <td class="text-center">
-<?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'administrativo'): ?>
-    <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
-    <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
-<?php else: ?>
-    <span class="text-muted">—</span>
-<?php endif; ?>
-
+                      <?php
+                      // Mostrar botones solo si la notificación fue enviada por el administrativo logueado
+                      if (isset($n['rol_emisor'], $n['adscripto_cedula']) && 
+                          $n['rol_emisor'] === 'administrativo' && 
+                          isset($cedula_actual) && $cedula_actual == $n['adscripto_cedula']):
+                      ?>
+                        <a href="editar-notificaciones.php?id=<?= $n['id'] ?>" class="btn btn-warning btn-sm">✏️ Modificar</a>
+                        <a href="eliminar-notificacion.php?id=<?= $n['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta notificación?')">🗑️ Eliminar</a>
+                      <?php else: ?>
+                        <span class="text-muted">—</span>
+                      <?php endif; ?>
                     </td>
                   </tr>
                 <?php endwhile; ?>
@@ -264,7 +260,7 @@ ORDER BY n.fecha DESC
             </table>
           </div>
         <?php else: ?>
-          <p class="text-center text-muted mb-0">No hay notificaciones enviadas por docentes aún.</p>
+          <p class="text-center text-muted mb-0">No hay notificaciones registradas aún.</p>
         <?php endif; ?>
       </div>
       <div class="modal-footer">
@@ -273,6 +269,7 @@ ORDER BY n.fecha DESC
     </div>
   </div>
 </div>
+
 
 <!-- SCRIPT PARA ABRIR MODAL -->
 <script>
