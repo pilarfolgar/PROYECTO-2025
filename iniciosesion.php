@@ -76,6 +76,22 @@ session_start();  // Al inicio absoluto para sesiones
         });
     });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (isset($_SESSION['mensaje'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al iniciar sesión',
+            text: '<?php echo addslashes($_SESSION['mensaje']); ?>',
+            confirmButtonColor: '#1B3A4B',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+</script>
+<?php unset($_SESSION['mensaje']); endif; ?>
+
 
 </body>
 </html>
