@@ -7,6 +7,10 @@ if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'admin
     header("Location: iniciosesion.php");
     exit();
 }
+$hoy = date('Y-m-d'); // Fecha actual
+$sql_eliminar = "DELETE FROM reserva WHERE fecha < '$hoy'";
+$con->query($sql_eliminar);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -147,14 +151,16 @@ if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'admin
 // ============================
 // RESERVAS DE AULAS
 // ============================
+$hoy = date('Y-m-d');
 $sql_reservas = "SELECT r.id_reserva, r.fecha, r.hora_inicio, r.hora_fin, 
                         r.aula, r.nombre AS docente, g.nombre AS grupo
                  FROM reserva r
                  LEFT JOIN grupo g ON r.grupo = g.id_grupo
-                 ORDER BY r.fecha DESC, r.hora_inicio ASC";
+                 WHERE r.fecha >= '$hoy'
+                 ORDER BY r.fecha ASC, r.hora_inicio ASC";
+
 $result_reservas = $con->query($sql_reservas);
 ?>
-
 <!-- MODAL RESERVAS -->
 <div class="modal fade" id="modalReservas" tabindex="-1" aria-labelledby="modalReservasLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
