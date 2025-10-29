@@ -1,15 +1,10 @@
-// =============================
-// FUNCIONES PARA FORMULARIOS MODALES
-// =============================
 
-// Muestra el formulario como modal centrado
 function mostrarForm(formId) {
-  // Oculta todos los formularios abiertos
   document.querySelectorAll('.formulario').forEach(form => {
     form.style.display = 'none';
   });
 
-  // Muestra el seleccionado
+
   const form = document.getElementById(formId);
   const overlay = document.getElementById('overlayForm');
 
@@ -22,12 +17,11 @@ function mostrarForm(formId) {
     overlay.style.display = 'block'; // Mostrar fondo oscuro
   }
 
-  // Focus en primer input o select
   const firstInput = form.querySelector('input, select, textarea');
   if (firstInput) firstInput.focus();
 }
 
-// Cierra el formulario actual
+
 function cerrarForm(formId) {
   const form = document.getElementById(formId);
   const overlay = document.getElementById('overlayForm');
