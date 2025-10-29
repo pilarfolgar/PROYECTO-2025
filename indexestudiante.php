@@ -140,12 +140,12 @@ $result = $stmt->get_result();
 <section class="container my-5" id="horarioGrupo">
     <h2 class="text-center mb-4">Horario de tu Grupo</h2>
 
-    <!-- Botones de días -->
     <div class="dias-semana d-flex justify-content-center flex-wrap gap-2 mb-3">
-        <?php foreach($dias as $dia): ?>
-            <button class="btn btn-primary btn-dia" data-dia="<?= $dia ?>"><?= ucfirst($dia) ?></button>
-        <?php endforeach; ?>
-    </div>
+    <?php foreach($dias as $dia): ?>
+        <button class="boton btn-dia" data-dia="<?= $dia ?>"><?= ucfirst($dia) ?></button>
+    <?php endforeach; ?>
+</div>
+
 
     <!-- Contenedor de horarios -->
     <div id="horarios-contenedor">

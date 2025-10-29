@@ -90,6 +90,15 @@
 .boton.w-100 {
   width: 100%;
 }
+.btn-dia {
+    background-color: var(--acento); /* Celeste pastel */
+    color: var(--primario);          /* Texto oscuro */
+}
+
+.btn-dia:hover {
+    background-color: var(--hover);  /* Azul más intenso al pasar el mouse */
+    color: white;
+}
 
 /* ================= ACORDEÓN HORARIOS ================= */
 #horarioGrupo {
