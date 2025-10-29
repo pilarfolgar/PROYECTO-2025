@@ -1,22 +1,34 @@
+/* ================= BODY ================= */
 body { 
-    background-color: #f8f9fa; 
+    background-color: #F0F4F8; /* tono suave de fondo */
     font-family: 'Arial', sans-serif; 
+    margin: 0;
+    padding: 0;
 }
 
+/* ================= CONTENEDOR ================= */
 .perfil-container { 
     max-width: 600px; 
     margin: 50px auto; 
-    padding: 2rem; 
+    padding: 2rem 1rem;
 }
 
+/* ================= TARJETA PERFIL ================= */
 .perfil-card { 
     background: #fff; 
-    padding: 2rem; 
-    border-radius: 15px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+    padding: 2.5rem 2rem; 
+    border-radius: 20px; 
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15); 
     text-align: center; 
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.perfil-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.2);
+}
+
+/* ================= FOTO DE PERFIL ================= */
 .perfil-card img { 
     width: 150px; 
     height: 150px; 
@@ -24,71 +36,92 @@ body {
     border-radius: 50%; 
     margin-bottom: 20px; 
     border: 4px solid #588BAE; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.perfil-card img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ================= NOMBRE Y DATOS ================= */
 .perfil-card h4 { 
     font-weight: bold; 
     margin-bottom: 15px; 
     color: #1B3A4B; 
+    font-size: 1.6rem;
 }
 
 .perfil-card p { 
     font-size: 1rem; 
     margin-bottom: 10px; 
-    color: #333; 
+    color: #555; 
 }
 
-.btn-perfil { 
-    border-radius: 8px; 
-    padding: 0.6rem 1.2rem; 
-    font-weight: bold; 
-    text-decoration: none; 
-}
-
-.btn-edit { 
-    background-color: #588BAE; 
-    color: #fff; 
-    transition: background 0.3s; 
-}
-
-.btn-edit:hover { 
-    background-color: #417899; 
-}
-
-.btn-logout { 
-    background-color: #dc3545; 
-    color: #fff; 
-    transition: background 0.3s; 
-}
-
-.btn-logout:hover { 
-    background-color: #b02a37; 
-}
-
+/* ================= ACCIONES BOTONES ================= */
 .perfil-actions { 
-    margin-top: 20px; 
+    margin-top: 25px; 
     display: flex; 
-    justify-content: center; 
-    gap: 20px; 
+    flex-direction: column; 
+    gap: 12px; 
 }
 
 .btn-perfil {
-    display: inline-block;
+    display: block;
     width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
     font-weight: bold;
-    text-decoration: none; /* sin subrayado */
+    text-decoration: none;
     cursor: pointer;
-    margin-bottom: 5px;
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    border: none;
 }
 
-.btn-edit { background-color: #588BAE; color: #fff; }
-.btn-edit:hover { background-color: #417899; transform: translateY(-2px); }
+/* Editar Perfil */
+.btn-edit { 
+    background-color: #588BAE; 
+    color: #fff; 
+    box-shadow: 0 4px 12px rgba(88, 139, 174, 0.3);
+}
+.btn-edit:hover { 
+    background-color: #417899; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 16px rgba(65, 120, 153, 0.4);
+}
 
-.btn-logout { background-color: #6c757d; color: #fff; }
-.btn-logout:hover { background-color: #5a6268; transform: translateY(-2px); }
+/* Cerrar Sesión */
+.btn-logout { 
+    background-color: #6c757d; 
+    color: #fff; 
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+.btn-logout:hover { 
+    background-color: #5a6268; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 16px rgba(90, 98, 104, 0.4);
+}
 
-.btn-delete { background-color: #dc3545; color: #fff; border: none; }
-.btn-delete:hover { background-color: #b02a37; transform: translateY(-2px); }
+/* Eliminar Cuenta */
+.btn-delete { 
+    background-color: #dc3545; 
+    color: #fff; 
+    border: none; 
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+.btn-delete:hover { 
+    background-color: #b02a37; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 16px rgba(176, 42, 55, 0.4);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .perfil-card { 
+        padding: 2rem 1.5rem; 
+    }
+    .perfil-card img { width: 130px; height: 130px; }
+    .perfil-card h4 { font-size: 1.4rem; }
+    .btn-perfil { padding: 0.65rem 1rem; }
+}

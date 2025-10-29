@@ -83,6 +83,6 @@ document.getElementById('btnEliminar').addEventListener('click', function(e) {
     });
 });
 </script>
-
+<?php include('footer.php'); ?>
 </body>
 </html>
