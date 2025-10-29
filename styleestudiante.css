@@ -1,19 +1,29 @@
+:root {
+  --primario: #1B3A4B;
+  --secundario: #588BAE;
+  --acento: #A2D5F2;
+  --fondo: #F0F4F8;
+  --texto: #1B3A4B;
+  --hover: #417899;
+}
+
+/* ================= CONTENEDORES ================= */
 .estudiante-container,
 .docentes-grid {
   display: flex;
-  flex-wrap: wrap;         
-  justify-content: center;  
-  gap: 1.5rem;             
-  padding: 1rem 1.5rem;    /* Padding horizontal para separar del borde */
-  margin: 0 auto;           /* Centrado horizontal si hay max-width */
-  max-width: 1200px;        /* Opcional: limita el ancho en pantallas grandes */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 /* ================= TARJETAS ================= */
 .estudiante-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Empuja botón al fondo */
+  justify-content: space-between;
   align-items: center;
   width: 250px;
   min-height: 320px;
@@ -40,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #007bff; /* Color por defecto, se puede cambiar por clase */
+  background-color: var(--secundario);
   color: white;
 }
 
@@ -49,6 +59,7 @@
   font-weight: bold;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
+  color: var(--primario);
 }
 
 .docente-subject {
@@ -60,7 +71,7 @@
 
 /* ================= BOTONES ================= */
 .boton {
-  background-color: #007bff;
+  background-color: var(--secundario);
   color: white;
   padding: 0.75rem 1rem;
   border: none;
@@ -72,7 +83,7 @@
 }
 
 .boton:hover {
-  background-color: #0056b3;
+  background-color: var(--hover);
   transform: translateY(-2px);
 }
 
@@ -82,22 +93,40 @@
 
 /* ================= ACORDEÓN HORARIOS ================= */
 #horarioGrupo {
-  display: none; /* Oculto hasta clic */
+  display: none;
 }
 
 .accordion-button {
-  background: #007bff;
+  background: var(--primario);
   color: #fff;
+  font-weight: 500;
+  transition: background 0.3s;
 }
 
 .accordion-button:not(.collapsed) {
-  background: #0056b3;
+  background: var(--secundario);
+  color: #fff;
+}
+
+.accordion-button:hover {
+  background: var(--hover);
+  color: #fff;
 }
 
 /* ================= TABLA HORARIOS ================= */
 .table {
   margin-bottom: 0;
   font-size: 0.9rem;
+  border-color: var(--acento);
+}
+
+.table thead {
+  background-color: var(--acento);
+  color: var(--primario);
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f8fbfd;
 }
 
 /* ================= BOTÓN FLOTANTE ================= */
@@ -105,8 +134,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #ffc107;
-  color: #fff;
+  background-color: var(--acento);
+  color: var(--primario);
   border: none;
   border-radius: 50%;
   width: 60px;
@@ -123,57 +152,123 @@
 
 .btn-flotante:hover {
   transform: scale(1.1);
-  background-color: #e0a800;
+  background-color: var(--hover);
+  color: #fff;
 }
 
-/* ================= MODAL / FORMULARIO REPORTES ================= */
+/* ================= FORMULARIO REPORTES MEJORADO ================= */
 .formulario-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(27, 58, 75, 0.6); /* tono del primario con transparencia */
   display: none;
   z-index: 999;
+  backdrop-filter: blur(4px);
 }
 
 .formulario {
   position: fixed;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.95);
   background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
   width: 90%;
-  max-width: 400px;
+  max-width: 450px;
   display: none;
   z-index: 1000;
-  max-height: 90vh;
-  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.formulario.visible {
+  display: block;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
 }
 
 .formulario .cerrar {
   position: absolute;
-  top: 10px; right: 10px;
+  top: 12px; right: 15px;
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   cursor: pointer;
+  color: var(--primario);
+  transition: color 0.2s;
+}
+.formulario .cerrar:hover {
+  color: var(--secundario);
 }
 
 .formulario .form-title {
   font-weight: bold;
   text-align: center;
-  color: #007bff;
+  color: var(--primario);
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--acento);
+  padding-bottom: 0.5rem;
 }
 
 .formulario .form-control,
-.formulario .form-select {
-  border-radius: 6px;
-  padding: 0.75rem;
+.formulario .form-select,
+.formulario textarea {
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--acento);
+  background-color: #f9fbfc;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
+
+.formulario .form-control:focus,
+.formulario .form-select:focus,
+.formulario textarea:focus {
+  border-color: var(--secundario);
+  box-shadow: 0 0 8px rgba(88, 139, 174, 0.3);
+  outline: none;
+  background-color: #fff;
+}
+
+.formulario label {
+  font-weight: 600;
+  color: var(--primario);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.formulario textarea {
+  resize: none;
+}
+
+.formulario button[type="submit"] {
+  background: var(--secundario);
+  color: #fff;
+  border: none;
+  padding: 0.9rem;
+  width: 100%;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.formulario button[type="submit"]:hover {
+  background: var(--hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.formulario #mensajeReporte {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+  color: var(--primario);
+}
+
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {

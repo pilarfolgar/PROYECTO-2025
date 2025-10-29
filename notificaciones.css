@@ -29,15 +29,33 @@ h2 {
     margin-bottom: 2rem;
 }
 
-/* Contenedor de notificaciones */
+/* Contenedor de notificaciones (ahora horizontal) */
 .notificaciones-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
     gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secundario) var(--fondo);
+}
+
+.notificaciones-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.notificaciones-container::-webkit-scrollbar-thumb {
+    background-color: var(--secundario);
+    border-radius: 4px;
+}
+
+.notificaciones-container::-webkit-scrollbar-track {
+    background: var(--fondo);
 }
 
 /* Tarjetas de notificación */
 .notificacion {
+    flex: 0 0 320px; /* ancho fijo para que se dispongan en fila */
     background-color: #fff;
     border-radius: 12px;
     padding: 1.5rem 2rem;
@@ -45,6 +63,7 @@ h2 {
     transition: transform 0.3s, box-shadow 0.3s;
     opacity: 0;
     transform: translateY(20px);
+    scroll-snap-align: start;
 }
 
 .notificacion.visible {
@@ -108,12 +127,13 @@ h2 {
     color: #333;
     font-weight: bold;
 }
+
 .footer {
-  background-color: var(--primario);
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
-  font-size: 1rem;
-  color: white;
-  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--primario);
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: white;
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
 }
