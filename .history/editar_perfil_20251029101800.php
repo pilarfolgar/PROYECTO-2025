@@ -18,23 +18,13 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-if (!$user) {
-    echo "Usuario no encontrado.";
-    exit;
-}
+if (!$user) { echo "Usuario no encontrado."; exit; }
 
 $mensaje = '';
 
-// Obtener grupos disponibles para el select
-$grupos_result = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
-$grupos = [];
-while ($row = $grupos_result->fetch_assoc()) {
-    $grupos[$row['id_grupo']] = $row['nombre'];
-}
-
-// ---------------------------
+// ======================
 // ELIMINAR CUENTA
-// ---------------------------
+// ======================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_cuenta'])) {
     $del_stmt = $con->prepare("DELETE FROM usuario WHERE cedula=?");
     $del_stmt->bind_param("s", $cedula);
@@ -46,20 +36,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_cuenta'])) {
     exit;
 }
 
-// ---------------------------
-// PROCESAR EDICIÓN DE PERFIL
-// ---------------------------
+// ======================
+// EDITAR PERFIL
+// ======================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) {
     $nombre = trim($_POST['nombrecompleto'] ?? '');
     $apellido = trim($_POST['apellido'] ?? '');
     $telefono = trim($_POST['telefono'] ?? '');
     $asignatura = trim($_POST['asignatura'] ?? '');
-    $id_grupo = isset($_POST['id_grupo']) && $_POST['id_grupo'] !== '' ? intval($_POST['id_grupo']) : null;
+    $id_grupo = $_POST['id_grupo'] ?? null;
     $pass_actual = $_POST['pass_actual'] ?? '';
     $pass_nueva = $_POST['pass_nueva'] ?? '';
 
+    // Validar id_grupo para estudiantes
+    if ($user['rol'] === 'estudiante') {
+        if ($id_grupo) {
+            $stmt_val = $con->prepare("SELECT id_grupo FROM grupo WHERE id_grupo=?");
+            $stmt_val->bind_param("i", $id_grupo);
+            $stmt_val->execute();
+            $res_val = $stmt_val->get_result();
+            if ($res_val->num_rows === 0) {
+                $mensaje = "El grupo seleccionado no existe.";
+                $id_grupo = null;
+            }
+            $stmt_val->close();
+        }
+    } else {
+        $id_grupo = null; // docentes y administrativos no necesitan grupo
+    }
+
     // -------------------
-    // Manejar subida de foto
+    // Subida de foto
     // -------------------
     $foto_ruta = $user['foto'];
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
@@ -79,21 +86,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
                 $upd_foto->bind_param("ss", $foto_ruta, $cedula);
                 $upd_foto->execute();
                 $upd_foto->close();
-            } else {
-                $mensaje = "Error al subir la foto.";
-            }
+            } else $mensaje = "Error al subir la foto.";
         }
     }
 
     // -------------------
-    // Cambiar contraseña
+    // Cambio de contraseña
     // -------------------
     if (!empty($pass_actual) || !empty($pass_nueva)) {
-        if (empty($pass_actual) || empty($pass_nueva)) {
-            $mensaje = "Completa ambos campos para cambiar la contraseña.";
-        } elseif (!password_verify($pass_actual, $user['pass'])) {
-            $mensaje = "Contraseña actual incorrecta.";
-        } else {
+        if (empty($pass_actual) || empty($pass_nueva)) $mensaje = "Completa ambos campos para cambiar la contraseña.";
+        elseif (!password_verify($pass_actual, $user['pass'])) $mensaje = "Contraseña actual incorrecta.";
+        else {
             $pass_hashed = password_hash($pass_nueva, PASSWORD_DEFAULT);
             $upd_pass = $con->prepare("UPDATE usuario SET pass=? WHERE cedula=?");
             $upd_pass->bind_param("ss", $pass_hashed, $cedula);
@@ -104,15 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
     }
 
     // -------------------
-    // Actualizar datos del perfil
+    // Actualizar datos
     // -------------------
-    if ($id_grupo === null) {
-        $upd = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=NULL WHERE cedula=?");
-        $upd->bind_param("sssss", $nombre, $apellido, $telefono, $asignatura, $cedula);
-    } else {
-        $upd = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
-        $upd->bind_param("ssssis", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
-    }
+    $upd = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, id_grupo=? WHERE cedula=?");
+    $upd->bind_param("sssssis", $nombre, $apellido, $telefono, $asignatura, $id_grupo, $cedula);
     $upd->execute();
     $upd->close();
 
@@ -172,14 +170,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
                 <label class="form-label">Asignatura</label>
                 <input type="text" name="asignatura" class="form-control" value="<?= htmlspecialchars($user['asignatura']) ?>">
             </div>
-            <?php else: ?>
+            <?php elseif($user['rol'] === 'estudiante'): ?>
             <div class="mb-3">
                 <label class="form-label">Grupo</label>
-                <select name="id_grupo" class="form-control">
-                    <option value="">-- Ningún grupo --</option>
-                    <?php foreach($grupos as $id => $nombre_grupo): ?>
-                        <option value="<?= $id ?>" <?= ($user['id_grupo']==$id ? 'selected' : '') ?>><?= htmlspecialchars($nombre_grupo) ?></option>
-                    <?php endforeach; ?>
+                <select name="id_grupo" class="form-control" required>
+                    <?php
+                    $res_grupos = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
+                    while($g = $res_grupos->fetch_assoc()){
+                        $selected = ($g['id_grupo'] == $user['id_grupo']) ? 'selected' : '';
+                        echo "<option value='{$g['id_grupo']}' $selected>".htmlspecialchars($g['nombre'])."</option>";
+                    }
+                    ?>
                 </select>
             </div>
             <?php endif; ?>
@@ -205,6 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 
         <a href="logout.php" class="btn btn-danger w-100 mb-2">Cerrar Sesión</a>
 
+        <!-- Botón para eliminar cuenta -->
         <form id="eliminarCuentaForm" method="post">
             <input type="hidden" name="eliminar_cuenta" value="1">
             <button type="button" class="btn btn-danger w-100 mt-2" id="btnEliminar">Eliminar Cuenta</button>
@@ -215,6 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+// Confirmar eliminación
 document.getElementById('btnEliminar').addEventListener('click', function(e) {
     e.preventDefault();
     Swal.fire({

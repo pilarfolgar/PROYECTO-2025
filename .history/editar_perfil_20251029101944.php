@@ -25,13 +25,6 @@ if (!$user) {
 
 $mensaje = '';
 
-// Obtener grupos disponibles para el select
-$grupos_result = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
-$grupos = [];
-while ($row = $grupos_result->fetch_assoc()) {
-    $grupos[$row['id_grupo']] = $row['nombre'];
-}
-
 // ---------------------------
 // ELIMINAR CUENTA
 // ---------------------------
@@ -54,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
     $apellido = trim($_POST['apellido'] ?? '');
     $telefono = trim($_POST['telefono'] ?? '');
     $asignatura = trim($_POST['asignatura'] ?? '');
-    $id_grupo = isset($_POST['id_grupo']) && $_POST['id_grupo'] !== '' ? intval($_POST['id_grupo']) : null;
+    $id_grupo = $_POST['id_grupo'] !== '' ? intval($_POST['id_grupo']) : null;
     $pass_actual = $_POST['pass_actual'] ?? '';
     $pass_nueva = $_POST['pass_nueva'] ?? '';
 
@@ -175,12 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
             <?php else: ?>
             <div class="mb-3">
                 <label class="form-label">Grupo</label>
-                <select name="id_grupo" class="form-control">
-                    <option value="">-- Ningún grupo --</option>
-                    <?php foreach($grupos as $id => $nombre_grupo): ?>
-                        <option value="<?= $id ?>" <?= ($user['id_grupo']==$id ? 'selected' : '') ?>><?= htmlspecialchars($nombre_grupo) ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <input type="text" name="id_grupo" class="form-control" value="<?= htmlspecialchars($user['id_grupo']) ?>">
             </div>
             <?php endif; ?>
 
@@ -205,6 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 
         <a href="logout.php" class="btn btn-danger w-100 mb-2">Cerrar Sesión</a>
 
+        <!-- Botón para eliminar cuenta -->
         <form id="eliminarCuentaForm" method="post">
             <input type="hidden" name="eliminar_cuenta" value="1">
             <button type="button" class="btn btn-danger w-100 mt-2" id="btnEliminar">Eliminar Cuenta</button>
@@ -215,6 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['eliminar_cuenta'])) 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+// Confirmar eliminación de cuenta
 document.getElementById('btnEliminar').addEventListener('click', function(e) {
     e.preventDefault();
     Swal.fire({
