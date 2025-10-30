@@ -19,21 +19,25 @@ if ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
-// Traer horarios solo si tiene grupo asignado
+// Traer horarios del grupo del estudiante, incluyendo el docente
 $horarios = [];
 if ($id_grupo) {
-    $sql = "SELECT h.dia, h.hora_inicio, h.hora_fin, h.clase, h.aula, a.nombre AS asignatura
+    $sql = "SELECT h.dia, h.hora_inicio, h.hora_fin, h.clase, h.aula,
+                   a.nombre AS asignatura,
+                   CONCAT(u.nombrecompleto, ' ', u.apellido) AS docente
             FROM horarios h
             INNER JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+            LEFT JOIN usuario u ON h.docente_cedula = u.cedula
             WHERE h.id_grupo = ?
             ORDER BY FIELD(h.dia,'lunes','martes','miercoles','jueves','viernes'), h.hora_inicio ASC";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("i", $id_grupo);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $horarios = $result->fetch_all(MYSQLI_ASSOC);
+    $result_horarios = $stmt->get_result(); // variable separada
+    $horarios = $result_horarios->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 }
+
 
 // Obtener nombre del grupo
 $nombre_grupo = "Sin asignar";
@@ -154,26 +158,29 @@ $result = $stmt->get_result();
                 <?php if(count($horarios_por_dia[$dia]) > 0): ?>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped text-center">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Hora Inicio</th>
-                                    <th>Hora Fin</th>
-                                    <th>Clase</th>
-                                    <th>Aula</th>
-                                    <th>Asignatura</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($horarios_por_dia[$dia] as $h): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
-                                        <td><?= htmlspecialchars($h['hora_fin']) ?></td>
-                                        <td><?= htmlspecialchars($h['clase']) ?></td>
-                                        <td><?= htmlspecialchars($h['aula']) ?></td>
-                                        <td><?= htmlspecialchars($h['asignatura']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
+                           <thead class="table-dark">
+    <tr>
+        <th>Hora Inicio</th>
+        <th>Hora Fin</th>
+        <th>Clase</th>
+        <th>Aula</th>
+        <th>Asignatura</th>
+        <th>Docente</th>
+    </tr>
+</thead>
+<tbody>
+    <?php foreach($horarios_por_dia[$dia] as $h): ?>
+        <tr>
+            <td><?= htmlspecialchars($h['hora_inicio']) ?></td>
+            <td><?= htmlspecialchars($h['hora_fin']) ?></td>
+            <td><?= htmlspecialchars($h['clase']) ?></td>
+            <td><?= htmlspecialchars($h['aula']) ?></td>
+            <td><?= htmlspecialchars($h['asignatura']) ?></td>
+            <td><?= htmlspecialchars($h['docente'] ?? '—') ?></td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
+
                         </table>
                     </div>
                 <?php else: ?>
