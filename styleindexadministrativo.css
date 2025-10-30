@@ -262,3 +262,81 @@ a {
     font-size: 1.4rem;
   }
 }
+
+/* ============================
+   MODAL DE NOTIFICACIONES
+============================ */
+#modalNotificaciones .modal-content {
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  border: 1px solid var(--acento);
+}
+
+#modalNotificaciones .modal-header {
+  background: linear-gradient(135deg, var(--primario), var(--secundario));
+  color: #fff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+#modalNotificaciones .modal-title {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+#modalNotificaciones .table thead {
+  background-color: var(--primario);
+  color: #fff;
+}
+
+#modalNotificaciones .table tbody tr:hover {
+  background-color: rgba(162, 213, 242, 0.2);
+  transition: background 0.3s ease;
+}
+
+/* ===== Botones de acción dentro del modal ===== */
+#modalNotificaciones .btn-warning {
+  background-color: #FDD85D;
+  border: none;
+  color: #3b3b3b;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#modalNotificaciones .btn-warning:hover {
+  background-color: #FFD43B;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(253, 212, 59, 0.3);
+}
+
+#modalNotificaciones .btn-danger {
+  background-color: #FF6B6B;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#modalNotificaciones .btn-danger:hover {
+  background-color: #FF4757;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+}
+
+/* Footer del modal */
+#modalNotificaciones .modal-footer {
+  border-top: 1px solid #ddd;
+  background-color: #f8f9fa;
+}
+
+#modalNotificaciones .btn-secondary {
+  background-color: var(--primario);
+  border: none;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+#modalNotificaciones .btn-secondary:hover {
+  background-color: var(--hover);
+}
