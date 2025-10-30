@@ -130,44 +130,31 @@ $con = conectar_bd();
     <h3>Horarios</h3>
 
     <?php
-    // Obtener el grupo seleccionado (si hay)
-    $grupo_id = isset($_GET['grupo_id']) && !empty($_GET['grupo_id']) ? intval($_GET['grupo_id']) : null;
-
-    // Selector de grupos
+    // Obtener todos los grupos para el selector
     $sql_grupos = "SELECT id_grupo, nombre FROM grupo ORDER BY nombre";
     $res_grupos = $con->query($sql_grupos);
     if ($res_grupos && $res_grupos->num_rows > 0):
     ?>
-    <form method="GET" class="mb-3">
-        <select name="grupo_id" class="form-select" onchange="this.form.submit()">
-            <option value="">-- Todos los grupos --</option>
-            <?php while($g = $res_grupos->fetch_assoc()):
-                $selected = ($grupo_id && $grupo_id == $g['id_grupo']) ? "selected" : "";
-            ?>
-            <option value="<?= $g['id_grupo'] ?>" <?= $selected ?>><?= htmlspecialchars($g['nombre']) ?></option>
-            <?php endwhile; ?>
-        </select>
-    </form>
+    <div class="mb-3">
+      <select id="filtroGrupo" class="form-select">
+        <option value="">-- Todos los grupos --</option>
+        <?php while($g = $res_grupos->fetch_assoc()): ?>
+          <option value="<?= $g['id_grupo'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
+        <?php endwhile; ?>
+      </select>
+    </div>
     <?php endif; ?>
 
     <?php
-    // Consulta de grupos según filtro
-    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre FROM grupo g";
-    if ($grupo_id) {
-        $sql .= " WHERE g.id_grupo = $grupo_id";
-    }
-    $sql .= " ORDER BY g.nombre";
-
-    $grupos = $con->query($sql);
+    // Obtener todos los grupos y horarios
+    $sql_grupos = "SELECT id_grupo, nombre AS grupo_nombre FROM grupo ORDER BY nombre";
+    $grupos = $con->query($sql_grupos);
     if ($grupos && $grupos->num_rows > 0):
         while ($grupo = $grupos->fetch_assoc()):
-            echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
-
-            // Consulta de horarios del grupo
             $sql_hor = "SELECT 
                           h.id_horario,
                           a.nombre AS asignatura,
-                          CONCAT(u.nombrecompleto, ' ', u.apellido) AS docente,
+                          CONCAT(u.nombrecompleto,' ',u.apellido) AS docente,
                           h.dia,
                           h.hora_inicio,
                           h.hora_fin,
@@ -178,11 +165,11 @@ $con = conectar_bd();
                         LEFT JOIN usuario u ON h.docente_cedula = u.cedula
                         WHERE h.id_grupo = " . intval($grupo['id_grupo']) . "
                         ORDER BY h.dia, h.hora_inicio";
-
             $result = $con->query($sql_hor);
             if ($result && $result->num_rows > 0):
     ?>
-    <div class="table-responsive mb-3">
+    <div class="table-responsive mb-3 grupo-horario" data-grupo="<?= $grupo['id_grupo'] ?>">
+      <h5>Grupo: <?= htmlspecialchars($grupo['grupo_nombre']) ?></h5>
       <table class="table table-bordered table-striped">
         <thead class="table-dark">
           <tr>
@@ -200,15 +187,15 @@ $con = conectar_bd();
         <tbody>
         <?php while ($row = $result->fetch_assoc()): ?>
           <tr>
-            <td data-label="ID"><?= $row['id_horario'] ?></td>
-            <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
-            <td data-label="Docente"><?= htmlspecialchars($row['docente'] ?? '—') ?></td>
-            <td data-label="Día"><?= htmlspecialchars($row['dia']) ?></td>
-            <td data-label="Hora Inicio"><?= htmlspecialchars($row['hora_inicio']) ?></td>
-            <td data-label="Hora Fin"><?= htmlspecialchars($row['hora_fin']) ?></td>
-            <td data-label="Clase"><?= htmlspecialchars($row['clase']) ?></td>
-            <td data-label="Aula"><?= htmlspecialchars($row['aula']) ?></td>
-            <td data-label="Acciones">
+            <td><?= $row['id_horario'] ?></td>
+            <td><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>
+            <td><?= htmlspecialchars($row['docente'] ?? '—') ?></td>
+            <td><?= htmlspecialchars($row['dia']) ?></td>
+            <td><?= htmlspecialchars($row['hora_inicio']) ?></td>
+            <td><?= htmlspecialchars($row['hora_fin']) ?></td>
+            <td><?= htmlspecialchars($row['clase']) ?></td>
+            <td><?= htmlspecialchars($row['aula']) ?></td>
+            <td>
               <a href="editar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-primary">Editar</a>
               <a href="eliminar-horario.php?id=<?= $row['id_horario'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este horario?');">Eliminar</a>
             </td>
@@ -218,16 +205,35 @@ $con = conectar_bd();
       </table>
     </div>
     <?php
-            else:
-              echo "<p>No hay horarios registrados para este grupo.</p>";
             endif;
         endwhile;
-    else:
-      echo "<p>No hay grupos registrados.</p>";
     endif;
     ?>
+
   </section>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const filtro = document.getElementById("filtroGrupo");
+  const gruposHorarios = document.querySelectorAll(".grupo-horario");
+
+  // Inicialmente ocultar todos
+  gruposHorarios.forEach(g => g.style.display = 'none');
+
+  filtro.addEventListener("change", () => {
+    const valor = filtro.value;
+
+    gruposHorarios.forEach(g => {
+      if (!valor || g.dataset.grupo === valor) {
+        g.style.display = 'block';
+      } else {
+        g.style.display = 'none';
+      }
+    });
+  });
+});
+</script>
 
 
     <!-- RESERVAS -->
