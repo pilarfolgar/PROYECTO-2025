@@ -295,23 +295,23 @@ a {
   transition: background 0.3s ease;
 }
 
-/* ===== Botones de acción dentro del modal ===== */
+/* ===== Botones de acción dentro del modal de notificaciones ===== */
 #modalNotificaciones .btn-warning {
-  background-color: #FDD85D;
+  background-color: var(--secundario); /* Azul medio de tu paleta */
   border: none;
-  color: #3b3b3b;
+  color: #fff;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
 #modalNotificaciones .btn-warning:hover {
-  background-color: #FFD43B;
+  background-color: var(--hover); /* Azul hover de tu paleta */
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(253, 212, 59, 0.3);
+  box-shadow: 0 4px 10px rgba(88, 139, 174, 0.3); /* sombra acorde */
 }
 
 #modalNotificaciones .btn-danger {
-  background-color: #FF6B6B;
+  background-color: #D9534F; /* Rojo estándar para eliminar, mantiene contraste */
   border: none;
   color: #fff;
   font-weight: bold;
@@ -319,24 +319,7 @@ a {
 }
 
 #modalNotificaciones .btn-danger:hover {
-  background-color: #FF4757;
+  background-color: #C9302C;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
-}
-
-/* Footer del modal */
-#modalNotificaciones .modal-footer {
-  border-top: 1px solid #ddd;
-  background-color: #f8f9fa;
-}
-
-#modalNotificaciones .btn-secondary {
-  background-color: var(--primario);
-  border: none;
-  color: #fff;
-  transition: background 0.3s ease;
-}
-
-#modalNotificaciones .btn-secondary:hover {
-  background-color: var(--hover);
+  box-shadow: 0 4px 10px rgba(217, 83, 79, 0.3);
 }
