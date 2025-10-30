@@ -46,27 +46,13 @@ form.addEventListener('submit', function (event) {
 btnAbrir.addEventListener('mouseenter', () => btnAbrir.classList.add('btn-flotante-hover'));
 btnAbrir.addEventListener('mouseleave', () => btnAbrir.classList.remove('btn-flotante-hover'));
 
-// Mostrar/ocultar horario del grupo y seleccionar día por defecto
+// Mostrar/ocultar horario del grupo
 document.getElementById('verHorarioBtn').addEventListener('click', function(e){
     e.preventDefault();
 
     const horario = document.getElementById('horarioGrupo');
-    horario.style.display = 'block';
+    horario.style.display = horario.style.display === 'none' ? 'block' : 'none';
     horario.scrollIntoView({behavior: "smooth"});
-
-    // Mostrar lunes por defecto
-    const horariosDias = document.querySelectorAll('.horario-dia');
-    horariosDias.forEach(h => h.classList.add('d-none'));
-
-    const lunes = document.getElementById('horario-lunes');
-    if (lunes) lunes.classList.remove('d-none');
-
-    // Activar botón lunes
-    const botonesDia = document.querySelectorAll('.btn-dia');
-    botonesDia.forEach(b => {
-        if (b.dataset.dia === 'lunes') b.classList.add('active');
-        else b.classList.remove('active');
-    });
 });
 
 // Cambiar entre días
@@ -90,3 +76,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
