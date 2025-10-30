@@ -133,10 +133,11 @@ $con = conectar_bd();
             FROM grupo g
             ORDER BY g.nombre";
     $grupos = $con->query($sql);
-    if($grupos && $grupos->num_rows > 0):
-      while($grupo = $grupos->fetch_assoc()):
+    if ($grupos && $grupos->num_rows > 0):
+      while ($grupo = $grupos->fetch_assoc()):
         echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
-        // Consulta con docente incluido
+
+        // ✅ Consulta actualizada con docente desde horarios
         $sql_hor = "SELECT 
                       h.id_horario,
                       a.nombre AS asignatura,
@@ -148,12 +149,12 @@ $con = conectar_bd();
                       h.aula
                     FROM horarios h
                     LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
-                    LEFT JOIN docente_asignatura da ON a.id_asignatura = da.id_asignatura
-                    LEFT JOIN usuario u ON da.cedula_docente = u.cedula
-                    WHERE h.id_grupo = " . $grupo['id_grupo'] . "
+                    LEFT JOIN usuario u ON h.docente_cedula = u.cedula
+                    WHERE h.id_grupo = " . intval($grupo['id_grupo']) . "
                     ORDER BY h.dia, h.hora_inicio";
+
         $result = $con->query($sql_hor);
-        if($result && $result->num_rows > 0):
+        if ($result && $result->num_rows > 0):
     ?>
     <div class="table-responsive mb-3">
       <table class="table table-bordered table-striped">
@@ -171,7 +172,7 @@ $con = conectar_bd();
           </tr>
         </thead>
         <tbody>
-        <?php while($row = $result->fetch_assoc()): ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
           <tr>
             <td data-label="ID"><?= $row['id_horario'] ?></td>
             <td data-label="Asignatura"><?= htmlspecialchars($row['asignatura'] ?? '—') ?></td>

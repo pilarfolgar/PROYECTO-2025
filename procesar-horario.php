@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id_asignatura  = intval($_POST['id_asignatura']);
         $id_grupo       = intval($_POST['id_grupo']);
         $docente_cedula = intval($_POST['docente_cedula']);
-        $dia            = trim($_POST['dia']);
+        $dia = strtolower(trim($_POST['dia']));
         $clase          = trim($_POST['clase']);
         $aula           = trim($_POST['aula']);
         $hora_inicio    = date("H:i:s", strtotime($_POST['hora_inicio']));
