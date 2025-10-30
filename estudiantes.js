@@ -3,6 +3,7 @@ const btnAbrir = document.getElementById('btnAbrirReporte');
 const btnCerrar = document.getElementById('btnCerrarReporte');
 const formSection = document.getElementById('form-reporte');
 const overlay = document.getElementById('overlayReporte');
+const form = document.getElementById('reporteForm');
 
 btnAbrir.addEventListener('click', () => {
   formSection.classList.add('visible');
@@ -14,7 +15,6 @@ btnCerrar.addEventListener('click', () => {
   overlay.style.display = 'none';
 });
 
-// Cerrar formulario al hacer click en overlay
 overlay.addEventListener('click', () => {
   formSection.classList.remove('visible');
   overlay.style.display = 'none';
@@ -22,7 +22,6 @@ overlay.addEventListener('click', () => {
 
 overlay.classList.add('visible'); // al abrir
 overlay.classList.remove('visible'); // al cerrar
-
 
 // Validación del formulario de reporte
 form.addEventListener('submit', function (event) {
@@ -47,14 +46,30 @@ form.addEventListener('submit', function (event) {
 btnAbrir.addEventListener('mouseenter', () => btnAbrir.classList.add('btn-flotante-hover'));
 btnAbrir.addEventListener('mouseleave', () => btnAbrir.classList.remove('btn-flotante-hover'));
 
-// Mostrar/ocultar horario del grupo
+// Mostrar/ocultar horario del grupo y seleccionar día por defecto
 document.getElementById('verHorarioBtn').addEventListener('click', function(e){
     e.preventDefault();
+
     const horario = document.getElementById('horarioGrupo');
-    horario.style.display = horario.style.display === 'none' ? 'block' : 'none';
+    horario.style.display = 'block';
     horario.scrollIntoView({behavior: "smooth"});
+
+    // Mostrar lunes por defecto
+    const horariosDias = document.querySelectorAll('.horario-dia');
+    horariosDias.forEach(h => h.classList.add('d-none'));
+
+    const lunes = document.getElementById('horario-lunes');
+    if (lunes) lunes.classList.remove('d-none');
+
+    // Activar botón lunes
+    const botonesDia = document.querySelectorAll('.btn-dia');
+    botonesDia.forEach(b => {
+        if (b.dataset.dia === 'lunes') b.classList.add('active');
+        else b.classList.remove('active');
+    });
 });
 
+// Cambiar entre días
 document.addEventListener("DOMContentLoaded", function() {
     const botonesDia = document.querySelectorAll(".btn-dia");
     const horariosDias = document.querySelectorAll(".horario-dia");
