@@ -400,6 +400,22 @@ function abrirModalNotificaciones() {
           ?>
         </select>
       </div>
+  <!-- Docente -->
+<div class="col-md-6">
+  <label for="docenteHorario" class="form-label">Docente</label>
+  <select class="form-select" id="docenteHorario" name="docente_cedula" required>
+    <option value="">Seleccione docente...</option>
+    <?php
+    $sql_doc = "SELECT cedula, nombrecompleto FROM usuario WHERE rol='docente' ORDER BY nombrecompleto";
+    $result_doc = $con->query($sql_doc);
+    while ($row = $result_doc->fetch_assoc()) {
+        echo '<option value="'.$row['cedula'].'">'.htmlspecialchars($row['nombrecompleto']).' ('.$row['cedula'].')</option>';
+    }
+    ?>
+  </select>
+</div>
+
+
 
       <!-- Día -->
       <div class="col-md-6">
