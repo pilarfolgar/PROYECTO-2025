@@ -130,23 +130,22 @@ $con = conectar_bd();
     <h3>Horarios</h3>
 
     <?php
-    // Obtener todos los grupos para el selector
+    // Obtener todos los grupos
     $sql_grupos = "SELECT id_grupo, nombre FROM grupo ORDER BY nombre";
     $res_grupos = $con->query($sql_grupos);
     if ($res_grupos && $res_grupos->num_rows > 0):
     ?>
-    <div class="mb-3">
-      <select id="filtroGrupo" class="form-select">
-        <option value="">-- Todos los grupos --</option>
-        <?php while($g = $res_grupos->fetch_assoc()): ?>
-          <option value="<?= $g['id_grupo'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
-        <?php endwhile; ?>
-      </select>
+    <div class="mb-3 d-flex flex-wrap gap-2">
+      <?php while($g = $res_grupos->fetch_assoc()): ?>
+        <button class="btn btn-outline-secondary btn-grupo" data-grupo="<?= $g['id_grupo'] ?>">
+          <?= htmlspecialchars($g['nombre']) ?>
+        </button>
+      <?php endwhile; ?>
     </div>
     <?php endif; ?>
 
     <?php
-    // Obtener todos los grupos y horarios
+    // Obtener todos los horarios por grupo
     $sql_grupos = "SELECT id_grupo, nombre AS grupo_nombre FROM grupo ORDER BY nombre";
     $grupos = $con->query($sql_grupos);
     if ($grupos && $grupos->num_rows > 0):
@@ -168,7 +167,7 @@ $con = conectar_bd();
             $result = $con->query($sql_hor);
             if ($result && $result->num_rows > 0):
     ?>
-    <div class="table-responsive mb-3 grupo-horario" data-grupo="<?= $grupo['id_grupo'] ?>">
+    <div class="table-responsive mb-3 grupo-horario" data-grupo="<?= $grupo['id_grupo'] ?>" style="display:none;">
       <h5>Grupo: <?= htmlspecialchars($grupo['grupo_nombre']) ?></h5>
       <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -215,21 +214,26 @@ $con = conectar_bd();
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const filtro = document.getElementById("filtroGrupo");
+  const botones = document.querySelectorAll(".btn-grupo");
   const gruposHorarios = document.querySelectorAll(".grupo-horario");
 
-  // Inicialmente ocultar todos
-  gruposHorarios.forEach(g => g.style.display = 'none');
+  botones.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const grupoId = btn.dataset.grupo;
 
-  filtro.addEventListener("change", () => {
-    const valor = filtro.value;
+      // Ocultar todos los horarios
+      gruposHorarios.forEach(g => g.style.display = 'none');
 
-    gruposHorarios.forEach(g => {
-      if (!valor || g.dataset.grupo === valor) {
-        g.style.display = 'block';
-      } else {
-        g.style.display = 'none';
-      }
+      // Mostrar solo el seleccionado
+      const seleccionado = document.querySelector(`.grupo-horario[data-grupo='${grupoId}']`);
+      if(seleccionado) seleccionado.style.display = 'block';
+
+      // Quitar active de todos los botones y poner en el seleccionado
+      botones.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Scroll al horario
+      if(seleccionado) seleccionado.scrollIntoView({behavior: "smooth"});
     });
   });
 });
