@@ -124,37 +124,63 @@ $con = conectar_bd();
       </section>
     </div>
 
-    <!-- HORARIOS -->
+<!-- HORARIOS -->
 <div class="collapse mb-5" id="horariosCollapse" data-bs-parent="#accordionPanels">
   <section>
     <h3>Horarios</h3>
+
     <?php
-    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre
-            FROM grupo g
-            ORDER BY g.nombre";
+    // Obtener el grupo seleccionado (si hay)
+    $grupo_id = isset($_GET['grupo_id']) && !empty($_GET['grupo_id']) ? intval($_GET['grupo_id']) : null;
+
+    // Selector de grupos
+    $sql_grupos = "SELECT id_grupo, nombre FROM grupo ORDER BY nombre";
+    $res_grupos = $con->query($sql_grupos);
+    if ($res_grupos && $res_grupos->num_rows > 0):
+    ?>
+    <form method="GET" class="mb-3">
+        <select name="grupo_id" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Todos los grupos --</option>
+            <?php while($g = $res_grupos->fetch_assoc()):
+                $selected = ($grupo_id && $grupo_id == $g['id_grupo']) ? "selected" : "";
+            ?>
+            <option value="<?= $g['id_grupo'] ?>" <?= $selected ?>><?= htmlspecialchars($g['nombre']) ?></option>
+            <?php endwhile; ?>
+        </select>
+    </form>
+    <?php endif; ?>
+
+    <?php
+    // Consulta de grupos según filtro
+    $sql = "SELECT g.id_grupo, g.nombre AS grupo_nombre FROM grupo g";
+    if ($grupo_id) {
+        $sql .= " WHERE g.id_grupo = $grupo_id";
+    }
+    $sql .= " ORDER BY g.nombre";
+
     $grupos = $con->query($sql);
     if ($grupos && $grupos->num_rows > 0):
-      while ($grupo = $grupos->fetch_assoc()):
-        echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
+        while ($grupo = $grupos->fetch_assoc()):
+            echo "<h5>Grupo: " . htmlspecialchars($grupo['grupo_nombre']) . "</h5>";
 
-        // ✅ Consulta actualizada con docente desde horarios
-        $sql_hor = "SELECT 
-                      h.id_horario,
-                      a.nombre AS asignatura,
-                      CONCAT(u.nombrecompleto, ' ', u.apellido) AS docente,
-                      h.dia,
-                      h.hora_inicio,
-                      h.hora_fin,
-                      h.clase,
-                      h.aula
-                    FROM horarios h
-                    LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
-                    LEFT JOIN usuario u ON h.docente_cedula = u.cedula
-                    WHERE h.id_grupo = " . intval($grupo['id_grupo']) . "
-                    ORDER BY h.dia, h.hora_inicio";
+            // Consulta de horarios del grupo
+            $sql_hor = "SELECT 
+                          h.id_horario,
+                          a.nombre AS asignatura,
+                          CONCAT(u.nombrecompleto, ' ', u.apellido) AS docente,
+                          h.dia,
+                          h.hora_inicio,
+                          h.hora_fin,
+                          h.clase,
+                          h.aula
+                        FROM horarios h
+                        LEFT JOIN asignatura a ON h.id_asignatura = a.id_asignatura
+                        LEFT JOIN usuario u ON h.docente_cedula = u.cedula
+                        WHERE h.id_grupo = " . intval($grupo['id_grupo']) . "
+                        ORDER BY h.dia, h.hora_inicio";
 
-        $result = $con->query($sql_hor);
-        if ($result && $result->num_rows > 0):
+            $result = $con->query($sql_hor);
+            if ($result && $result->num_rows > 0):
     ?>
     <div class="table-responsive mb-3">
       <table class="table table-bordered table-striped">
@@ -192,16 +218,17 @@ $con = conectar_bd();
       </table>
     </div>
     <?php
-        else:
-          echo "<p>No hay horarios registrados para este grupo.</p>";
-        endif;
-      endwhile;
+            else:
+              echo "<p>No hay horarios registrados para este grupo.</p>";
+            endif;
+        endwhile;
     else:
       echo "<p>No hay grupos registrados.</p>";
     endif;
     ?>
   </section>
 </div>
+
 
     <!-- RESERVAS -->
     <div class="collapse mb-5" id="reservasCollapse" data-bs-parent="#accordionPanels">
