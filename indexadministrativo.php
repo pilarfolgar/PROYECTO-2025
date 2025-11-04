@@ -88,6 +88,9 @@ $con->query($sql_eliminar);
   <a href="indexadministrativoDatos.php" class="btn btn-primary btn-lg">
     Ir a Datos Administrativos
   </a>
+  <a href="gestionar-usuarios.php" class="btn btn-danger btn-lg">
+    Gestionar Usuarios
+  </a>
 </div>
 
 
