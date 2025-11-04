@@ -113,25 +113,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-// docente.js
+// ==============================
+// FORMULARIO DE REPORTES
+// ==============================
 document.addEventListener('DOMContentLoaded', function() {
     const btnAbrir = document.getElementById('btnAbrirReporte');
     const overlay = document.getElementById('overlayReporte');
     const formReporte = document.getElementById('form-reporte');
     const btnCerrar = document.getElementById('btnCerrarReporte');
 
+    // Abrir formulario
     btnAbrir.addEventListener('click', () => {
-        overlay.style.display = 'block';
-        formReporte.style.display = 'block';
+        overlay.classList.add('visible');
+        formReporte.classList.add('visible');
     });
 
+    // Cerrar formulario (botón X)
     btnCerrar.addEventListener('click', () => {
-        overlay.style.display = 'none';
-        formReporte.style.display = 'none';
+        overlay.classList.remove('visible');
+        formReporte.classList.remove('visible');
     });
 
+    // Cerrar formulario al hacer clic fuera
     overlay.addEventListener('click', () => {
-        overlay.style.display = 'none';
-        formReporte.style.display = 'none';
+        overlay.classList.remove('visible');
+        formReporte.classList.remove('visible');
     });
 });

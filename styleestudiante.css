@@ -317,3 +317,6 @@
     padding: 0.6rem 1rem;
   }
 }
+.formulario-overlay.visible {
+    display: block;
+}
