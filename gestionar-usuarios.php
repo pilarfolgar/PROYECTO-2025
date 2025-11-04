@@ -1,30 +1,48 @@
 <?php
+// ==========================
+// iniciar sesión y conexión
+// ==========================
 session_start();
 require("conexion.php");
 
 $con = conectar_bd();
+if (!$con) {
+    die("Error al conectar a la base de datos: " . mysqli_connect_error());
+}
 
+// ==========================
 // Verificar que sea administrativo
+// ==========================
 if (!isset($_SESSION['cedula'], $_SESSION['rol']) || $_SESSION['rol'] !== 'administrativo') {
     header("Location: iniciosesion.php");
     exit();
 }
 
+// ==========================
 // Eliminar usuario si se recibe GET 'cedula'
+// ==========================
 if (isset($_GET['cedula'])) {
     $cedula = $con->real_escape_string($_GET['cedula']);
     $sql_eliminar = "DELETE FROM usuario WHERE cedula = '$cedula' AND rol='estudiante'";
+    
     if ($con->query($sql_eliminar)) {
         $_SESSION['msg_usuario'] = "Usuario eliminado con éxito";
     } else {
         $_SESSION['error_usuario'] = "Error al eliminar usuario";
     }
+
+    // Redirigir después de la acción para evitar resubmit
     header("Location: gestionar-usuarios.php");
     exit();
 }
 
-?>
+// ==========================
+// Obtener estudiantes
+// ==========================
+$sql = "SELECT * FROM usuario WHERE rol='estudiante' ORDER BY nombrecompleto";
+$result = $con->query($sql);
 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -41,40 +59,36 @@ if (isset($_GET['cedula'])) {
 <main class="container my-5">
     <h1 class="mb-4">👥 Gestión de Estudiantes</h1>
 
-    <?php
-    $sql = "SELECT * FROM usuario WHERE rol='estudiante' ORDER BY nombrecompleto";
-    $result = $con->query($sql);
-    if ($result && $result->num_rows > 0):
-    ?>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>Cédula</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php while($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['cedula']) ?></td>
-                    <td><?= htmlspecialchars($row['nombrecompleto']) ?></td>
-                    <td><?= htmlspecialchars($row['apellido']) ?></td>
-                    <td><?= htmlspecialchars($row['email']) ?></td>
-                    <td><?= htmlspecialchars($row['telefono']) ?></td>
-                    <td>
-                        <a href="gestionar-usuarios.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" 
-                           onclick="return confirm('¿Seguro que deseas eliminar a este estudiante?');">Eliminar</a>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
+    <?php if ($result && $result->num_rows > 0): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php while($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['cedula']) ?></td>
+                        <td><?= htmlspecialchars($row['nombrecompleto']) ?></td>
+                        <td><?= htmlspecialchars($row['apellido']) ?></td>
+                        <td><?= htmlspecialchars($row['email']) ?></td>
+                        <td><?= htmlspecialchars($row['telefono']) ?></td>
+                        <td>
+                            <a href="gestionar-usuarios.php?cedula=<?= $row['cedula'] ?>" class="btn btn-sm btn-danger" 
+                               onclick="return confirm('¿Seguro que deseas eliminar a este estudiante?');">Eliminar</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
     <?php else: ?>
         <p>No hay estudiantes registrados.</p>
     <?php endif; ?>
