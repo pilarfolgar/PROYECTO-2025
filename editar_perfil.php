@@ -29,8 +29,9 @@ while ($row = $grupos_result->fetch_assoc()) {
     $grupos[$row['id_grupo']] = $row['nombre'];
 }
 
-// Procesar edición de perfil...
-// (Aquí va tu código de procesamiento de foto, contraseña y datos)}
+// ----------------------------
+// Procesar edición de perfil
+// ----------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombrecompleto'];
     $apellido = $_POST['apellido'];
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar foto (si se subió una)
     $ruta_foto = $user['foto'];
     if (!empty($_FILES['foto']['name'])) {
-        $nombre_foto = basename($_FILES['foto']['name']);
+        $nombre_foto = time() . '_' . basename($_FILES['foto']['name']); // nombre único
         $ruta_destino = 'imagenes/' . $nombre_foto;
         if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino)) {
             $ruta_foto = $ruta_destino;
@@ -59,12 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $stmt->close();
 
-    // Si cambia la contraseña
+    // Cambiar contraseña si corresponde
     if (!empty($_POST['pass_actual']) && !empty($_POST['pass_nueva'])) {
         $pass_actual = $_POST['pass_actual'];
         $pass_nueva = password_hash($_POST['pass_nueva'], PASSWORD_DEFAULT);
 
-        // Verificar contraseña actual
         $stmt = $con->prepare("SELECT contrasena FROM usuario WHERE cedula=?");
         $stmt->bind_param("s", $cedula);
         $stmt->execute();
@@ -85,16 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensaje = "Perfil actualizado correctamente.";
     }
 
-    // Actualizar los datos del usuario cargados en la página
+    // Recargar datos actualizados
     $stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=?");
     $stmt->bind_param("s", $cedula);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -113,18 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     text-align: center;
 }
-
 .perfil-card img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 20px;
-    border: 4px solid #588BAE; /* Igual que perfil.php */
-}
-
-.perfil-card .form-control, .perfil-card .form-select, .perfil-card textarea {
-    margin-bottom: 1rem;
+    border: 4px solid #588BAE;
 }
 </style>
 </head>
@@ -193,40 +186,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
             </div>
         </form>
-
-        <hr class="my-4">
-
-        <a href="logout.php" class="btn btn-danger w-100 mb-2">Cerrar Sesión</a>
-
-        <form id="eliminarCuentaForm" method="post">
-            <input type="hidden" name="eliminar_cuenta" value="1">
-            <button type="button" class="btn btn-danger w-100 mt-2" id="btnEliminar">Eliminar Cuenta</button>
-        </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-document.getElementById('btnEliminar').addEventListener('click', function(e) {
-    e.preventDefault();
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se puede deshacer.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('eliminarCuentaForm').submit();
-        }
-    });
-});
-</script>
-
 <?php include('footer.php'); ?>
 </body>
 </html>
+
