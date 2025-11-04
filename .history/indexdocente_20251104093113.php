@@ -135,7 +135,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
         $img = $row['imagen'] ?: 'default-aula.jpg';
         $ruta_img = 'imagenes/aulas/'.$img;
         if (!file_exists($ruta_img)) {
-            $ruta_img = 'imagenes/aulas/';
+            $ruta_img = 'imagenes/aulas/default-aula.jpg';
         }
 
         echo '<div class="col-md-4">

@@ -66,13 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 <body>
 
 <div class="container my-4">
+  <!-- Botón de flecha volver -->
+
 
     <?php if($mensaje) echo $mensaje; ?>
-
-    <div class="contenedor-flecha">
-        <button class="btn-flecha" onclick="window.history.back()">← Volver</button>
-    </div>
-
+<div class="contenedor-flecha">
+  <button class="btn-flecha" onclick="window.history.back()">
+    ← Volver
+  </button>
+</div>
     <!-- Filtros -->
     <div class="text-center mb-3">
         <button class="btn btn-outline-primary boton-filtro active" id="filtro-todo" onclick="filtrar('todo')">Todos</button>
@@ -90,15 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
         ?>
         <div class="col-md-4 espacio <?= htmlspecialchars($row['tipo']) ?>">
             <div class="card h-100 shadow-sm">
-                <?php
-                // ✅ CORRECCIÓN DE RUTA DE IMAGEN
-                $img = $row['imagen'] ?: 'default-aula.jpg';
-                $ruta_img = 'imagenes/aulas/' . basename($img);
-                if (!file_exists($ruta_img)) {
-                    $ruta_img = 'imagenes/aulas/default-aula.jpg';
-                }
-                ?>
-                <img src="<?= $ruta_img ?>" 
+                <img src="<?= $row['imagen'] ?: 'imagenes/default-aula.jpg' ?>" 
                      alt="<?= htmlspecialchars($row['codigo']) ?>" 
                      class="card-img-top"
                      onclick="mostrarImagen(this)">
@@ -178,11 +172,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     </div>
   </div>
 </div>
-
 <?php require("footer.php"); ?>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="docente.js"></script>
+
 
 </body>
 </html>
