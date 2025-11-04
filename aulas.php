@@ -89,21 +89,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
         while($row = $result->fetch_assoc()):
         ?>
         <div class="col-md-4 espacio <?= htmlspecialchars($row['tipo']) ?>">
-            <div class="card h-100 shadow-sm">
-                <?php
-                // ✅ CORRECCIÓN DE RUTA DE IMAGEN
-                $img = $row['imagen'] ?: 'default-aula.jpg';
-                $ruta_img = 'imagenes/aulas/' . basename($img);
-                if (!file_exists($ruta_img)) {
-                    $ruta_img = 'imagenes/aulas/default-aula.jpg';
-                }
-                ?>
-                <img src="<?= $ruta_img ?>" 
-                     alt="<?= htmlspecialchars($row['codigo']) ?>" 
-                     class="card-img-top"
-                     onclick="mostrarImagen(this)">
-                <div class="card-body text-center">
-                    <h4 class="card-title"><?= htmlspecialchars($row['codigo']) ?></h4>
+           <div class="card h-100 shadow-sm">
+    <?php
+    // Nombre de la imagen desde la base de datos o default
+    $img = !empty($row['imagen']) ? $row['imagen'] : 'default-aula.jpg';
+
+    // Carpeta donde están las imágenes
+    $carpeta_img = 'imagenes/aulas/';
+
+    // Construir ruta completa relativa
+    $ruta_img = $carpeta_img . basename($img);
+
+    // Verificar si el archivo existe, si no usar default
+    if (!file_exists($ruta_img) || empty($row['imagen'])) {
+        $ruta_img = $carpeta_img . 'default-aula.jpg';
+    }
+    ?>
+    <img src="<?= htmlspecialchars($ruta_img) ?>" 
+         alt="<?= htmlspecialchars($row['codigo']) ?>" 
+         class="card-img-top"
+         onclick="mostrarImagen(this)">
+
                     <p>Capacidad: <?= $row['capacidad'] ?> personas<br>Ubicación: <?= htmlspecialchars($row['ubicacion']) ?></p>
                     <button class="btn btn-success w-100" 
                             onclick="abrirReserva(<?= $row['id_aula'] ?>, '<?= htmlspecialchars($row['codigo']) ?>')">
