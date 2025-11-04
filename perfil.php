@@ -42,7 +42,8 @@ $rol = strtolower($user['rol']);
 <div class="perfil-container">
     <div class="perfil-card text-center">
         <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil" class="rounded-circle" width="150" height="150">
-        <h4 class="mt-3"><?= htmlspecialchars($user['nombrecompleto'] . ' ' . $user['apellido']) ?></h4>
+        <h4 class="mt-3"><?= htmlspecialchars($user['nombrecompleto']) ?></h4>
+
         <p><strong>Cédula:</strong> <?= htmlspecialchars($user['cedula']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
         <p><strong>Teléfono:</strong> <?= htmlspecialchars($user['telefono'] ?: 'No registrado') ?></p>
