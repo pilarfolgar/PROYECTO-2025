@@ -67,14 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 
 <div class="container my-4">
   <!-- Botón de flecha volver -->
-
-
-    <?php if($mensaje) echo $mensaje; ?>
 <div class="contenedor-flecha">
   <button class="btn-flecha" onclick="window.history.back()">
     ← Volver
   </button>
 </div>
+
+    <?php if($mensaje) echo $mensaje; ?>
+
     <!-- Filtros -->
     <div class="text-center mb-3">
         <button class="btn btn-outline-primary boton-filtro active" id="filtro-todo" onclick="filtrar('todo')">Todos</button>

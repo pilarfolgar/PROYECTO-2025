@@ -249,7 +249,7 @@ nav a:hover {
   .docente-card { max-width: 90%; }
   .info-grid { padding: 0.5rem; }
 }
-  header { flex-direction: column; text-align: center; gap: 0.5rem; padding: 2px 2px;}
+  header { flex-direction: column; text-align: center; gap: 0.5rem; }
   .logo { width: 60px; height: 60px; }
   nav { flex-direction: column; gap: 0.5rem; padding: 1px;}
   .docente-photo { width: 100px; height: 100px; }

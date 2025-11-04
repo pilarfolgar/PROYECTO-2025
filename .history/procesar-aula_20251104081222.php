@@ -4,25 +4,10 @@ require("conexion.php");
 $con = conectar_bd();
 
 // Recoger datos del formulario
-$codigo = trim($_POST['codigo'] ?? '');
+$codigo = $_POST['codigo'] ?? '';
 $capacidad = !empty($_POST['capacidad']) ? intval($_POST['capacidad']) : null;
 $ubicacion = $_POST['ubicacion'] ?? null;
-$tipo = $_POST['tipo'] ?? 'aula';
-
-// Verificar que el código no exista ya
-$sql_check = "SELECT id_aula FROM aula WHERE codigo = ?";
-$stmt_check = $con->prepare($sql_check);
-$stmt_check->bind_param("s", $codigo);
-$stmt_check->execute();
-$stmt_check->store_result();
-
-if($stmt_check->num_rows > 0){
-    $_SESSION['error_aula'] = "El código de aula '$codigo' ya existe.";
-    $stmt_check->close();
-    header("Location: aulas.php");
-    exit;
-}
-$stmt_check->close();
+$tipo = $_POST['tipo'] ?? 'aula'; 
 
 // Procesar imagen
 $imagenPath = null;
@@ -44,7 +29,7 @@ if(!$stmt){
 $stmt->bind_param("sisss", $codigo, $capacidad, $ubicacion, $imagenPath, $tipo);
 
 if($stmt->execute()){
-    $id_aula = $stmt->insert_id;
+    $id_aula = $stmt->insert_id; // ID del aula recién insertada
     $stmt->close();
 
     // Recursos seleccionados
@@ -58,13 +43,13 @@ if($stmt->execute()){
         if($stmt_rec->execute()){
             $nuevo_id = $stmt_rec->insert_id;
             if($nuevo_id){
-                $recursos[] = $nuevo_id;
+                $recursos[] = $nuevo_id; // agregar el ID a los recursos del aula
             }
         }
         $stmt_rec->close();
     }
 
-    // Filtrar solo IDs válidos en la tabla recurso
+    // Filtrar solo IDs válidos que existen en la tabla recurso
     $recursos_validos = [];
     foreach($recursos as $id_recurso){
         $id_recurso = intval($id_recurso);
