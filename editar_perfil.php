@@ -3,38 +3,36 @@ session_start();
 require("conexion.php");
 $con = conectar_bd();
 
-// Verificar sesión
+// Verificar sesión activa
 if (!isset($_SESSION['cedula'])) {
-    header("Location: login.php");
+    header("Location: iniciosesion.php");
     exit;
 }
 
 $cedula = $_SESSION['cedula'];
 
-// Traer datos del estudiante
-$stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=? AND rol='estudiante'");
+// ✅ Traer datos del usuario (sin importar mayúsculas en el rol)
+$stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=? AND LOWER(rol)='estudiante'");
 $stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$user) {
-    echo "Usuario no encontrado o no es estudiante.";
+    echo "<h3 style='text-align:center;margin-top:50px;color:red;'>❌ Usuario no encontrado o no es estudiante.</h3>";
     exit;
 }
 
 $mensaje = "";
 
-// Obtener grupos disponibles
+// ✅ Obtener lista de grupos
 $grupos_result = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
 $grupos = [];
 while ($row = $grupos_result->fetch_assoc()) {
     $grupos[$row['id_grupo']] = $row['nombre'];
 }
 
-// ----------------------------
-// Procesar edición de perfil
-// ----------------------------
+// ✅ Procesar edición
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombrecompleto']);
     $apellido = trim($_POST['apellido']);
@@ -42,17 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_grupo = $_POST['id_grupo'] ?? null;
     $id_grupo = !empty($id_grupo) ? (int)$id_grupo : null;
 
-    // Procesar foto (si se subió una)
+    // Subida de foto
     $ruta_foto = $user['foto'];
     if (!empty($_FILES['foto']['name'])) {
-        $nombre_foto = time() . '_' . basename($_FILES['foto']['name']); // nombre único
+        $nombre_foto = time() . '_' . basename($_FILES['foto']['name']);
         $ruta_destino = 'imagenes/' . $nombre_foto;
         if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino)) {
             $ruta_foto = $ruta_destino;
         }
     }
 
-    // Actualizar datos principales del estudiante
+    // ✅ Actualizar datos principales del estudiante
     $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, id_grupo=?, foto=? WHERE cedula=?");
     $stmt->bind_param("sssiss", $nombre, $apellido, $telefono, $id_grupo, $ruta_foto, $cedula);
     $stmt->execute();
@@ -66,20 +64,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->close();
 
-    // Cambiar contraseña si corresponde
+    // ✅ Cambiar contraseña (usando columna 'pass')
     if (!empty($_POST['pass_actual']) && !empty($_POST['pass_nueva'])) {
         $pass_actual = $_POST['pass_actual'];
         $pass_nueva = password_hash($_POST['pass_nueva'], PASSWORD_DEFAULT);
 
-        $stmt = $con->prepare("SELECT contrasena FROM usuario WHERE cedula=?");
+        $stmt = $con->prepare("SELECT pass FROM usuario WHERE cedula=?");
         $stmt->bind_param("s", $cedula);
         $stmt->execute();
         $result = $stmt->get_result();
         $datos = $result->fetch_assoc();
         $stmt->close();
 
-        if ($datos && password_verify($pass_actual, $datos['contrasena'])) {
-            $stmt = $con->prepare("UPDATE usuario SET contrasena=? WHERE cedula=?");
+        if ($datos && password_verify($pass_actual, $datos['pass'])) {
+            $stmt = $con->prepare("UPDATE usuario SET pass=? WHERE cedula=?");
             $stmt->bind_param("ss", $pass_nueva, $cedula);
             $stmt->execute();
             $stmt->close();
@@ -89,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Recargar datos actualizados
+    // ✅ Recargar datos actualizados
     $stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=?");
     $stmt->bind_param("s", $cedula);
     $stmt->execute();
