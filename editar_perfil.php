@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Docente: actualizar asignatura si existe
         $asignatura = trim($_POST['asignatura'] ?? $user['asignatura']);
         $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, foto=? WHERE cedula=?");
-        $stmt->bind_param("sssss", $nombre, $apellido, $telefono, $asignatura, $ruta_foto, $cedula);
+       $stmt->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $ruta_foto, $cedula);
+
     }
 
     $stmt->execute();
