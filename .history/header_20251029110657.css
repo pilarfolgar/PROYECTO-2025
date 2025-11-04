@@ -85,9 +85,7 @@
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .header{
-    padding: 8px 5px ;
-  }
+
   .header-left h1 {
     font-size: 22px;
   }
@@ -107,11 +105,4 @@
     top: 80px;
     right: 20px;
   }
-}
-
-@media (max-width:480px) {
-  header { flex-direction: column; text-align: center; gap: 0.5rem; padding: 2px 2px;}
-  .logo { width: 60px; height: 60px; }
-  nav { flex-direction: column; gap: 0.5rem; padding: 1px;}
-  .docente-photo { width: 100px; height: 100px; }
 }

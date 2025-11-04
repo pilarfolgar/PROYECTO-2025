@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'msg_aula'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Aula registrada con éxito'],
         'error_aula'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al registrar el aula','form'=>'form-aula'],
         'msg_notificacion'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Notificación enviada con éxito'],
-        'error_notificacion'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al enviar la notificación'],
+        'error_notificacion'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al enviar la notificación']
         'msg_grupo'=>['icon'=>'success','title'=>'¡Éxito!','text'=>'Grupo registrado con éxito'],
         'error_grupo'=>['icon'=>'error','title'=>'Error','text'=>'Ocurrió un error al registrar el grupo','form'=>'form-grupo']
       ];

@@ -66,15 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
 <body>
 
 <div class="container my-4">
-  <!-- Botón de flecha volver -->
-
-
     <?php if($mensaje) echo $mensaje; ?>
-<div class="contenedor-flecha">
-  <button class="btn-flecha" onclick="window.history.back()">
-    ← Volver
-  </button>
-</div>
+
     <!-- Filtros -->
     <div class="text-center mb-3">
         <button class="btn btn-outline-primary boton-filtro active" id="filtro-todo" onclick="filtrar('todo')">Todos</button>
@@ -86,7 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     <!-- Lista de aulas -->
     <div class="row g-3">
         <?php
-        $sql = "SELECT id_aula, codigo, capacidad, ubicacion, imagen, tipo FROM aula ORDER BY codigo";
+        $sql = "SELECT a.id_aula, a.codigo, a.capacidad, a.ubicacion, a.imagen, a.tipo,
+                       GROUP_CONCAT(r.nombre SEPARATOR ', ') AS recursos
+                FROM aula a
+                LEFT JOIN aula_recurso ar ON a.id_aula = ar.id_aula
+                LEFT JOIN recurso r ON ar.id_recurso = r.id_recurso
+                GROUP BY a.id_aula
+                ORDER BY a.codigo";
         $result = $con->query($sql);
         while($row = $result->fetch_assoc()):
         ?>
@@ -98,9 +97,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
                      onclick="mostrarImagen(this)">
                 <div class="card-body text-center">
                     <h4 class="card-title"><?= htmlspecialchars($row['codigo']) ?></h4>
-                    <p>Capacidad: <?= $row['capacidad'] ?> personas<br>Ubicación: <?= htmlspecialchars($row['ubicacion']) ?></p>
+                    <p>
+                        Capacidad: <?= $row['capacidad'] ?> personas<br>
+                        Ubicación: <?= htmlspecialchars($row['ubicacion']) ?><br>
+                        <?php if(!empty($row['recursos'])): ?>
+                            Recursos: <?= htmlspecialchars($row['recursos']) ?>
+                        <?php else: ?>
+                            Recursos: No disponibles
+                        <?php endif; ?>
+                    </p>
                     <button class="btn btn-success w-100" 
-                            onclick="abrirReserva(<?= $row['id_aula'] ?>, '<?= htmlspecialchars($row['codigo']) ?>')">
+                            onclick="abrirReserva(<?= $row['id_aula'] ?>, '<?= htmlspecialchars($row['codigo']) ?>', '<?= htmlspecialchars($row['recursos']) ?>')">
                         Reservar
                     </button>
                 </div>
@@ -125,6 +132,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
           <div class="mb-3">
             <label class="form-label">Aula</label>
             <input type="text" name="aula_nombre" id="aulaSeleccionada" class="form-control" readonly required>
+          </div>
+
+          <div class="mb-3">
+            <p id="recursosAula"></p>
           </div>
 
           <div class="mb-3">
@@ -172,12 +183,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aula'])) {
     </div>
   </div>
 </div>
-<?php require("footer.php"); ?>
 
+<?php require("footer.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="docente.js"></script>
-
+<script>
+function abrirReserva(id, nombre, recursos) {
+    document.getElementById('idAulaSeleccionada').value = id;
+    document.getElementById('aulaSeleccionada').value = nombre;
+    document.getElementById('recursosAula').textContent = recursos ? 'Recursos: ' + recursos : 'Recursos: No disponibles';
+    new bootstrap.Modal(document.getElementById('modalReserva')).show();
+}
+</script>
 
 </body>
 </html>

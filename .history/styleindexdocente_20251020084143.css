@@ -382,32 +382,3 @@ button:hover {
   .aula-card { padding: 1.5rem; flex: 1 1 100%; }
   .footer { font-size: 0.85rem; padding: 1rem; }
 }
-
-/* ================= BOTÓN FLECHA VOLVER ================= */
-.contenedor-flecha {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
-}
-
-.btn-flecha {
-  background-color: var(--secundario);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-}
-
-.btn-flecha:hover {
-  background-color: var(--hover);
-  transform: translateX(-3px);
-}
