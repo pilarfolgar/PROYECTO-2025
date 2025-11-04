@@ -11,16 +11,19 @@ if (!isset($_SESSION['cedula'])) {
 
 $cedula = $_SESSION['cedula'];
 
-// Traer datos del usuario
-$stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=?");
+// Traer datos del estudiante
+$stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=? AND rol='estudiante'");
 $stmt->bind_param("s", $cedula);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-if (!$user) { echo "Usuario no encontrado."; exit; }
+if (!$user) {
+    echo "Usuario no encontrado o no es estudiante.";
+    exit;
+}
 
-$mensaje = '';
+$mensaje = "";
 
 // Obtener grupos disponibles
 $grupos_result = $con->query("SELECT id_grupo, nombre FROM grupo ORDER BY nombre");
@@ -33,11 +36,11 @@ while ($row = $grupos_result->fetch_assoc()) {
 // Procesar edición de perfil
 // ----------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = $_POST['nombrecompleto'];
-    $apellido = $_POST['apellido'];
-    $telefono = $_POST['telefono'] ?? null;
-    $asignatura = $_POST['asignatura'] ?? null;
+    $nombre = trim($_POST['nombrecompleto']);
+    $apellido = trim($_POST['apellido']);
+    $telefono = trim($_POST['telefono']) ?: null;
     $id_grupo = $_POST['id_grupo'] ?? null;
+    $id_grupo = !empty($id_grupo) ? (int)$id_grupo : null;
 
     // Procesar foto (si se subió una)
     $ruta_foto = $user['foto'];
@@ -49,15 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Actualizar datos principales
-    if ($user['rol'] === 'docente') {
-        $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, foto=? WHERE cedula=?");
-        $stmt->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $ruta_foto, $cedula);
-    } else {
-        $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, id_grupo=?, foto=? WHERE cedula=?");
-        $stmt->bind_param("ssssss", $nombre, $apellido, $telefono, $id_grupo, $ruta_foto, $cedula);
-    }
+    // Actualizar datos principales del estudiante
+    $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, id_grupo=?, foto=? WHERE cedula=?");
+    $stmt->bind_param("sssiss", $nombre, $apellido, $telefono, $id_grupo, $ruta_foto, $cedula);
     $stmt->execute();
+
+    if ($stmt->error) {
+        $mensaje = "❌ Error al actualizar: " . $stmt->error;
+    } elseif ($stmt->affected_rows > 0) {
+        $mensaje = "✅ Perfil actualizado correctamente.";
+    } else {
+        $mensaje = "⚠️ No se detectaron cambios en los datos.";
+    }
     $stmt->close();
 
     // Cambiar contraseña si corresponde
@@ -77,12 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ss", $pass_nueva, $cedula);
             $stmt->execute();
             $stmt->close();
-            $mensaje = "Perfil y contraseña actualizados correctamente.";
+            $mensaje = "✅ Perfil y contraseña actualizados correctamente.";
         } else {
             $mensaje = "⚠️ La contraseña actual no es correcta.";
         }
-    } else {
-        $mensaje = "Perfil actualizado correctamente.";
     }
 
     // Recargar datos actualizados
@@ -127,10 +131,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container">
     <div class="perfil-card">
-        <h2 class="mb-4">Editar Perfil</h2>
+        <h2 class="mb-4">Editar Perfil de Estudiante</h2>
 
         <?php if(!empty($mensaje)): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($mensaje) ?></div>
+            <script>
+            Swal.fire({
+                icon: 'info',
+                title: 'Resultado',
+                text: '<?= addslashes($mensaje) ?>',
+                confirmButtonText: 'OK'
+            });
+            </script>
         <?php endif; ?>
 
         <img src="<?= htmlspecialchars($user['foto'] ?: 'imagenes/default-user.png') ?>" alt="Foto de perfil">
@@ -153,22 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="telefono" class="form-control" value="<?= htmlspecialchars($user['telefono']) ?>">
             </div>
 
-            <?php if($user['rol'] === 'docente'): ?>
-                <div class="mb-3">
-                    <label class="form-label">Asignatura</label>
-                    <input type="text" name="asignatura" class="form-control" value="<?= htmlspecialchars($user['asignatura']) ?>">
-                </div>
-            <?php else: ?>
-                <div class="mb-3">
-                    <label class="form-label">Grupo</label>
-                    <select name="id_grupo" class="form-control">
-                        <option value="">-- Ningún grupo --</option>
-                        <?php foreach($grupos as $id => $nombre_grupo): ?>
-                            <option value="<?= $id ?>" <?= ($user['id_grupo']==$id ? 'selected' : '') ?>><?= htmlspecialchars($nombre_grupo) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            <?php endif; ?>
+            <div class="mb-3">
+                <label class="form-label">Grupo</label>
+                <select name="id_grupo" class="form-control">
+                    <option value="">-- Ningún grupo --</option>
+                    <?php foreach($grupos as $id => $nombre_grupo): ?>
+                        <option value="<?= $id ?>" <?= ($user['id_grupo']==$id ? 'selected' : '') ?>><?= htmlspecialchars($nombre_grupo) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
             <hr>
             <h5>Cambiar Contraseña</h5>
@@ -193,4 +197,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include('footer.php'); ?>
 </body>
 </html>
-
