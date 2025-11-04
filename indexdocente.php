@@ -132,11 +132,20 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $result_aulas_preview = $con->query($sql_aulas_preview);
     while ($row = $result_aulas_preview->fetch_assoc()) {
         // Si no hay imagen, o si no existe el archivo, usar una por defecto
-        $img = $row['imagen'] ?: 'default-aula.jpg';
-        $ruta_img = 'imagenes/aulas/'.$img;
-        if (!file_exists($ruta_img)) {
-            $ruta_img = 'imagenes/aulas/';
-        }
+       // Nombre de la imagen desde la base de datos o default
+$img = !empty($row['imagen']) ? $row['imagen'] : 'default-aula.jpg';
+
+// Carpeta donde están las imágenes
+$carpeta_img = 'imagenes/aulas/';
+
+// Construir ruta completa relativa
+$ruta_img = $carpeta_img . basename($img);
+
+// Verificar si el archivo existe, si no usar default
+if (!file_exists($ruta_img) || empty($row['imagen'])) {
+    $ruta_img = $carpeta_img . 'default-aula.jpg';
+}
+
 
         echo '<div class="col-md-4">
           <div class="card h-100 shadow-sm border-0">
