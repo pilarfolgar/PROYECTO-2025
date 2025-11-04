@@ -140,3 +140,66 @@ document.addEventListener('DOMContentLoaded', function() {
         formReporte.classList.remove('visible');
     });
 });
+// ==============================
+// Envío del formulario de reporte con SweetAlert2
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+    const formReporte = document.getElementById("reporteForm");
+
+    if (!formReporte) return; // Si no existe el form, no hace nada
+
+    formReporte.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Validación HTML5/Bootstrap
+        if (!formReporte.checkValidity()) {
+            formReporte.classList.add("was-validated");
+            return;
+        }
+
+        // Mostrar alerta de carga
+        Swal.fire({
+            title: "Enviando reporte...",
+            text: "Por favor espera unos segundos",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const formData = new FormData(formReporte);
+
+        try {
+            const res = await fetch("guardar-reporte-.php", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!res.ok) throw new Error("Error en la solicitud");
+
+            // Cierra el loader y muestra confirmación
+            Swal.fire({
+                icon: "success",
+                title: "¡Reporte enviado!",
+                text: "Tu reporte fue registrado correctamente.",
+                confirmButtonColor: "#588BAE",
+                confirmButtonText: "Aceptar"
+            });
+
+            // Limpia formulario y cierra modal
+            formReporte.reset();
+            document.getElementById("overlayReporte").classList.remove("visible");
+            document.getElementById("form-reporte").classList.remove("visible");
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Ocurrió un problema al enviar el reporte. Intenta nuevamente.",
+                confirmButtonColor: "#d33"
+            });
+        }
+    });
+});
+
