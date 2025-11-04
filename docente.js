@@ -113,3 +113,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+// docente.js
+document.addEventListener('DOMContentLoaded', function() {
+    const btnAbrir = document.getElementById('btnAbrirReporte');
+    const overlay = document.getElementById('overlayReporte');
+    const formReporte = document.getElementById('form-reporte');
+    const btnCerrar = document.getElementById('btnCerrarReporte');
+
+    btnAbrir.addEventListener('click', () => {
+        overlay.style.display = 'block';
+        formReporte.style.display = 'block';
+    });
+
+    btnCerrar.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        formReporte.style.display = 'none';
+    });
+
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        formReporte.style.display = 'none';
+    });
+});
