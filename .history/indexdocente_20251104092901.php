@@ -41,6 +41,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
+
+
 </head>
 <body>
 
@@ -81,7 +83,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $stmt->close();
     ?>
   </div>
+
+  
 </section>
+
 
 <section class="container mt-5">
   <h2 class="mb-3">Mis reservas</h2>
@@ -131,19 +136,13 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $sql_aulas_preview = "SELECT codigo, capacidad, imagen FROM aula ORDER BY codigo LIMIT 5";
     $result_aulas_preview = $con->query($sql_aulas_preview);
     while ($row = $result_aulas_preview->fetch_assoc()) {
-        // Si no hay imagen, o si no existe el archivo, usar una por defecto
         $img = $row['imagen'] ?: 'default-aula.jpg';
-        $ruta_img = 'imagenes/aulas/'.$img;
-        if (!file_exists($ruta_img)) {
-            $ruta_img = 'imagenes/aulas/';
-        }
-
         echo '<div class="col-md-4">
           <div class="card h-100 shadow-sm border-0">
-            <img src="'.$ruta_img.'" class="card-img-top" alt="'.htmlspecialchars($row["codigo"]).'">
+            <img src="imagenes/aulas'.$img.'" class="card-img-top" alt="'.$row["codigo"].'">
             <div class="card-body text-center">
-              <h5 class="card-title">'.htmlspecialchars($row["codigo"]).'</h5>
-              <p class="card-text">Capacidad: '.htmlspecialchars($row["capacidad"]).' personas</p>
+              <h5 class="card-title">'.$row["codigo"].'</h5>
+              <p class="card-text">Capacidad: '.$row["capacidad"].' personas</p>
               <a href="aulas.php" class="btn btn-primary">Reservar</a>
             </div>
           </div>
@@ -238,7 +237,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     </div>
   </div>
 </main>
-
 <!-- Modal Enviar Notificación -->
 <div class="modal fade" id="modalNotificacion" tabindex="-1" aria-labelledby="modalNotificacionLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -267,7 +265,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     </div>
   </div>
 </div>
-
 <!-- Botón flotante Reporte -->
 <button id="btnAbrirReporte" class="btn-flotante">📝</button>
 
@@ -313,8 +310,11 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
   </form>
 </section>
 
+
+
 <?php require("footer.php"); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="docente.js"></script>
 </body>

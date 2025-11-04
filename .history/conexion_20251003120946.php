@@ -4,7 +4,7 @@
 
 function conectar_bd(){
 
- $servidor = "127.0.0.1:3307";
+ $servidor = "127.0.0.1:3307"; 
 $bd = "db_evolutionit";
 $usuario = "root";
 $pass = "";

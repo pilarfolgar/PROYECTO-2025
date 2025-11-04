@@ -132,7 +132,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'miembros') {
     $result_aulas_preview = $con->query($sql_aulas_preview);
     while ($row = $result_aulas_preview->fetch_assoc()) {
         // Si no hay imagen, o si no existe el archivo, usar una por defecto
-        $img = $row['imagen'] ?: 'default-aula.jpg';
+        $img = $row['imagen'] ?: 'imagenes/aulas/';
         $ruta_img = 'imagenes/aulas/'.$img;
         if (!file_exists($ruta_img)) {
             $ruta_img = 'imagenes/aulas/';
