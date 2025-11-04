@@ -30,7 +30,69 @@ while ($row = $grupos_result->fetch_assoc()) {
 }
 
 // Procesar edición de perfil...
-// (Aquí va tu código de procesamiento de foto, contraseña y datos)
+// (Aquí va tu código de procesamiento de foto, contraseña y datos)}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = $_POST['nombrecompleto'];
+    $apellido = $_POST['apellido'];
+    $telefono = $_POST['telefono'] ?? null;
+    $asignatura = $_POST['asignatura'] ?? null;
+    $id_grupo = $_POST['id_grupo'] ?? null;
+
+    // Procesar foto (si se subió una)
+    $ruta_foto = $user['foto'];
+    if (!empty($_FILES['foto']['name'])) {
+        $nombre_foto = basename($_FILES['foto']['name']);
+        $ruta_destino = 'imagenes/' . $nombre_foto;
+        if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino)) {
+            $ruta_foto = $ruta_destino;
+        }
+    }
+
+    // Actualizar datos principales
+    if ($user['rol'] === 'docente') {
+        $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, asignatura=?, foto=? WHERE cedula=?");
+        $stmt->bind_param("ssssss", $nombre, $apellido, $telefono, $asignatura, $ruta_foto, $cedula);
+    } else {
+        $stmt = $con->prepare("UPDATE usuario SET nombrecompleto=?, apellido=?, telefono=?, id_grupo=?, foto=? WHERE cedula=?");
+        $stmt->bind_param("ssssss", $nombre, $apellido, $telefono, $id_grupo, $ruta_foto, $cedula);
+    }
+    $stmt->execute();
+    $stmt->close();
+
+    // Si cambia la contraseña
+    if (!empty($_POST['pass_actual']) && !empty($_POST['pass_nueva'])) {
+        $pass_actual = $_POST['pass_actual'];
+        $pass_nueva = password_hash($_POST['pass_nueva'], PASSWORD_DEFAULT);
+
+        // Verificar contraseña actual
+        $stmt = $con->prepare("SELECT contrasena FROM usuario WHERE cedula=?");
+        $stmt->bind_param("s", $cedula);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $datos = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($datos && password_verify($pass_actual, $datos['contrasena'])) {
+            $stmt = $con->prepare("UPDATE usuario SET contrasena=? WHERE cedula=?");
+            $stmt->bind_param("ss", $pass_nueva, $cedula);
+            $stmt->execute();
+            $stmt->close();
+            $mensaje = "Perfil y contraseña actualizados correctamente.";
+        } else {
+            $mensaje = "⚠️ La contraseña actual no es correcta.";
+        }
+    } else {
+        $mensaje = "Perfil actualizado correctamente.";
+    }
+
+    // Actualizar los datos del usuario cargados en la página
+    $stmt = $con->prepare("SELECT * FROM usuario WHERE cedula=?");
+    $stmt->bind_param("s", $cedula);
+    $stmt->execute();
+    $user = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
