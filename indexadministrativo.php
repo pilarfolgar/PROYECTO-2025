@@ -280,7 +280,6 @@ ORDER BY n.fecha DESC
   </div>
 </div>
 
-<!-- SCRIPT PARA ABRIR MODAL -->
 <script>
 function abrirModalNotificaciones() {
   const modal = new bootstrap.Modal(document.getElementById('modalNotificaciones'));
